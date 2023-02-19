@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "stddef.h": "c",
+        "stdio.h": "c",
+        "stdio_lim.h": "c",
+        "vec3.h": "c",
+        "vec4.h": "c",
+        "sstream": "c",
+        "matrix.h": "c"
+    }
+}
