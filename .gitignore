@@ -1,1 +1,4 @@
-**Temporary**
+.vscode
+moc*
+*.exe
+*.o
