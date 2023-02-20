@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -Iinc -I. -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I. -I. -I/usr/lib/qt/mkspecs/linux-g++
+DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+CFLAGS        = -pipe -g -D_REENTRANT -Wall -Wextra -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -D_REENTRANT -Wall -Wextra -fPIC $(DEFINES)
+INCPATH       = -I. -I. -Iinc -I../lab1-C/inc -I/usr/include/qt -I/usr/include/qt/QtOpenGL -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -Iout -Iinc -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -37,26 +37,26 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = app.exe1.0.0
-DISTDIR = /home/daria/Документы/OOP/lab1/.tmp/app.exe1.0.0
+DISTDIR = /home/daria/Документы/OOP/lab1/lab1-window/out/app.exe1.0.0
 LINK          = g++
-LFLAGS        = -Wl,-O1 -pipe -O2 -flto=16 -fno-fat-lto-objects -fuse-linker-plugin -fPIC
-LIBS          = $(SUBLIBS) /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
-AR            = gcc-ar cqs
+LFLAGS        = -fPIC
+LIBS          = $(SUBLIBS) -L../lab1-C/libs/ -lmesh /usr/lib/libQt5OpenGL.so /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
+AR            = ar cqs
 RANLIB        = 
 SED           = sed
 STRIP         = strip
 
 ####### Output directory
 
-OBJECTS_DIR   = ./
+OBJECTS_DIR   = out/
 
 ####### Files
 
 SOURCES       = src/main.cpp \
-		src/mainwindow.cpp moc_mainwindow.cpp
-OBJECTS       = main.o \
-		mainwindow.o \
-		moc_mainwindow.o
+		src/mainwindow.cpp out/moc_mainwindow.cpp
+OBJECTS       = out/main.o \
+		out/mainwindow.o \
+		out/moc_mainwindow.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -264,16 +264,16 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
 		/usr/lib/qt/mkspecs/features/default_post.prf \
-		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
-		/usr/lib/qt/mkspecs/features/ltcg.prf \
-		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qt.prf \
 		/usr/lib/qt/mkspecs/features/resources_functions.prf \
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
+		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
+		/usr/lib/qt/mkspecs/features/ltcg.prf \
+		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qmake_use.prf \
 		/usr/lib/qt/mkspecs/features/file_copies.prf \
 		/usr/lib/qt/mkspecs/features/testcase_targets.prf \
@@ -290,7 +290,7 @@ TARGET        = app.exe
 first: all
 ####### Build rules
 
-app.exe: ui_mainwindow.h $(OBJECTS)  
+app.exe: inc/ui_mainwindow.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: lab1.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/features/spec_pre.prf \
@@ -500,16 +500,16 @@ Makefile: lab1.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
 		/usr/lib/qt/mkspecs/features/default_post.prf \
-		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
-		/usr/lib/qt/mkspecs/features/ltcg.prf \
-		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qt.prf \
 		/usr/lib/qt/mkspecs/features/resources_functions.prf \
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
+		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
+		/usr/lib/qt/mkspecs/features/ltcg.prf \
+		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qmake_use.prf \
 		/usr/lib/qt/mkspecs/features/file_copies.prf \
 		/usr/lib/qt/mkspecs/features/testcase_targets.prf \
@@ -725,16 +725,16 @@ Makefile: lab1.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/features/default_pre.prf:
 /usr/lib/qt/mkspecs/features/resolve_config.prf:
 /usr/lib/qt/mkspecs/features/default_post.prf:
-/usr/lib/qt/mkspecs/features/link_ltcg.prf:
-/usr/lib/qt/mkspecs/features/ltcg.prf:
-/usr/lib/qt/mkspecs/features/warn_on.prf:
 /usr/lib/qt/mkspecs/features/qt.prf:
 /usr/lib/qt/mkspecs/features/resources_functions.prf:
 /usr/lib/qt/mkspecs/features/resources.prf:
 /usr/lib/qt/mkspecs/features/moc.prf:
+/usr/lib/qt/mkspecs/features/link_ltcg.prf:
 /usr/lib/qt/mkspecs/features/unix/opengl.prf:
 /usr/lib/qt/mkspecs/features/uic.prf:
 /usr/lib/qt/mkspecs/features/unix/thread.prf:
+/usr/lib/qt/mkspecs/features/ltcg.prf:
+/usr/lib/qt/mkspecs/features/warn_on.prf:
 /usr/lib/qt/mkspecs/features/qmake_use.prf:
 /usr/lib/qt/mkspecs/features/file_copies.prf:
 /usr/lib/qt/mkspecs/features/testcase_targets.prf:
@@ -759,7 +759,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents inc/mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents src/main.cpp src/mainwindow.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
+	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -785,30 +785,30 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_predefs_make_all: moc_predefs.h
+compiler_moc_predefs_make_all: out/moc_predefs.h
 compiler_moc_predefs_clean:
-	-$(DEL_FILE) moc_predefs.h
-moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	-$(DEL_FILE) out/moc_predefs.h
+out/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -dM -E -o out/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: out/moc_mainwindow.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
-moc_mainwindow.cpp: inc/mainwindow.h \
-		moc_predefs.h \
+	-$(DEL_FILE) out/moc_mainwindow.cpp
+out/moc_mainwindow.cpp: inc/mainwindow.h \
+		out/moc_predefs.h \
 		/usr/bin/moc
-	/usr/bin/moc $(DEFINES) --include /home/daria/Документы/OOP/lab1/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/daria/Документы/OOP/lab1 -I/home/daria/Документы/OOP/lab1/inc -I/home/daria/Документы/OOP/lab1 -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/12.2.1 -I/usr/include/c++/12.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/12.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include-fixed -I/usr/include inc/mainwindow.h -o moc_mainwindow.cpp
+	/usr/bin/moc $(DEFINES) --include /home/daria/Документы/OOP/lab1/lab1-window/out/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/daria/Документы/OOP/lab1/lab1-window -I/home/daria/Документы/OOP/lab1/lab1-window -I/home/daria/Документы/OOP/lab1/lab1-window/inc -I/home/daria/Документы/OOP/lab1/lab1-C/inc -I/usr/include/qt -I/usr/include/qt/QtOpenGL -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/12.2.1 -I/usr/include/c++/12.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/12.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include-fixed -I/usr/include inc/mainwindow.h -o out/moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: ui_mainwindow.h
+compiler_uic_make_all: inc/ui_mainwindow.h
 compiler_uic_clean:
-	-$(DEL_FILE) ui_mainwindow.h
-ui_mainwindow.h: mainwindow.ui \
+	-$(DEL_FILE) inc/ui_mainwindow.h
+inc/ui_mainwindow.h: forms/mainwindow.ui \
 		/usr/bin/uic
-	/usr/bin/uic mainwindow.ui -o ui_mainwindow.h
+	/usr/bin/uic forms/mainwindow.ui -o inc/ui_mainwindow.h
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -820,15 +820,15 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
-main.o: src/main.cpp inc/mainwindow.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
+out/main.o: src/main.cpp inc/mainwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/main.o src/main.cpp
 
-mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
-		ui_mainwindow.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o src/mainwindow.cpp
+out/mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
+		inc/ui_mainwindow.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mainwindow.o src/mainwindow.cpp
 
-moc_mainwindow.o: moc_mainwindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+out/moc_mainwindow.o: out/moc_mainwindow.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/moc_mainwindow.o out/moc_mainwindow.cpp
 
 ####### Install
 

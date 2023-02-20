@@ -4,9 +4,16 @@
 
 TEMPLATE = app
 TARGET = app.exe
-INCLUDEPATH += inc .
+INCLUDEPATH += . inc ../lab1-C/inc
+LIBS += -L../lab1-C/libs/ -lmesh
 
-QT += widgets
+OBJECTS_DIR=out
+MOC_DIR=out
+UI_DIR = inc
+
+CONFIG += qt debug
+
+QT += widgets opengl
 
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -17,6 +24,6 @@ QT += widgets
 
 # Input
 HEADERS += inc/mainwindow.h
-FORMS += mainwindow.ui
+FORMS += forms/mainwindow.ui
 SOURCES += src/main.cpp \
            src/mainwindow.cpp

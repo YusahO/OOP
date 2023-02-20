@@ -1,0 +1,24 @@
+#ifndef __VIEWPORT_H__
+#define __VIEWPORT_H__
+
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
+#include "mesh.h"
+
+class Viewport : public QOpenGLWidget, protected QOpenGLFunctions
+{
+    Q_OBJECT
+public:
+    explicit Viewport(QOpenGLWidget *parent = nullptr);
+    ~Viewport();
+
+protected:
+    void initializeGL(void);
+    void resizeGL(int w, int h);
+    void paintGL();
+
+// private:
+
+};
+
+#endif // __VIEWPORT_H__
