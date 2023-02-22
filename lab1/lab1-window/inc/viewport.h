@@ -3,7 +3,7 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
-#include "mesh.h"
+#include <string>
 
 class Viewport : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -14,10 +14,11 @@ public:
 
 protected:
     void initializeGL(void);
-    void resizeGL(int w, int h);
+    void resizeGL(int width, int height);
     void paintGL();
 
 // private:
+//     mesh_t *mesh;
 
 };
 
