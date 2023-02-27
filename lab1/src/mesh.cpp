@@ -33,10 +33,6 @@ error_code_t mesh_load_from_file(mesh_t &mesh, const filename_t filename)
 
 error_code_t mesh_render(const mesh_t &mesh, scene_t &scene)
 {
-    vertices_t projected_verts;
-    error_code_t ec = vertices_copy(projected_verts, mesh.vertices);
-    vertices_model_to_view(scene, projected_verts);
-
     linkages_draw(scene, mesh.vertices, mesh.indices);
-    return ec;
+    return SUCCESS;
 }

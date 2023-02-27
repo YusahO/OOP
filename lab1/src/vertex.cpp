@@ -35,17 +35,6 @@ size_t vertices_get_amount(const vertices_t &verts)
     return verts.amount;
 }
 
-error_code_t vertices_copy(vertices_t &dst, const vertices_t &src)
-{
-    dst.amount = src.amount;
-    error_code_t ec = create_vertex_array(dst);
-    if (ec == SUCCESS)
-        for (size_t i = 0; i < src.amount; ++i)
-            dst.array[i] = src.array[i];
-
-    return ec;
-}
-
 // ------------------------- перемещение -------------------------
 static inline void vertex_translate(vertex_t &vert, const vec3_t &delta)
 {
@@ -116,19 +105,6 @@ void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor
     {
         vertex_scale(verts.array[i], pivot, factor);
     }
-}
-
-// ------------------------- проекция -------------------------
-static void vertex_model_to_view(const scene_t &scene, vertex_t &vert)
-{
-    vert.x /= scene.width;
-    vert.y /= scene.height;
-}
-
-void vertices_model_to_view(const scene_t &scene, vertices_t &verts)
-{
-    for (size_t i = 0; i < verts.amount; ++i)
-        vertex_model_to_view(scene, verts.array[i]);
 }
 
 // ------------------------- чтение вершин -------------------------

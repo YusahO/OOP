@@ -24,13 +24,9 @@ void vertices_init(vertices_t &verts);
 void vertices_destroy(vertices_t &verts);
 size_t vertices_get_amount(const vertices_t &verts);
 
-error_code_t vertices_copy(vertices_t &dst, const vertices_t &src);
-
 void vertices_translate(vertices_t &verts, const vec3_t &delta);
 void vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angles);
 void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor);
-
-void vertices_model_to_view(const scene_t &scene, vertices_t &verts);
 
 error_code_t vertices_load_from_file(vertices_t &verts, FILE *f);
 
