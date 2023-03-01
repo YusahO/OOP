@@ -10,7 +10,6 @@ struct vertex_t;
 struct scene_t
 {
     QGraphicsScene *scene;
-    double width, height;
 };
 
 void scene_draw_line(scene_t &scene, const vertex_t &p1, const vertex_t &p2);

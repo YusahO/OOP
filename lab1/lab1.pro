@@ -11,6 +11,7 @@ MOC_DIR = moc_files
 UI_DIR = inc
 
 QMAKE_CXXFLAGS_RELEASE = -O3
+CONFIG += debug
 
 QT += gui core opengl
 

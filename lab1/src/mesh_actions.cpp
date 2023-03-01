@@ -10,6 +10,9 @@ error_code_t process_action(action_t &action)
     case LOAD:
         ec = mesh_load_from_file(mesh, action.filename);
         break;
+    case SAVE:
+        ec = mesh_save_to_file(mesh, action.filename);
+        break;
     case TRANSLATE:
         ec = transform_translate(mesh, action.translation);
         break;

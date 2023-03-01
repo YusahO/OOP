@@ -34,7 +34,8 @@ class Ui_MainWindow
 {
 public:
     QAction *loadMeshAction;
-    QAction *action_2;
+    QAction *clearTransformsAction;
+    QAction *saveMeshAction;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QGraphicsView *graphicsView;
@@ -51,16 +52,16 @@ public:
     QFrame *line_4;
     QGridLayout *rotateLayout;
     QDoubleSpinBox *pivRotYSB;
-    QSpacerItem *verticalSpacer_2;
     QLabel *label_4;
-    QDoubleSpinBox *pivRotXSB;
-    QDoubleSpinBox *angleZSB;
     QLabel *label_5;
-    QDoubleSpinBox *pivRotZSB;
-    QDoubleSpinBox *angleYSB;
-    QDoubleSpinBox *angleXSB;
-    QLabel *label_3;
     QPushButton *rotatePB;
+    QDoubleSpinBox *angleYSB;
+    QDoubleSpinBox *pivRotZSB;
+    QLabel *label_3;
+    QSpacerItem *verticalSpacer_2;
+    QDoubleSpinBox *angleXSB;
+    QDoubleSpinBox *angleZSB;
+    QDoubleSpinBox *pivRotXSB;
     QFrame *line_5;
     QGridLayout *scaleLayout;
     QLabel *label_6;
@@ -88,8 +89,10 @@ public:
         MainWindow->setFont(font);
         loadMeshAction = new QAction(MainWindow);
         loadMeshAction->setObjectName(QString::fromUtf8("loadMeshAction"));
-        action_2 = new QAction(MainWindow);
-        action_2->setObjectName(QString::fromUtf8("action_2"));
+        clearTransformsAction = new QAction(MainWindow);
+        clearTransformsAction->setObjectName(QString::fromUtf8("clearTransformsAction"));
+        saveMeshAction = new QAction(MainWindow);
+        saveMeshAction->setObjectName(QString::fromUtf8("saveMeshAction"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayout = new QVBoxLayout(centralwidget);
@@ -119,6 +122,7 @@ public:
         deltaYSB->setObjectName(QString::fromUtf8("deltaYSB"));
         deltaYSB->setMinimum(-65536.000000000000000);
         deltaYSB->setMaximum(65536.000000000000000);
+        deltaYSB->setSingleStep(0.010000000000000);
 
         translateLayout->addWidget(deltaYSB, 2, 2, 1, 1);
 
@@ -137,6 +141,7 @@ public:
         deltaZSB->setObjectName(QString::fromUtf8("deltaZSB"));
         deltaZSB->setMinimum(-65536.000000000000000);
         deltaZSB->setMaximum(65536.000000000000000);
+        deltaZSB->setSingleStep(0.010000000000000);
 
         translateLayout->addWidget(deltaZSB, 2, 3, 1, 1);
 
@@ -144,6 +149,7 @@ public:
         deltaXSB->setObjectName(QString::fromUtf8("deltaXSB"));
         deltaXSB->setMinimum(-65536.000000000000000);
         deltaXSB->setMaximum(65536.000000000000000);
+        deltaXSB->setSingleStep(0.010000000000000);
 
         translateLayout->addWidget(deltaXSB, 2, 1, 1, 1);
 
@@ -163,57 +169,40 @@ public:
         pivRotYSB->setObjectName(QString::fromUtf8("pivRotYSB"));
         pivRotYSB->setMinimum(-65536.000000000000000);
         pivRotYSB->setMaximum(65536.000000000000000);
+        pivRotYSB->setSingleStep(0.010000000000000);
 
         rotateLayout->addWidget(pivRotYSB, 2, 2, 1, 1);
-
-        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        rotateLayout->addItem(verticalSpacer_2, 1, 0, 1, 1);
 
         label_4 = new QLabel(groupBox);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
         rotateLayout->addWidget(label_4, 2, 0, 1, 1);
 
-        pivRotXSB = new QDoubleSpinBox(groupBox);
-        pivRotXSB->setObjectName(QString::fromUtf8("pivRotXSB"));
-        pivRotXSB->setMinimum(-65536.000000000000000);
-        pivRotXSB->setMaximum(65536.000000000000000);
-
-        rotateLayout->addWidget(pivRotXSB, 2, 1, 1, 1);
-
-        angleZSB = new QDoubleSpinBox(groupBox);
-        angleZSB->setObjectName(QString::fromUtf8("angleZSB"));
-        angleZSB->setMinimum(-65536.000000000000000);
-        angleZSB->setMaximum(65536.000000000000000);
-
-        rotateLayout->addWidget(angleZSB, 3, 3, 1, 1);
-
         label_5 = new QLabel(groupBox);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         rotateLayout->addWidget(label_5, 3, 0, 1, 1);
 
-        pivRotZSB = new QDoubleSpinBox(groupBox);
-        pivRotZSB->setObjectName(QString::fromUtf8("pivRotZSB"));
-        pivRotZSB->setMinimum(-65536.000000000000000);
-        pivRotZSB->setMaximum(65536.000000000000000);
+        rotatePB = new QPushButton(groupBox);
+        rotatePB->setObjectName(QString::fromUtf8("rotatePB"));
 
-        rotateLayout->addWidget(pivRotZSB, 2, 3, 1, 1);
+        rotateLayout->addWidget(rotatePB, 4, 0, 1, 4);
 
         angleYSB = new QDoubleSpinBox(groupBox);
         angleYSB->setObjectName(QString::fromUtf8("angleYSB"));
         angleYSB->setMinimum(-65536.000000000000000);
         angleYSB->setMaximum(65536.000000000000000);
+        angleYSB->setSingleStep(0.010000000000000);
 
         rotateLayout->addWidget(angleYSB, 3, 2, 1, 1);
 
-        angleXSB = new QDoubleSpinBox(groupBox);
-        angleXSB->setObjectName(QString::fromUtf8("angleXSB"));
-        angleXSB->setMinimum(-65536.000000000000000);
-        angleXSB->setMaximum(65536.000000000000000);
+        pivRotZSB = new QDoubleSpinBox(groupBox);
+        pivRotZSB->setObjectName(QString::fromUtf8("pivRotZSB"));
+        pivRotZSB->setMinimum(-65536.000000000000000);
+        pivRotZSB->setMaximum(65536.000000000000000);
+        pivRotZSB->setSingleStep(0.010000000000000);
 
-        rotateLayout->addWidget(angleXSB, 3, 1, 1, 1);
+        rotateLayout->addWidget(pivRotZSB, 2, 3, 1, 1);
 
         label_3 = new QLabel(groupBox);
         label_3->setObjectName(QString::fromUtf8("label_3"));
@@ -221,10 +210,33 @@ public:
 
         rotateLayout->addWidget(label_3, 0, 0, 1, 4);
 
-        rotatePB = new QPushButton(groupBox);
-        rotatePB->setObjectName(QString::fromUtf8("rotatePB"));
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        rotateLayout->addWidget(rotatePB, 4, 0, 1, 4);
+        rotateLayout->addItem(verticalSpacer_2, 1, 0, 1, 1);
+
+        angleXSB = new QDoubleSpinBox(groupBox);
+        angleXSB->setObjectName(QString::fromUtf8("angleXSB"));
+        angleXSB->setMinimum(-65536.000000000000000);
+        angleXSB->setMaximum(65536.000000000000000);
+        angleXSB->setSingleStep(0.010000000000000);
+
+        rotateLayout->addWidget(angleXSB, 3, 1, 1, 1);
+
+        angleZSB = new QDoubleSpinBox(groupBox);
+        angleZSB->setObjectName(QString::fromUtf8("angleZSB"));
+        angleZSB->setMinimum(-65536.000000000000000);
+        angleZSB->setMaximum(65536.000000000000000);
+        angleZSB->setSingleStep(0.010000000000000);
+
+        rotateLayout->addWidget(angleZSB, 3, 3, 1, 1);
+
+        pivRotXSB = new QDoubleSpinBox(groupBox);
+        pivRotXSB->setObjectName(QString::fromUtf8("pivRotXSB"));
+        pivRotXSB->setMinimum(-65536.000000000000000);
+        pivRotXSB->setMaximum(65536.000000000000000);
+        pivRotXSB->setSingleStep(0.010000000000000);
+
+        rotateLayout->addWidget(pivRotXSB, 2, 1, 1, 1);
 
 
         horizontalLayout->addLayout(rotateLayout);
@@ -253,6 +265,7 @@ public:
         pivScaleXSB->setObjectName(QString::fromUtf8("pivScaleXSB"));
         pivScaleXSB->setMinimum(-65536.000000000000000);
         pivScaleXSB->setMaximum(65536.000000000000000);
+        pivScaleXSB->setSingleStep(0.010000000000000);
 
         scaleLayout->addWidget(pivScaleXSB, 2, 1, 1, 1);
 
@@ -260,6 +273,7 @@ public:
         pivScaleYSB->setObjectName(QString::fromUtf8("pivScaleYSB"));
         pivScaleYSB->setMinimum(-65536.000000000000000);
         pivScaleYSB->setMaximum(65536.000000000000000);
+        pivScaleYSB->setSingleStep(0.010000000000000);
 
         scaleLayout->addWidget(pivScaleYSB, 2, 2, 1, 1);
 
@@ -267,6 +281,7 @@ public:
         factorZSB->setObjectName(QString::fromUtf8("factorZSB"));
         factorZSB->setMinimum(-65536.000000000000000);
         factorZSB->setMaximum(65536.000000000000000);
+        factorZSB->setSingleStep(0.010000000000000);
         factorZSB->setValue(1.000000000000000);
 
         scaleLayout->addWidget(factorZSB, 3, 3, 1, 1);
@@ -275,6 +290,7 @@ public:
         pivScaleZSB->setObjectName(QString::fromUtf8("pivScaleZSB"));
         pivScaleZSB->setMinimum(-65536.000000000000000);
         pivScaleZSB->setMaximum(65536.000000000000000);
+        pivScaleZSB->setSingleStep(0.010000000000000);
 
         scaleLayout->addWidget(pivScaleZSB, 2, 3, 1, 1);
 
@@ -282,6 +298,7 @@ public:
         factorYSB->setObjectName(QString::fromUtf8("factorYSB"));
         factorYSB->setMinimum(-65536.000000000000000);
         factorYSB->setMaximum(65536.000000000000000);
+        factorYSB->setSingleStep(0.010000000000000);
         factorYSB->setValue(1.000000000000000);
 
         scaleLayout->addWidget(factorYSB, 3, 2, 1, 1);
@@ -290,6 +307,7 @@ public:
         factorXSB->setObjectName(QString::fromUtf8("factorXSB"));
         factorXSB->setMinimum(-65536.000000000000000);
         factorXSB->setMaximum(65536.000000000000000);
+        factorXSB->setSingleStep(0.010000000000000);
         factorXSB->setValue(1.000000000000000);
 
         scaleLayout->addWidget(factorXSB, 3, 1, 1, 1);
@@ -327,7 +345,9 @@ public:
 
         menubar->addAction(menu->menuAction());
         menu->addAction(loadMeshAction);
-        menu->addAction(action_2);
+        menu->addAction(saveMeshAction);
+        menu->addSeparator();
+        menu->addAction(clearTransformsAction);
 
         retranslateUi(MainWindow);
 
@@ -338,15 +358,16 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         loadMeshAction->setText(QCoreApplication::translate("MainWindow", "\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
-        action_2->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \321\202\321\200\320\260\320\275\321\201\321\204\320\276\321\200\320\274\320\260\321\206\320\270\320\270", nullptr));
+        clearTransformsAction->setText(QCoreApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214 \321\202\321\200\320\260\320\275\321\201\321\204\320\276\321\200\320\274\320\260\321\206\320\270\320\270", nullptr));
+        saveMeshAction->setText(QCoreApplication::translate("MainWindow", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214 \320\274\320\276\320\264\320\265\320\273\321\214", nullptr));
         groupBox->setTitle(QString());
         label_2->setText(QCoreApplication::translate("MainWindow", "\320\241\320\274\320\265\321\211\320\265\320\275\320\270\320\265", nullptr));
         translatePB->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\277\320\276\320\273\320\275\320\270\321\202\321\214", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\274\320\265\321\211\320\265\320\275\320\270\320\265", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\276\321\200\320\275\320\260\321\217 \321\202\320\276\321\207\320\272\320\260", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\262\320\276\321\200\320\276\321\202", nullptr));
         rotatePB->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\277\320\276\320\273\320\275\320\270\321\202\321\214", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\262\320\276\321\200\320\276\321\202", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\320\265", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "\320\236\320\277\320\276\321\200\320\275\320\260\321\217 \321\202\320\276\321\207\320\272\320\260", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "\320\232\320\276\321\215\321\204\321\204\320\270\321\206\320\270\320\265\320\275\321\202", nullptr));

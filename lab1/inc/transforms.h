@@ -22,13 +22,6 @@ struct scaling_data_t
     vec3_t factor;
 };
 
-struct transform_t
-{
-    translation_data_t translation;
-    rotation_data_t rotation;
-    scaling_data_t scaling;
-};
-
 error_code_t transform_translate(mesh_t &mesh, const translation_data_t &translation);
 error_code_t transform_rotate(mesh_t &mesh, const rotation_data_t &rotation);
 error_code_t transform_scale(mesh_t &mesh, const scaling_data_t &scaling);

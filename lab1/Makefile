@@ -14,9 +14,9 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -O2 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -O3 -flto -fno-fat-lto-objects -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+CFLAGS        = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -Wall -Wextra -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I. -Iinc -Ifunctional/inc -I/usr/include/qt -I/usr/include/qt/QtOpenGL -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -Imoc_files -Iinc -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
@@ -39,9 +39,9 @@ COMPRESS      = gzip -9f
 DISTNAME      = app.exe1.0.0
 DISTDIR = /home/daria/Документы/OOP/lab1/out/app.exe1.0.0
 LINK          = g++
-LFLAGS        = -Wl,-O1 -pipe -O3 -flto=16 -fno-fat-lto-objects -fuse-linker-plugin -fPIC
+LFLAGS        = -fPIC
 LIBS          = $(SUBLIBS) /usr/lib/libQt5OpenGL.so /usr/lib/libQt5Widgets.so /usr/lib/libQt5Gui.so /usr/lib/libQt5Core.so -lGL -lpthread   
-AR            = gcc-ar cqs
+AR            = ar cqs
 RANLIB        = 
 SED           = sed
 STRIP         = strip
@@ -52,24 +52,24 @@ OBJECTS_DIR   = out/
 
 ####### Files
 
-SOURCES       = src/transforms.cpp \
-		src/error_processor.cpp \
-		src/mainwindow.cpp \
+SOURCES       = src/mesh.cpp \
 		src/vertex.cpp \
-		src/mesh.cpp \
+		src/error_processor.cpp \
+		src/mesh_actions.cpp \
 		src/linkage.cpp \
-		src/main.cpp \
+		src/transforms.cpp \
 		src/scene.cpp \
-		src/mesh_actions.cpp moc_files/moc_mainwindow.cpp
-OBJECTS       = out/transforms.o \
-		out/error_processor.o \
-		out/mainwindow.o \
+		src/main.cpp \
+		src/mainwindow.cpp moc_files/moc_mainwindow.cpp
+OBJECTS       = out/mesh.o \
 		out/vertex.o \
-		out/mesh.o \
-		out/linkage.o \
-		out/main.o \
-		out/scene.o \
+		out/error_processor.o \
 		out/mesh_actions.o \
+		out/linkage.o \
+		out/transforms.o \
+		out/scene.o \
+		out/main.o \
+		out/mainwindow.o \
 		out/moc_mainwindow.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -278,13 +278,13 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
 		/usr/lib/qt/mkspecs/features/default_post.prf \
-		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/ltcg.prf \
 		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qt.prf \
 		/usr/lib/qt/mkspecs/features/resources_functions.prf \
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
+		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
@@ -294,25 +294,25 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		lab1.pro inc/common.h \
-		inc/vec.h \
-		inc/transforms.h \
-		inc/ui_mainwindow.h \
+		lab1.pro inc/error_processor.h \
 		inc/linkage.h \
 		inc/scene.h \
+		inc/common.h \
+		inc/mesh_actions.h \
+		inc/mesh.h \
 		inc/vertex.h \
 		inc/mainwindow.h \
-		inc/mesh.h \
-		inc/error_processor.h \
-		inc/mesh_actions.h src/transforms.cpp \
-		src/error_processor.cpp \
-		src/mainwindow.cpp \
+		inc/vec.h \
+		inc/ui_mainwindow.h \
+		inc/transforms.h src/mesh.cpp \
 		src/vertex.cpp \
-		src/mesh.cpp \
+		src/error_processor.cpp \
+		src/mesh_actions.cpp \
 		src/linkage.cpp \
-		src/main.cpp \
+		src/transforms.cpp \
 		src/scene.cpp \
-		src/mesh_actions.cpp
+		src/main.cpp \
+		src/mainwindow.cpp
 QMAKE_TARGET  = app.exe
 DESTDIR       = 
 TARGET        = app.exe
@@ -531,13 +531,13 @@ Makefile: lab1.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
 		/usr/lib/qt/mkspecs/features/resolve_config.prf \
 		/usr/lib/qt/mkspecs/features/default_post.prf \
-		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/ltcg.prf \
 		/usr/lib/qt/mkspecs/features/warn_on.prf \
 		/usr/lib/qt/mkspecs/features/qt.prf \
 		/usr/lib/qt/mkspecs/features/resources_functions.prf \
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
+		/usr/lib/qt/mkspecs/features/link_ltcg.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
@@ -756,13 +756,13 @@ Makefile: lab1.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspecs/
 /usr/lib/qt/mkspecs/features/default_pre.prf:
 /usr/lib/qt/mkspecs/features/resolve_config.prf:
 /usr/lib/qt/mkspecs/features/default_post.prf:
-/usr/lib/qt/mkspecs/features/link_ltcg.prf:
 /usr/lib/qt/mkspecs/features/ltcg.prf:
 /usr/lib/qt/mkspecs/features/warn_on.prf:
 /usr/lib/qt/mkspecs/features/qt.prf:
 /usr/lib/qt/mkspecs/features/resources_functions.prf:
 /usr/lib/qt/mkspecs/features/resources.prf:
 /usr/lib/qt/mkspecs/features/moc.prf:
+/usr/lib/qt/mkspecs/features/link_ltcg.prf:
 /usr/lib/qt/mkspecs/features/unix/opengl.prf:
 /usr/lib/qt/mkspecs/features/uic.prf:
 /usr/lib/qt/mkspecs/features/unix/thread.prf:
@@ -788,8 +788,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents inc/common.h inc/vec.h inc/transforms.h inc/ui_mainwindow.h inc/linkage.h inc/scene.h inc/vertex.h inc/mainwindow.h inc/mesh.h inc/error_processor.h inc/mesh_actions.h $(DISTDIR)/
-	$(COPY_FILE) --parents src/transforms.cpp src/error_processor.cpp src/mainwindow.cpp src/vertex.cpp src/mesh.cpp src/linkage.cpp src/main.cpp src/scene.cpp src/mesh_actions.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents inc/error_processor.h inc/linkage.h inc/scene.h inc/common.h inc/mesh_actions.h inc/mesh.h inc/vertex.h inc/mainwindow.h inc/vec.h inc/ui_mainwindow.h inc/transforms.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/mesh.cpp src/vertex.cpp src/error_processor.cpp src/mesh_actions.cpp src/linkage.cpp src/transforms.cpp src/scene.cpp src/main.cpp src/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents forms/mainwindow.ui $(DISTDIR)/
 
 
@@ -820,7 +820,7 @@ compiler_moc_predefs_make_all: moc_files/moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_files/moc_predefs.h
 moc_files/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O3 -flto -fno-fat-lto-objects -Wall -Wextra -dM -E -o moc_files/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	g++ -pipe -g -Wall -Wextra -dM -E -o moc_files/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: moc_files/moc_mainwindow.cpp
 compiler_moc_header_clean:
@@ -858,6 +858,44 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
+out/mesh.o: src/mesh.cpp inc/mesh.h \
+		inc/vertex.h \
+		inc/error_processor.h \
+		inc/vec.h \
+		inc/scene.h \
+		inc/linkage.h \
+		inc/common.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh.o src/mesh.cpp
+
+out/vertex.o: src/vertex.cpp inc/vertex.h \
+		inc/error_processor.h \
+		inc/vec.h \
+		inc/scene.h \
+		inc/common.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/vertex.o src/vertex.cpp
+
+out/error_processor.o: src/error_processor.cpp inc/error_processor.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/error_processor.o src/error_processor.cpp
+
+out/mesh_actions.o: src/mesh_actions.cpp inc/mesh_actions.h \
+		inc/vec.h \
+		inc/mesh.h \
+		inc/vertex.h \
+		inc/error_processor.h \
+		inc/scene.h \
+		inc/linkage.h \
+		inc/common.h \
+		inc/transforms.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh_actions.o src/mesh_actions.cpp
+
+out/linkage.o: src/linkage.cpp inc/linkage.h \
+		inc/error_processor.h \
+		inc/scene.h \
+		inc/vertex.h \
+		inc/vec.h \
+		inc/common.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/linkage.o src/linkage.cpp
+
 out/transforms.o: src/transforms.cpp inc/transforms.h \
 		inc/vec.h \
 		inc/mesh.h \
@@ -868,8 +906,21 @@ out/transforms.o: src/transforms.cpp inc/transforms.h \
 		inc/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/transforms.o src/transforms.cpp
 
-out/error_processor.o: src/error_processor.cpp inc/error_processor.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/error_processor.o src/error_processor.cpp
+out/scene.o: src/scene.cpp inc/scene.h \
+		inc/vertex.h \
+		inc/error_processor.h \
+		inc/vec.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/scene.o src/scene.cpp
+
+out/main.o: src/main.cpp inc/mainwindow.h \
+		inc/scene.h \
+		inc/vertex.h \
+		inc/error_processor.h \
+		inc/vec.h \
+		inc/mesh.h \
+		inc/linkage.h \
+		inc/common.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/main.o src/main.cpp
 
 out/mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
 		inc/scene.h \
@@ -883,57 +934,6 @@ out/mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
 		inc/mesh_actions.h \
 		inc/transforms.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mainwindow.o src/mainwindow.cpp
-
-out/vertex.o: src/vertex.cpp inc/vertex.h \
-		inc/error_processor.h \
-		inc/vec.h \
-		inc/scene.h \
-		inc/common.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/vertex.o src/vertex.cpp
-
-out/mesh.o: src/mesh.cpp inc/mesh.h \
-		inc/vertex.h \
-		inc/error_processor.h \
-		inc/vec.h \
-		inc/scene.h \
-		inc/linkage.h \
-		inc/common.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh.o src/mesh.cpp
-
-out/linkage.o: src/linkage.cpp inc/linkage.h \
-		inc/error_processor.h \
-		inc/scene.h \
-		inc/vertex.h \
-		inc/vec.h \
-		inc/common.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/linkage.o src/linkage.cpp
-
-out/main.o: src/main.cpp inc/mainwindow.h \
-		inc/scene.h \
-		inc/vertex.h \
-		inc/error_processor.h \
-		inc/vec.h \
-		inc/mesh.h \
-		inc/linkage.h \
-		inc/common.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/main.o src/main.cpp
-
-out/scene.o: src/scene.cpp inc/scene.h \
-		inc/vertex.h \
-		inc/error_processor.h \
-		inc/vec.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/scene.o src/scene.cpp
-
-out/mesh_actions.o: src/mesh_actions.cpp inc/mesh_actions.h \
-		inc/vec.h \
-		inc/mesh.h \
-		inc/vertex.h \
-		inc/error_processor.h \
-		inc/scene.h \
-		inc/linkage.h \
-		inc/common.h \
-		inc/transforms.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh_actions.o src/mesh_actions.cpp
 
 out/moc_mainwindow.o: moc_files/moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/moc_mainwindow.o moc_files/moc_mainwindow.cpp

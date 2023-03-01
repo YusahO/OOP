@@ -21,101 +21,105 @@ void linkages_init(linkages_t &linkages)
 
 void linkages_destroy(linkages_t &linkages)
 {
+    linkages.amount = 0;
     free(linkages.array);
+    linkages.array = nullptr;
+}
+
+static error_code_t create_linkage_array(linkages_t &linkages, const size_t amount)
+{
+    error_code_t ec = SUCCESS;
+    linkage_t *arr = (linkage_t *)malloc(sizeof(linkage_t) * amount);
+    if (arr)
+    {
+        linkages.array = arr;
+        linkages.amount = amount;
+    }
+    else
+        ec = ERR_ALLOC;
+
+    return ec;
 }
 
 // ---------------------------- отрисовка ----------------------------
-static void linkage_draw(scene_t &scene, const vertices_t &verts, const linkage_t &linkage)
+static void linkage_draw(scene_t &scene, const vertex_t *array, const linkage_t &linkage)
 {
-    vertex_t p1 = verts.array[linkage.v1];
-    vertex_t p2 = verts.array[linkage.v2];
-    vertex_t p3 = verts.array[linkage.v3];
+    vertex_t p1 = array[linkage.v1];
+    vertex_t p2 = array[linkage.v2];
+    vertex_t p3 = array[linkage.v3];
 
     scene_draw_line(scene, p1, p2);
     scene_draw_line(scene, p2, p2);
     scene_draw_line(scene, p1, p3);
 }
 
-void linkages_draw(scene_t &scene, const vertices_t &verts, const linkages_t &linkages)
+error_code_t linkages_draw(scene_t &scene, const vertices_t &verts, const linkages_t &linkages)
 {
+    if (!verts.array || !linkages.array)
+        return ERR_MESH_NOT_LOADED;
+
     for (size_t i = 0; i < linkages.amount; ++i)
-        linkage_draw(scene, verts, linkages.array[i]);
+        linkage_draw(scene, verts.array, linkages.array[i]);
+    
+    return SUCCESS;
 }
 
 // ---------------------------- чтение данных ----------------------------
-static error_code_t create_linkage_array(linkages_t &linkages)
+static error_code_t read_linkages_amount(size_t &amount, FILE *f)
 {
     error_code_t ec = SUCCESS;
-    linkages.array = (linkage_t *)malloc(sizeof(linkage_t) * linkages.amount);
-    if (!linkages.array)
-        ec = ERR_ALLOC;
+    size_t amt = 0;
+    if (fscanf(f, "%lu", &amt) != 1 || amt == 0)
+        ec = ERR_INSUFFICIENT_LINKAGE_DATA;
 
+    amount = amt;
     return ec;
 }
 
-static size_t get_linkages_amount(FILE *f)
-{
-    size_t amt = 0;
-    char buffer[BUFFER_SIZE];
-    bool started_reading = false;
-    while (fgets(buffer, BUFFER_SIZE, f) && !feof(f))
-    {
-        if (strstr(buffer, "f "))
-        {
-            started_reading = true;
-            ++amt;
-        }
-        // else if (started_reading)
-        //     break;
-    }
-
-    return amt;
-}
-
-static error_code_t read_into_linkage(linkage_t &linkage, string_t str)
+static error_code_t read_into_linkage(linkage_t &linkage, FILE *f)
 {
     error_code_t ec = SUCCESS;
-    int *fields[] = {&linkage.v1, &linkage.v2, &linkage.v3};
-    size_t ind = 0;
 
-    for (const char *p = str; *p != '\0' && *p != '\n'; ++p)
-    {
-        if (isspace(*p) && !isspace(*(p + 1)))
-        {
-            int buf;
-            if (sscanf(p, "%d", &buf) != 1)
-            {
-                ec = ERR_INCORRECT_LINKAGE_DATA;
-                break;
-            }
-            *(fields[ind++]) = buf - 1;
-        }
-    }
+    int v1, v2, v3;
 
-    if (ec == SUCCESS)
-    {
-        if (ind != 3)
-            ec = ERR_INSUFFICIENT_LINKAGE_DATA;
-    }
+    if (fscanf(f, "%d %d %d", &v1, &v2, &v3) != 3)
+        ec = ERR_INCORRECT_LINKAGE_DATA;
+    
+    linkage.v1 = v1 - 1;
+    linkage.v2 = v2 - 1;
+    linkage.v3 = v3 - 1;
 
     return ec;
 }
 
 static error_code_t read_linkages(linkages_t &linkages, FILE *f)
 {
-    rewind(f);
+    const char *current_locale = "";
+    setlocale(LC_NUMERIC, "C");
 
     error_code_t ec = SUCCESS;
-    char buffer[BUFFER_SIZE];
-    for (size_t i = 0; i < linkages.amount;)
+    for (size_t i = 0; i < linkages.amount && ec == SUCCESS; ++i)
+        ec = read_into_linkage(linkages.array[i], f);
+
+    setlocale(LC_NUMERIC, current_locale);
+    return ec;
+}
+
+static error_code_t read_linkages_from_file(linkages_t &linkages, FILE *f)
+{
+    error_code_t ec = SUCCESS;
+
+    size_t amt = 0;
+
+    ec = read_linkages_amount(amt, f);
+
+    if (ec == ERR_INCORRECT_LINKAGE_DATA)
+        return ec;
+
+    ec = create_linkage_array(linkages, amt);
+    if (ec == SUCCESS)
     {
-        fgets(buffer, BUFFER_SIZE, f);
-        if (strstr(buffer, "f "))
-        {
-            ec = read_into_linkage(linkages.array[i++], buffer);
-            if (ec != SUCCESS)
-                break;
-        }
+        ec = read_linkages(linkages, f);
     }
 
     return ec;
@@ -126,20 +130,26 @@ error_code_t linkages_load_from_file(linkages_t &linkages, FILE *f)
     if (!f)
         return ERR_INVALID_PTR_PASSED;
 
-    error_code_t ec = SUCCESS;
-
-    size_t amt = get_linkages_amount(f);
-    if (amt == 0)
-        return ERR_INSUFFICIENT_LINKAGE_DATA;
-    linkages.amount = amt;
-
-    ec = create_linkage_array(linkages);
-    if (ec != SUCCESS)
-        return ec;
-
-    ec = read_linkages(linkages, f);
-    if (ec != SUCCESS)
-        linkages_destroy(linkages);
+    error_code_t ec = read_linkages_from_file(linkages, f);
 
     return ec;
+}
+
+// ------------------------- запись в файл -------------------------
+static void write_linkage_to_file(const linkage_t &linkage, FILE *f)
+{
+    fprintf(f, "f %d %d %d\n", linkage.v1 + 1, linkage.v2 + 1, linkage.v3 + 1);
+}
+
+error_code_t linkages_save_to_file(const linkages_t &linkages, FILE *f)
+{
+    if (!f)
+        return ERR_INVALID_PTR_PASSED;
+    if (!linkages.array)
+        return ERR_INSUFFICIENT_LINKAGE_DATA;
+
+    for (size_t i = 0; i < linkages.amount; ++i)
+        write_linkage_to_file(linkages.array[i], f);
+    
+    return SUCCESS;
 }

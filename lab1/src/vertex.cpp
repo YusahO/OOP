@@ -17,14 +17,21 @@ void vertices_init(vertices_t &verts)
 
 void vertices_destroy(vertices_t &verts)
 {
+    verts.amount = 0;
     free(verts.array);
+    verts.array = nullptr;
 }
 
-static error_code_t create_vertex_array(vertices_t &verts)
+static error_code_t create_vertex_array(vertices_t &verts, const size_t amount)
 {
     error_code_t ec = SUCCESS;
-    verts.array = (vertex_t *)malloc(sizeof(vertex_t) * verts.amount);
-    if (!verts.array)
+    vertex_t *arr = (vertex_t *)malloc(sizeof(vertex_t) * amount);
+    if (arr)
+    {
+        verts.array = arr;
+        verts.amount = amount;
+    }
+    else
         ec = ERR_ALLOC;
 
     return ec;
@@ -52,35 +59,51 @@ void vertices_translate(vertices_t &verts, const vec3_t &delta)
 }
 
 // ------------------------- поворот -------------------------
-static inline void vertex_rotate_x(vertex_t &vert, const vec3_t &pivot, const double ax)
+static inline void vertex_rotate_x(vertex_t &vert, const double ax)
 {
     double vy = vert.y;
     double vz = vert.z;
-    vert.y = pivot.y + cos(ax) * (vy - pivot.y) - sin(ax) * (vz - pivot.z);
-    vert.z = pivot.z + sin(ax) * (vy - pivot.y) + cos(ax) * (vz - pivot.z);
+    vert.y = cos(ax) * vy - sin(ax) * vz;
+    vert.z = sin(ax) * vy + cos(ax) * vz;
 }
 
-static inline void vertex_rotate_y(vertex_t &vert, const vec3_t &pivot, const double ay)
+static inline void vertex_rotate_y(vertex_t &vert, const double ay)
 {
     double vx = vert.x;
     double vz = vert.z;
-    vert.x = pivot.x + cos(ay) * (vx - pivot.x) + sin(ay) * (vz - pivot.z);
-    vert.z = pivot.z - sin(ay) * (vx - pivot.x) + cos(ay) * (vz - pivot.z);
+    vert.x = cos(ay) * vx + sin(ay) * vz;
+    vert.z = sin(ay) * vx + cos(ay) * vz;
 }
 
-static inline void vertex_rotate_z(vertex_t &vert, const vec3_t &pivot, const double az)
+static inline void vertex_rotate_z(vertex_t &vert, const double az)
 {
     double vx = vert.x;
     double vy = vert.y;
-    vert.x = pivot.x + cos(az) * (vx - pivot.x) - sin(az) * (vy - pivot.y);
-    vert.y = pivot.y + sin(az) * (vx - pivot.x) + cos(az) * (vy - pivot.y);
+    vert.x = cos(az) * vx - sin(az) * vy;
+    vert.y = sin(az) * vx + cos(az) * vy;
+}
+
+static inline void shift_to_zero(vertex_t &vert, const vec3_t &pivot)
+{
+    vert.x -= pivot.x;
+    vert.y -= pivot.y;
+    vert.z -= pivot.z;
+}
+
+static inline void shift_to_pos(vertex_t &vert, const vec3_t &pivot)
+{
+    vert.x += pivot.x;
+    vert.y += pivot.y;
+    vert.z += pivot.z;
 }
 
 static void vertex_rotate(vertex_t &vert, const vec3_t &pivot, const vec3_t &angles)
 {
-    vertex_rotate_x(vert, pivot, angles.x);
-    vertex_rotate_y(vert, pivot, angles.y);
-    vertex_rotate_z(vert, pivot, angles.z);
+    shift_to_zero(vert, pivot);
+    vertex_rotate_x(vert, angles.x);
+    vertex_rotate_y(vert, angles.y);
+    vertex_rotate_z(vert, angles.z);
+    shift_to_pos(vert, pivot);
 }
 
 void vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angles)
@@ -94,9 +117,11 @@ void vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angle
 // ------------------------- масштабирование -------------------------
 static inline void vertex_scale(vertex_t &vert, const vec3_t &pivot, const vec3_t &factor)
 {
-    vert.x = vert.x * factor.x + (1 - factor.x) * pivot.x;
-    vert.y = vert.y * factor.y + (1 - factor.y) * pivot.y;
-    vert.z = vert.z * factor.z + (1 - factor.z) * pivot.z;
+    shift_to_zero(vert, pivot);
+    vert.x *= factor.x;
+    vert.y *= factor.y;
+    vert.z *= factor.z;
+    shift_to_pos(vert, pivot);
 }
 
 void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor)
@@ -108,54 +133,55 @@ void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor
 }
 
 // ------------------------- чтение вершин -------------------------
-static size_t get_vertices_amount(FILE *f)
-{
-    size_t amt = 0;
-    char buffer[BUFFER_SIZE];
-    bool started_reading = false;
-    while (fgets(buffer, BUFFER_SIZE, f) && !feof(f))
-    {
-        if (strstr(buffer, "v "))
-        {
-            started_reading = true;
-            ++amt;
-        }
-        // else if (started_reading)
-        //     break;
-    }
-
-    return amt;
-}
-
-static error_code_t read_into_vertex(vertex_t &vert, string_t str)
+static error_code_t read_vertices_amount(size_t &amount, FILE *f)
 {
     error_code_t ec = SUCCESS;
-    if (sscanf(str, "%lf %lf %lf", &vert.x, &vert.y, &vert.z) != 3)
-        ec = ERR_INCORRECT_VERTEX_DATA;
+    size_t amt = 0;
+    if (fscanf(f, "%lu", &amt) != 1 || amt == 0)
+        ec = ERR_INSUFFICIENT_VERTEX_DATA;
 
+    amount = amt;
+    return ec;
+}
+
+static error_code_t read_into_vertex(vertex_t &vert, FILE *f)
+{
+    error_code_t ec = SUCCESS;
+
+    if (fscanf(f, "%lf %lf %lf", &vert.x, &vert.y, &vert.z) != 3)
+        ec = ERR_INCORRECT_VERTEX_DATA;
     return ec;
 }
 
 static error_code_t read_vertices(vertices_t &verts, FILE *f)
 {
-    rewind(f);
     const char *current_locale = "";
     setlocale(LC_NUMERIC, "C");
 
     error_code_t ec = SUCCESS;
-    char buffer[BUFFER_SIZE];
-    for (size_t i = 0; i < verts.amount;)
-    {
-        fgets(buffer, BUFFER_SIZE, f);
-        if (strstr(buffer, "v "))
-        {
-            ec = read_into_vertex(verts.array[i++], buffer + 2);
-            if (ec != SUCCESS)
-                break;
-        }
-    }
+    for (size_t i = 0; i < verts.amount && ec == SUCCESS; ++i)
+        ec = read_into_vertex(verts.array[i], f);
 
     setlocale(LC_NUMERIC, current_locale);
+    return ec;
+}
+
+static error_code_t read_vertices_from_file(vertices_t &verts, FILE *f)
+{
+    error_code_t ec = SUCCESS;
+    size_t amt = 0;
+
+    ec = read_vertices_amount(amt, f);
+
+    ec = create_vertex_array(verts, amt);
+    if (ec == SUCCESS)
+    {
+        ec = read_vertices(verts, f);
+        
+        if (ec != SUCCESS)
+            vertices_destroy(verts);
+    }
+
     return ec;
 }
 
@@ -164,21 +190,30 @@ error_code_t vertices_load_from_file(vertices_t &verts, FILE *f)
     if (!f)
         return ERR_INVALID_PTR_PASSED;
 
-    error_code_t ec = SUCCESS;
-
-    size_t amt = get_vertices_amount(f);
-    if (amt == 0)
-        return ERR_INSUFFICIENT_VERTEX_DATA;
-
-    verts.amount = amt;
-
-    ec = create_vertex_array(verts);
-    if (ec != SUCCESS)
-        return ec;
-
-    ec = read_vertices(verts, f);
-    if (ec != SUCCESS)
-        vertices_destroy(verts);
+    error_code_t ec = read_vertices_from_file(verts, f);
 
     return ec;
+}
+
+// ------------------------- запись в файл -------------------------
+static void write_vertex_to_file(const vertex_t &vert, FILE *f)
+{
+    fprintf(f, "v %lf %lf %lf\n", vert.x, vert.y, vert.z);
+}
+
+error_code_t vertices_save_to_file(const vertices_t &verts, FILE *f)
+{
+    if (!f)
+        return ERR_INVALID_PTR_PASSED;
+    if (!verts.array)
+        return ERR_INSUFFICIENT_VERTEX_DATA;
+
+    const char *current_locale = "";
+    setlocale(LC_NUMERIC, "C");
+
+    for (size_t i = 0; i < verts.amount; ++i)
+        write_vertex_to_file(verts.array[i], f);
+
+    setlocale(LC_NUMERIC, current_locale);
+    return SUCCESS;
 }

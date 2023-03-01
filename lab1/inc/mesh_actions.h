@@ -12,6 +12,7 @@ struct scene;
 enum action_id
 {
     LOAD,
+    SAVE,
     TRANSLATE,
     ROTATE,
     SCALE,

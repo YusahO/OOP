@@ -24,9 +24,11 @@ private:
 
 public slots:
     void loadMesh(void);
+    void saveMesh(void);
     void translateMesh(void);
     void rotateMesh(void);
     void scaleMesh(void);
+    void clearTransformFields(void);
 
 private:
     Ui::MainWindow *ui;

@@ -29,5 +29,6 @@ void vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angle
 void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor);
 
 error_code_t vertices_load_from_file(vertices_t &verts, FILE *f);
+error_code_t vertices_save_to_file(const vertices_t &verts, FILE *f);
 
 #endif // __VERTEX_H__

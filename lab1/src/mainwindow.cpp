@@ -6,15 +6,20 @@
 
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     QGraphicsScene *scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
+    if (scene)
+        ui->graphicsView->setScene(scene);
 
     connect(ui->loadMeshAction, &QAction::triggered, this, &MainWindow::loadMesh);
+    connect(ui->saveMeshAction, &QAction::triggered, this, &MainWindow::saveMesh);
+    connect(ui->clearTransformsAction, &QAction::triggered, this, &MainWindow::clearTransformFields);
+    
     connect(ui->translatePB, &QPushButton::clicked, this, &MainWindow::translateMesh);
     connect(ui->rotatePB, &QPushButton::clicked, this, &MainWindow::rotateMesh);
     connect(ui->scalePB, &QPushButton::clicked, this, &MainWindow::scaleMesh);
@@ -30,18 +35,50 @@ MainWindow::~MainWindow()
 void MainWindow::renderMesh(void)
 {
     ui->graphicsView->scene()->clear();
-    scene_t scene = { 
-        .scene = ui->graphicsView->scene(), 
-        .width = (double)ui->graphicsView->width(), 
-        .height = (double)ui->graphicsView->height() 
+    scene_t scene = {
+        .scene = ui->graphicsView->scene()
     };
 
-    action_t action = { 
-        .id = RENDER, 
-        .scene = scene 
+    action_t action = {
+        .id = RENDER,
+        .scene = scene
     };
     error_code_t ec = process_action(action);
     process_error(ec);
+}
+
+void MainWindow::loadMesh(void)
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Выберите файл модели"), "", tr("MSH Files (*.msh)"));
+
+    action_t action = {
+        .id = LOAD,
+        .filename = filename.toUtf8().data()
+    };
+
+    error_code_t ec = process_action(action);
+    process_error(ec);
+
+    if (ec == SUCCESS)
+        renderMesh();
+}
+
+void MainWindow::saveMesh(void)
+{
+    QString filename = QFileDialog::getSaveFileName(this, tr("Выберите файл для сохранения модели"), "", tr("MSH Files (*.msh)"));
+
+    action_t action = {
+        .id = SAVE,
+        .filename = filename.toUtf8().data()
+    };
+
+    error_code_t ec = process_action(action);
+    process_error(ec);
+    if (ec != SUCCESS)
+    {
+        QFile file(filename);
+        file.remove();
+    }
 }
 
 void MainWindow::translateMesh(void)
@@ -50,9 +87,9 @@ void MainWindow::translateMesh(void)
     double dy = ui->deltaYSB->value();
     double dz = ui->deltaZSB->value();
 
-    action_t action = { 
-        .id = TRANSLATE, 
-        .translation = { dx, dy, dz } 
+    action_t action = {
+        .id = TRANSLATE,
+        .translation = { dx, dy, dz }
     };
 
     error_code_t ec = process_action(action);
@@ -73,7 +110,7 @@ void MainWindow::rotateMesh(void)
 
     action_t action = {
         .id = ROTATE,
-        .rotation = { .pivot = { px, py, pz }, .angles = { ax, ay, az } }
+        .rotation = {.pivot = { px, py, pz }, .angles = { ax, ay, az } }
     };
 
     error_code_t ec = process_action(action);
@@ -94,27 +131,35 @@ void MainWindow::scaleMesh(void)
 
     action_t action = {
         .id = SCALE,
-        .scaling = { .pivot = { px, py, pz }, .factor = { kx, ky, kz } }
+        .scaling = {.pivot = { px, py, pz }, .factor = { kx, ky, kz } }
     };
-    
+
     error_code_t ec = process_action(action);
     process_error(ec);
-    if (ec == SUCCESS)
-        renderMesh();
-}   
-
-void MainWindow::loadMesh(void) 
-{
-    QString filename = QFileDialog::getOpenFileName(this, tr("Выберите файл модели"), "", tr("OBJ Files (*.obj)"));
-
-    action_t action = { 
-        .id = LOAD, 
-        .filename = filename.toUtf8().data() 
-    };
-    
-    error_code_t ec = process_action(action);
-    process_error(ec);
-
     if (ec == SUCCESS)
         renderMesh();
 }
+
+void MainWindow::clearTransformFields(void)
+{
+    ui->deltaXSB->setValue(0.0);
+    ui->deltaYSB->setValue(0.0);
+    ui->deltaZSB->setValue(0.0);
+
+    ui->angleXSB->setValue(0.0);
+    ui->angleYSB->setValue(0.0);
+    ui->angleZSB->setValue(0.0);
+
+    ui->pivRotXSB->setValue(0.0);
+    ui->pivRotYSB->setValue(0.0);
+    ui->pivRotZSB->setValue(0.0);
+
+    ui->factorXSB->setValue(1.0);
+    ui->factorYSB->setValue(1.0);
+    ui->factorZSB->setValue(1.0);
+
+    ui->pivScaleXSB->setValue(0.0);
+    ui->pivScaleYSB->setValue(0.0);
+    ui->pivScaleZSB->setValue(0.0);
+}
+
