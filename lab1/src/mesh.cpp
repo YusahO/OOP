@@ -1,10 +1,6 @@
 #include "mesh.h"
 #include <cstdio>
 
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 256
-#endif
-
 mesh_t &mesh_init(void)
 {
     static mesh_t mesh;
@@ -32,7 +28,16 @@ static error_code_t read_into_temp_mesh(mesh_t &temp_mesh, FILE *f)
     if (ec == SUCCESS)
     {
         ec = linkages_load_from_file(temp_mesh.linkages, f);
-        if (ec != SUCCESS)
+        if (ec == SUCCESS)
+        {
+            ec = linkages_check(vertices_get_amount(temp_mesh.vertices), temp_mesh.linkages);
+            if (ec != SUCCESS)
+            {
+                vertices_destroy(temp_mesh.vertices);
+                linkages_destroy(temp_mesh.linkages);
+            }
+        }
+        else
             vertices_destroy(temp_mesh.vertices);
     }
 
@@ -51,7 +56,10 @@ error_code_t mesh_load_from_file(mesh_t &mesh, const filename_t filename)
     fclose(f);
 
     if (ec == SUCCESS)
+    {
+        mesh_destroy(mesh);
         mesh_copy(mesh, tmp);
+    }
 
     return ec;
 }

@@ -36,7 +36,9 @@ void MainWindow::renderMesh(void)
 {
     ui->graphicsView->scene()->clear();
     scene_t scene = {
-        .scene = ui->graphicsView->scene()
+        .scene = ui->graphicsView->scene(),
+        .width = ui->graphicsView->width(),
+        .height = ui->graphicsView->height()
     };
 
     action_t action = {

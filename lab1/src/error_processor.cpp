@@ -38,11 +38,14 @@ void process_error(const error_code_t &ec)
     case ERR_INCORRECT_USER_INPUT:
         messagebox.critical(nullptr, "Ошибка", "Невозможно обработать введенные данные");
         break;
-    default:
-        messagebox.critical(nullptr, "Ошибка", "Произошла неизвестная ошибка");
-        break;
     case ERR_INVALID_PTR_PASSED:
         messagebox.critical(nullptr, "Ошибка", "Невозможно обработать данные");
+        break;
+    case ERR_UNKNOWN_ACTION:
+        messagebox.critical(nullptr, "Ошибка", "Неизвестное действие");
+        break;
+    default:
+        messagebox.critical(nullptr, "Ошибка", "Произошла неизвестная ошибка");
         break;
     }
 }

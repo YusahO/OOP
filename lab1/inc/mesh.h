@@ -1,8 +1,8 @@
 #ifndef __MESH_H__
 #define __MESH_H__
 
-#include "vertex.h"
-#include "linkage.h"
+#include "vertices.h"
+#include "linkages.h"
 #include "common.h"
 #include "scene.h"
 #include "error_processor.h"

@@ -4,7 +4,7 @@
 
 TEMPLATE = app
 TARGET = app.exe
-INCLUDEPATH += . inc functional/inc
+INCLUDEPATH += . inc
 
 OBJECTS_DIR = out
 MOC_DIR = moc_files

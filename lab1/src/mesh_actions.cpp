@@ -28,6 +28,9 @@ error_code_t process_action(action_t &action)
     case DESTROY:
         mesh_destroy(mesh);
         break;
+    default:
+        ec = ERR_UNKNOWN_ACTION;
+        break;
     }
 
     return ec;

@@ -1,31 +1,26 @@
-#ifndef __LINKAGES_H__
-#define __LINKAGES_H__
+#ifndef __LINKAGE_H__
+#define __LINKAGE_H__
 
 #include "error_processor.h"
 #include "scene.h"
+#include "vertices.h"
 // #include "common.h"
 #include <stddef.h>
 #include <cstdio>
 
 struct scene_t;
+struct vertices_t;
 
 struct linkage_t
 {
     int v1, v2, v3;
 };
 
-struct linkages_t
-{
-    linkage_t *array;
-    size_t amount;
-};
+void linkage_draw(scene_t &scene, const vertex_t *array, const linkage_t &linkage);
 
-void linkages_init(linkages_t &linkages);
-void linkages_destroy(linkages_t &linkages);
+bool linkage_check(const size_t vamount, const linkage_t &linkage);
+error_code_t linkage_read_into(linkage_t &linkage, FILE *f);
 
-error_code_t linkages_load_from_file(linkages_t &linkages, FILE *f);
-error_code_t linkages_save_to_file(const linkages_t &linkages, FILE *f);
+void linkage_write_to_file(const linkage_t &linkage, FILE *f);
 
-error_code_t linkages_draw(scene_t &scene, const vertices_t &verts, const linkages_t &linkages);
-
-#endif
+#endif // __LINKAGE_H__
