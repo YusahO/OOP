@@ -1,17 +1,17 @@
 #include "scene.h"
 #include <cstdlib>
 
-void scene_draw_line(scene_t &scene, const vertex_t &p1, const vertex_t &p2)
+error_code_t scene_draw_line(qscene_t scene, const vertex_t &p1, const vertex_t &p2)
 {
-    scene.scene->addLine(p1.x, p1.y, p2.x, p2.y);
+    if (!scene)
+        return ERR_INVALID_PTR_PASSED;
+    
+    scene->addLine(p1.x, p1.y, p2.x, p2.y);
+    return SUCCESS;
 }
 
-vertex_t scene_project(scene_t &scene, const vertex_t &v)
+error_code_t scene_get_qscene(qscene_t &qscene, const scene_t &scene)
 {
-    vertex_t projected = {
-        .x = v.x - scene.width / 2,
-        .y = v.y - scene.height / 2,
-        .z = 0
-    };
-    return projected;
+    qscene = scene.scene;
+    return SUCCESS;
 }

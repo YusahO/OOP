@@ -20,6 +20,6 @@ void mesh_destroy(mesh_t &mesh);
 error_code_t mesh_load_from_file(mesh_t &mesh, const filename_t filename);
 error_code_t mesh_save_to_file(const mesh_t &mesh, const filename_t filename);
 
-error_code_t mesh_render(const mesh_t &mesh, scene_t &scene);
+error_code_t mesh_render(scene_t &scene, const mesh_t &mesh);
 
 #endif // __MESH_H__

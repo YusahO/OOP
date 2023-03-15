@@ -18,6 +18,6 @@ error_code_t linkages_check(const size_t vamount, const linkages_t &linkages);
 error_code_t linkages_load_from_file(linkages_t &linkages, FILE *f);
 error_code_t linkages_save_to_file(const linkages_t &linkages, FILE *f);
 
-error_code_t linkages_draw(scene_t &scene, const vertices_t &verts, const linkages_t &linkages);
+error_code_t linkages_draw(qscene_t scene, const vertex_t *varray, const linkages_t &linkages);
 
 #endif // __LINKAGES_H__

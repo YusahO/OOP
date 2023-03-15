@@ -5,7 +5,6 @@
 #include <cstring>
 #include <locale>
 
-// ------------------------- перемещение -------------------------
 void vertex_translate(vertex_t &vert, const vec3_t &delta)
 {
     vert.x += delta.x;
@@ -13,7 +12,6 @@ void vertex_translate(vertex_t &vert, const vec3_t &delta)
     vert.z += delta.z;
 }
 
-// ------------------------- поворот -------------------------
 static inline void vertex_rotate_x(vertex_t &vert, const double ax)
 {
     double vy = vert.y;
@@ -26,7 +24,7 @@ static inline void vertex_rotate_y(vertex_t &vert, const double ay)
 {
     double vx = vert.x;
     double vz = vert.z;
-    vert.x =  cos(ay) * vx + sin(ay) * vz;
+    vert.x = cos(ay) * vx + sin(ay) * vz;
     vert.z = -sin(ay) * vx + cos(ay) * vz;
 }
 
@@ -61,27 +59,43 @@ void vertex_rotate(vertex_t &vert, const vec3_t &pivot, const vec3_t &angles)
     shift_to_pos(vert, pivot);
 }
 
-// ------------------------- масштабирование -------------------------
 void vertex_scale(vertex_t &vert, const vec3_t &pivot, const vec3_t &factor)
 {
-    vert.x = factor.x * vert.x + (1 - factor.x) * pivot.x;
-    vert.y = factor.y * vert.y + (1 - factor.y) * pivot.y;
-    vert.z = factor.z * vert.z + (1 - factor.z) * pivot.z;
+    vert.x = factor.x * (vert.x - pivot.x) + pivot.x;
+    vert.y = factor.y * (vert.y - pivot.y) + pivot.y;
+    vert.z = factor.z * (vert.z - pivot.z) + pivot.z;
 }
 
-// ------------------------- чтение вершин -------------------------
-error_code_t read_into_vertex(vertex_t &vert, FILE *f)
+error_code_t vertex_project(vertex_t &v, size_t width, size_t height)
 {
+    vertex_t projected = {
+        .x = v.x - width / 2,
+        .y = v.y - height / 2,
+        .z = 0
+    };
+    v = projected;
+    return SUCCESS;
+}
+
+error_code_t vertex_read_into(vertex_t &vert, FILE *f)
+{
+    if (!f)
+        return ERR_INVALID_PTR_PASSED;
+    
     error_code_t ec = SUCCESS;
 
     if (fscanf(f, "%lf %lf %lf", &vert.x, &vert.y, &vert.z) != 3)
         ec = ERR_INCORRECT_VERTEX_DATA;
+
     return ec;
 }
 
-// ------------------------- запись в файл -------------------------
-void write_vertex_to_file(const vertex_t &vert, FILE *f)
+error_code_t vertex_write_to_file(const vertex_t &vert, FILE *f)
 {
+    if (!f)
+        return ERR_INVALID_PTR_PASSED;
+    
     fprintf(f, "%lf %lf %lf\n", vert.x, vert.y, vert.z);
+    return SUCCESS;
 }
 

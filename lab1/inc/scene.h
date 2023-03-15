@@ -3,6 +3,7 @@
 
 // #include "mesh.h"
 #include "vertex.h"
+#include "common.h"
 #include <QGraphicsScene>
 
 struct vertex_t;
@@ -10,10 +11,10 @@ struct vertex_t;
 struct scene_t
 {
     QGraphicsScene *scene;
-    int width, height;
+    size_t width, height;
 };
 
-void scene_draw_line(scene_t &scene, const vertex_t &p1, const vertex_t &p2);
-vertex_t scene_project(scene_t &scene, const vertex_t &v);
+error_code_t scene_draw_line(qscene_t scene, const vertex_t &p1, const vertex_t &p2);
+error_code_t scene_get_qscene(qscene_t &qscene, const scene_t &scene);
 
 #endif // __SCENE_H__

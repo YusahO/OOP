@@ -14,11 +14,14 @@ void vertices_destroy(vertices_t &verts);
 
 error_code_t vertices_get_array(vertex_t *&dst, const vertices_t &verts);
 size_t vertices_get_amount(const vertices_t &verts);
-error_code_t vertices_try_get_value(vertex_t &dst, const vertices_t &verts, size_t ind);
+error_code_t vertices_copy(vertices_t &dst, const vertices_t &src);
 
-void vertices_translate(vertices_t &verts, const vec3_t &delta);
-void vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angles);
-void vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor);
+error_code_t vertices_project(vertices_t &verts, const scene_t &scene);
+error_code_t vertices_get_projected(vertex_t *&projected_verts, const scene_t &scene, const vertices_t &verts);
+
+error_code_t vertices_translate(vertices_t &verts, const vec3_t &delta);
+error_code_t vertices_rotate(vertices_t &verts, const vec3_t &pivot, const vec3_t &angles);
+error_code_t vertices_scale(vertices_t &verts, const vec3_t &pivot, const vec3_t &factor);
 
 error_code_t vertices_load_from_file(vertices_t &verts, FILE *f);
 error_code_t vertices_save_to_file(const vertices_t &verts, FILE *f);

@@ -23,7 +23,7 @@ error_code_t process_action(action_t &action)
         ec = transform_scale(mesh, action.scaling);
         break;
     case RENDER:
-        ec = mesh_render(mesh, action.scene);
+        ec = mesh_render(action.scene, mesh);
         break;
     case DESTROY:
         mesh_destroy(mesh);

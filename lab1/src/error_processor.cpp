@@ -44,6 +44,9 @@ void process_error(const error_code_t &ec)
     case ERR_UNKNOWN_ACTION:
         messagebox.critical(nullptr, "Ошибка", "Неизвестное действие");
         break;
+    case ERR_WRITING_TO_FILE:
+        messagebox.critical(nullptr, "Ошибка", "Ошибка записи в файл");
+        break;
     default:
         messagebox.critical(nullptr, "Ошибка", "Произошла неизвестная ошибка");
         break;

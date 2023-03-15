@@ -838,11 +838,11 @@ moc_files/moc_mainwindow.cpp: inc/mainwindow.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/vec.h \
+		inc/common.h \
 		inc/mesh.h \
 		inc/vertices.h \
 		inc/linkages.h \
 		inc/linkage.h \
-		inc/common.h \
 		moc_files/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include /home/daria/Документы/OOP/lab1/moc_files/moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/daria/Документы/OOP/lab1 -I/home/daria/Документы/OOP/lab1 -I/home/daria/Документы/OOP/lab1/inc -I/usr/include/qt -I/usr/include/qt/QtOpenGL -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/12.2.1 -I/usr/include/c++/12.2.1/x86_64-pc-linux-gnu -I/usr/include/c++/12.2.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include-fixed -I/usr/include inc/mainwindow.h -o moc_files/moc_mainwindow.cpp
@@ -874,9 +874,9 @@ out/mesh.o: src/mesh.cpp inc/mesh.h \
 		inc/error_processor.h \
 		inc/vec.h \
 		inc/scene.h \
+		inc/common.h \
 		inc/linkages.h \
-		inc/linkage.h \
-		inc/common.h
+		inc/linkage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh.o src/mesh.cpp
 
 out/vertex.o: src/vertex.cpp inc/vertex.h \
@@ -896,9 +896,9 @@ out/mesh_actions.o: src/mesh_actions.cpp inc/mesh_actions.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/scene.h \
+		inc/common.h \
 		inc/linkages.h \
 		inc/linkage.h \
-		inc/common.h \
 		inc/transforms.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/mesh_actions.o src/mesh_actions.cpp
 
@@ -917,6 +917,7 @@ out/linkages.o: src/linkages.cpp inc/linkages.h \
 		inc/scene.h \
 		inc/vertex.h \
 		inc/vec.h \
+		inc/common.h \
 		inc/vertices.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/linkages.o src/linkages.cpp
 
@@ -927,22 +928,24 @@ out/transforms.o: src/transforms.cpp inc/transforms.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/scene.h \
+		inc/common.h \
 		inc/linkages.h \
-		inc/linkage.h \
-		inc/common.h
+		inc/linkage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/transforms.o src/transforms.cpp
 
 out/scene.o: src/scene.cpp inc/scene.h \
 		inc/vertex.h \
 		inc/error_processor.h \
-		inc/vec.h
+		inc/vec.h \
+		inc/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/scene.o src/scene.cpp
 
 out/vertices.o: src/vertices.cpp inc/vertices.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/vec.h \
-		inc/scene.h
+		inc/scene.h \
+		inc/common.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/vertices.o src/vertices.cpp
 
 out/main.o: src/main.cpp inc/mainwindow.h \
@@ -950,11 +953,11 @@ out/main.o: src/main.cpp inc/mainwindow.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/vec.h \
+		inc/common.h \
 		inc/mesh.h \
 		inc/vertices.h \
 		inc/linkages.h \
-		inc/linkage.h \
-		inc/common.h
+		inc/linkage.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o out/main.o src/main.cpp
 
 out/mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
@@ -962,11 +965,11 @@ out/mainwindow.o: src/mainwindow.cpp inc/mainwindow.h \
 		inc/vertex.h \
 		inc/error_processor.h \
 		inc/vec.h \
+		inc/common.h \
 		inc/mesh.h \
 		inc/vertices.h \
 		inc/linkages.h \
 		inc/linkage.h \
-		inc/common.h \
 		inc/ui_mainwindow.h \
 		inc/mesh_actions.h \
 		inc/transforms.h
