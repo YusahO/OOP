@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/daria/Документы/OOP/lab2/build",
+  "command": "/usr/bin/g++  -I/home/daria/Документы/OOP/lab2/include -g -std=gnu++20 -o CMakeFiles/lab2.dir/src/main.cpp.o -c /home/daria/Документы/OOP/lab2/src/main.cpp",
+  "file": "/home/daria/Документы/OOP/lab2/src/main.cpp",
+  "output": "CMakeFiles/lab2.dir/src/main.cpp.o"
+}
+]

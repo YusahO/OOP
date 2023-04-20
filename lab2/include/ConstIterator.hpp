@@ -1,19 +1,30 @@
 #pragma once
 
-#include "ConstIterator.h"
+#include "ConstTreeIterator.h"
 
 template<typename T>
-ConstIterator<T>::ConstIterator(const ConstIterator<T> &other)
+ConstTreeIterator<T>::ConstTreeIterator(const ConstTreeIterator<T> &other)
 {
-    weakPtr = other.weakPtr;
-    index = other.index;
-    size = other.size;
+    mp_node = other.mp_node;
 }
 
 template<typename T>
-inline ConstIterator<T>::ConstIterator(const Tree<T> &tree)
+ConstTreeIterator<T>::ConstTreeIterator(const Tree<T> &tree)
 {
-    index = 0;
-    size = vector.getSize();
-    weakPtr = vector.values;
+    mp_node = tree.GetRoot();
+}
+
+template<typename T>
+ConstTreeIterator<T> &ConstTreeIterator<T>::operator=(const ConstTreeIterator<T> &other)
+{
+    other.CheckObject(__LINE__);
+
+    mp_node = other.mp_node;
+
+    return *this;
+}
+
+template<typename T>
+const T& ConstTreeIterator<T>::operator*() const
+{
 }
