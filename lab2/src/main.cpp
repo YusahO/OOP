@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include <set>
+#include "BinarySearchTree.h"
+#include "ConstTreeIterator.h"
 
 int main()
 {

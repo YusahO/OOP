@@ -2,22 +2,18 @@
 
 #include <cstddef>
 #include <memory>
-#include "BaseTreeNode.hpp"
 
-template<typename T>
-using BaseTreeNodePtr = std::weak_ptr<BaseTreeNode<T>>;
+#include "TreeNode.h"
 
-template<typename T>
+template <typename T>
+using IterWeakPtr = std::weak_ptr<TreeNode<T>>;
+
+template <typename T>
+using IterSharedPtr = std::shared_ptr<TreeNode<T>>;
+
+template <typename T>
 class BaseTreeIterator
 {
 public:
     virtual ~BaseTreeIterator() = 0;
-
-protected:
-    BaseTreeNodePtr<T> mp_node = nullptr;
 };
-
-template<typename T>
-BaseTreeIterator<T>::~BaseTreeIterator()
-{
-}
