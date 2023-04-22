@@ -1,3 +1,0 @@
-/home/daria/Документы/OOP/lab2/build/CMakeFiles/lab2.dir
-/home/daria/Документы/OOP/lab2/build/CMakeFiles/edit_cache.dir
-/home/daria/Документы/OOP/lab2/build/CMakeFiles/rebuild_cache.dir

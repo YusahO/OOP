@@ -2,3 +2,5 @@
 moc*
 *.exe
 *.o
+**build**
+
