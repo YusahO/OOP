@@ -3,8 +3,15 @@
 #include "Errors.h"
 #include "TreeIterator.h"
 
+template<typename T>
+TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> *tree)
+    : mp_node(node),
+      mp_tree(std::make_shared<BinarySearchTree<T>>(tree))
+{
+}
+
 template <typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const IterSharedPtr<T> &tree)
+TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const std::shared_ptr<BinarySearchTree<T>> &tree)
     : mp_node(node),
       mp_tree(tree)
 {

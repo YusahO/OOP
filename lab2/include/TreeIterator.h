@@ -11,7 +11,8 @@ class TreeIterator : public BaseTreeIterator<T>
 {
 public:
     TreeIterator() = default;
-    TreeIterator(const IterSharedPtr<T> &node, const IterSharedPtr<T> &tree);
+    TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> *tree);
+    TreeIterator(const IterSharedPtr<T> &node, const std::shared_ptr<BinarySearchTree<T>> &tree);
     explicit TreeIterator(const IterSharedPtr<T> &node);
 
     TreeIterator(const TreeIterator<T> &other);
@@ -47,8 +48,8 @@ protected:
 private:
     friend BinarySearchTree<T>;
 
-    const IterWeakPtr<T> mp_tree;
-    const IterWeakPtr<T> mp_node = nullptr;
+    const std::weak_ptr<BinarySearchTree<T>> mp_tree;
+    const IterWeakPtr<T> mp_node;
 };
 
 #include "TreeIterator.hpp"

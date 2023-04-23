@@ -20,11 +20,13 @@ template <typename T>
 class BinarySearchTree
 {
 public:
+    BinarySearchTree() = default;
+    BinarySearchTree(std::initializer_list<T> lst);
     virtual ~BinarySearchTree() = default;
 
     // вставка
-    virtual std::pair<TreeIterator<T>, bool> Insert(T &&value);
-    virtual std::pair<TreeIterator<T>, bool> Insert(const T &value);
+    virtual TreeIterator<T> Insert(T &&value);
+    virtual TreeIterator<T> Insert(const T &value);
 
     // поиск
     // virtual Iterator<T> Find(const T &value) = 0;
@@ -39,8 +41,20 @@ public:
 
     // virtual void Clean();
 
+    template<typename P>
+    friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
+
 protected:
+    std::ostream &Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const;
+
+private:
     BSTSharedPtr<T> mp_root = nullptr;
 };
+
+template<typename P>
+std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree)
+{
+    return tree->Inorder(tree->mp_root, os);
+}
 
 #include "BinarySearchTree.hpp"

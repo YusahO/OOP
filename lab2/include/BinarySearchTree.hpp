@@ -3,52 +3,79 @@
 #include "BinarySearchTree.h"
 #include "Errors.h"
 
+template<typename T>
+BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
+{
+    for (auto &val : lst)
+    {
+        Insert(val);
+    }
+}
+
 template <typename T>
-std::pair<TreeIterator<T>, bool> BinarySearchTree<T>::Insert(T &&value)
+TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 {
     BSTNodeSharedPtr<T> newNode = std::make_shared<TreeNode<T>>(value);
     if (!mp_root)
     {
         mp_root = newNode;
-        TreeIterator<T> iter(mp_root, *this);
-        return std::make_pair<TreeIterator<T>, bool>(iter, true);
+        TreeIterator<T> iter(mp_root, this);
+        return iter;
     }
 
     BSTSharedPtr<T> curr = mp_root;
 
     while (curr)
     {
-        if (curr->mp_value < value)
+        if (curr->m_value < value)
         {
             curr = curr->mp_right;
         }
-        else if (curr->mp_value > value)
+        else if (curr->m_value > value)
         {
             curr = curr->mp_left;
         }
         else
         {
-            std::make_pair<TreeIterator<T>, bool>(TreeIterator<T>(curr, *this), false);
+            throw TreeValueError(__FILE__, typeid(*this).name(), __LINE__);
         }
     }
 
-    if (curr->mp_parent->m_value < value)
+    BSTSharedPtr<T> parent = curr->mp_parent.lock();
+    if (parent->m_value < value)
     {
-        curr->mp_parent->mp_right = newNode;
+        parent->mp_right = newNode;
     }
     else
     {
-        curr->mp_parent->mp_left = newNode;
+        parent->mp_left = newNode;
     }
 
-    newNode->SetParent(curr->mp_parent);
+    newNode->SetParent(parent);
 
-    TreeIterator<T> iter(newNode, *this);
-    return std::make_pair<TreeIterator<T>, bool>(iter, true);
+    TreeIterator<T> iter(newNode, this);
+    return iter;
 }
 
 template <typename T>
-std::pair<TreeIterator<T>, bool> BinarySearchTree<T>::Insert(const T &value)
+TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
 {
     return Insert(value);
+}
+
+template<typename T>
+std::ostream &BinarySearchTree<T>::Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const
+{
+    if (node->mp_left)
+    {
+        Inorder(node->mp_left, os);
+    }
+
+    os << node->mp_value << ", ";
+
+    if (node->mp_right != nullptr)
+    {
+        Inorder(node->mp_right, os);
+    }
+    return os;
 }
