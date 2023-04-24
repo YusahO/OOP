@@ -21,7 +21,14 @@ class BinarySearchTree
 {
 public:
     BinarySearchTree() = default;
-    BinarySearchTree(std::initializer_list<T> lst);
+    explicit BinarySearchTree(std::initializer_list<T> lst);
+    
+    BinarySearchTree(const BinarySearchTree<T> &other) = default;
+    BinarySearchTree(BinarySearchTree<T> &&other) = default;
+
+    BinarySearchTree &operator=(const BinarySearchTree<T> &other) = default;
+    BinarySearchTree &operator=(BinarySearchTree<T> &&other) = default;
+
     virtual ~BinarySearchTree() = default;
 
     // вставка
@@ -29,23 +36,33 @@ public:
     virtual TreeIterator<T> Insert(const T &value);
 
     // поиск
-    // virtual Iterator<T> Find(const T &value) = 0;
-    // virtual ConstTreeIterator<T> Find(const T &value) const;
+    TreeIterator<T> Find(const T &value);
+    // ConstTreeIterator<T> Find(const T &value) const;
 
     // удаление
-    // template <class Iter>
-    // virtual Iterator<T> Erase(Iter<T> pos) = 0;
-    // template <class Iter>
-    // virtual Iterator<T> Erase(Iter<T> first, Iter<T> last) = 0;
-    // virtual std::size_t Erase(const T &value) = 0;
+    template <class Iter>
+    TreeIterator<T> Erase(Iter &pos);
+    template <class Iter>
+    TreeIterator<T> Erase(Iter &first, Iter &last);
+    virtual bool Erase(const T &value);
+
+    BSTSharedPtr<T> GetRoot() const;
 
     // virtual void Clean();
+    // std::size_t GetSize() const noexcept;
+
+    TreeIterator<T> begin();
+    TreeIterator<T> end();
 
     template<typename P>
     friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
 
 protected:
-    std::ostream &Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const;
+    std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
+    BSTSharedPtr<T> _Min(const BSTSharedPtr<T> &node);
+    BSTSharedPtr<T> _Max(const BSTSharedPtr<T> &node);
+    BSTSharedPtr<T> _Find(const T &value);
+    std::ostream &_Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const;
 
 private:
     BSTSharedPtr<T> mp_root = nullptr;
@@ -54,7 +71,10 @@ private:
 template<typename P>
 std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree)
 {
-    return tree->Inorder(tree->mp_root, os);
+    os << "{ ";
+    tree._Inorder(tree.mp_root, os);
+    os << "}";
+    return os;
 }
 
 #include "BinarySearchTree.hpp"

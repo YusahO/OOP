@@ -20,15 +20,16 @@ template <typename T>
 class TreeNode
 {
 public:
-    TreeNode();
+    TreeNode() = default;
     TreeNode(const T &value, const BSTNodeSharedPtr<T> &parent);
     explicit TreeNode(const T &value);
 
     virtual ~TreeNode() = default;
 
-    T &GetValue() const;
-    BSTNodeSharedPtr<T> &GetLeft() const;
-    BSTNodeSharedPtr<T> &GetRight() const;
+    const T &GetValue() const;
+    BSTNodeWeakPtr<T> &GetParent();
+    BSTNodeSharedPtr<T> &GetLeft();
+    BSTNodeSharedPtr<T> &GetRight();
 
     void SetLeft(const BSTNodeSharedPtr<T> &node);
     void SetLeft(BSTNodeSharedPtr<T> &&node);

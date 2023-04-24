@@ -4,8 +4,9 @@
 #include "Errors.h"
 
 template <typename T>
-ConstTreeIterator<T>::ConstTreeIterator(const IterSharedPtr<T> &node)
-    : mp_node(node)
+ConstTreeIterator<T>::ConstTreeIterator(IterSharedPtr<T> &node, BinarySearchTree<T> &tree)
+    : mp_node(node),
+      m_tree(tree)
 {
 }
 
@@ -60,7 +61,7 @@ ConstTreeIterator<T> &ConstTreeIterator<T>::operator++()
     CheckValidity(__LINE__);
 
     IterSharedPtr<T> node = mp_node.lock();
-    IterSharedPtr<T> tree = mp_tree.lock();
+    IterSharedPtr<T> tree = m_tree;
 
     if (node)
     {
@@ -104,7 +105,7 @@ ConstTreeIterator<T> &ConstTreeIterator<T>::operator--()
     CheckValidity(__LINE__);
 
     IterSharedPtr<T> node = mp_node.lock();
-    IterSharedPtr<T> tree = mp_tree.lock();
+    IterSharedPtr<T> tree = m_tree;
 
     if (!node)
     {
@@ -187,7 +188,7 @@ bool ConstTreeIterator<T>::operator!=(const ConstTreeIterator<T> &other) const
 template <typename T>
 void ConstTreeIterator<T>::CheckValidity(int) const
 {
-    if (!mp_node.expired())
+    if (mp_node.expired())
         throw InvalidPointerError(__FILE__, typeid(*this).name(), __LINE__);
 }
 

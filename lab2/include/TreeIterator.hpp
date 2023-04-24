@@ -3,30 +3,18 @@
 #include "Errors.h"
 #include "TreeIterator.h"
 
-template<typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> *tree)
-    : mp_node(node),
-      mp_tree(std::make_shared<BinarySearchTree<T>>(tree))
-{
-}
-
 template <typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const std::shared_ptr<BinarySearchTree<T>> &tree)
+TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree)
     : mp_node(node),
-      mp_tree(tree)
-{
-}
-
-template <typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node)
-    : mp_node(node)
+      m_tree(tree)
 {
 }
 
 template <typename T>
 TreeIterator<T>::TreeIterator(const TreeIterator<T> &other)
+    : mp_node(other.mp_node),
+      m_tree(other.m_tree)
 {
-    mp_node = other.mp_node;
 }
 
 template <typename T>
@@ -35,25 +23,17 @@ TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
     other.CheckValidity(__LINE__);
 
     mp_node = other.mp_node;
+    m_tree = other.m_tree;
 
     return *this;
 }
 
 template <typename T>
-T &TreeIterator<T>::operator*() const
+const T &TreeIterator<T>::operator*() const
 {
     CheckValidity(__LINE__);
     CheckNull(__LINE__);
-    return mp_node.lock()->get();
-}
-
-template <typename T>
-T *TreeIterator<T>::operator->() const
-{
-    CheckValidity(__LINE__);
-    CheckNull(__LINE__);
-
-    return mp_node.lock()->get();
+    return mp_node.lock()->GetValue();
 }
 
 template <typename T>
@@ -69,38 +49,43 @@ bool TreeIterator<T>::Valid() const
 }
 
 template <typename T>
+void TreeIterator<T>::SetNode(const IterSharedPtr<T> &node)
+{
+    mp_node = node;
+}
+
+template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator++()
 {
     CheckValidity(__LINE__);
 
     IterSharedPtr<T> node = mp_node.lock();
-    IterSharedPtr<T> tree = mp_tree.lock();
 
-    if (node)
+    if (!node)
     {
-        node = tree->mp_root;
-
-        if (!node)
-            InvalidIteratorError(__LINE__, typeid(*this).name(), __LINE__);
-
-        node->GetMinimum();
+        return *this;
     }
-    else if (node->mp_right)
+
+    if (node->GetRight())
     {
-        node = node->mp_right;
-        node->GetMinimum();
+        node = node->GetRight();
+        while (node->GetLeft())
+        {
+            node = node->GetLeft();
+        }
     }
     else
     {
-        IterSharedPtr<T> p = node->mp_parent.lock();
-        while (p && node == p->mp_right)
+        IterSharedPtr<T> parent = node->GetParent().lock();
+        while (parent != nullptr && node == parent->GetRight())
         {
-            node = p;
-            p = p->mp_parent;
+            node = parent;
+            parent = parent->GetParent().lock();
         }
-        node = p;
+        node = parent;
     }
 
+    mp_node = node;
     return *this;
 }
 
@@ -115,36 +100,38 @@ TreeIterator<T> TreeIterator<T>::operator++(int)
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator--()
 {
-    CheckValidity(__LINE__);
+    // CheckValidity(__LINE__);
 
     IterSharedPtr<T> node = mp_node.lock();
-    IterSharedPtr<T> tree = mp_tree.lock();
-
     if (!node)
     {
-        node = tree->mp_root;
-        if (!node)
-            InvalidIteratorError(__LINE__, typeid(*this).name(), __LINE__);
-
-        node->GetMaximum();
+        node = m_tree.GetRoot();
+        while (node->GetRight())
+        {
+            node = node->GetRight();
+        }
     }
-    else if (node->mp_left)
+
+    if (node->GetLeft())
     {
-        node = node->mp_left;
-        node->GetMaximum();
+        node = node->GetLeft();
+        while (node->GetRight())
+        {
+            node = node->GetRight();
+        }
     }
     else
     {
-        IterSharedPtr<T> p = node->mp_parent.lock();
-        while (p && node == p->mp_left)
+        IterSharedPtr<T> parent = node->GetParent().lock();
+        while (parent != nullptr && node == parent->GetLeft())
         {
-            node = p;
-            p = p->mp_paremt.lock();
+            node = parent;
+            parent = parent->GetParent().lock();
         }
-
-        node = p;
+        node = parent;
     }
 
+    mp_node = node;
     return *this;
 }
 
@@ -159,55 +146,55 @@ inline TreeIterator<T> TreeIterator<T>::operator--(int)
 template <typename T>
 bool TreeIterator<T>::operator<=(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
+    // CheckNull(__LINE__);
     return mp_node <= other.mp_node;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator<(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
-    return mp_node < other.mp_node;
+    // CheckNull(__LINE__);
+    return mp_node.lock().get() < other.mp_node.lock().get();
 }
 
 template <typename T>
 bool TreeIterator<T>::operator>=(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
+    // CheckNull(__LINE__);
     return mp_node >= other.mp_node;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator>(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
+    // CheckNull(__LINE__);
     return mp_node > other.mp_node;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator==(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
+    // CheckNull(__LINE__);
     return mp_node == other.mp_node;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
 {
-    CheckNull(__LINE__);
-    return mp_node != other.mp_node;
+    // CheckNull(__LINE__);
+    return mp_node.lock() != other.mp_node.lock();
 }
 
 template <typename T>
 void TreeIterator<T>::CheckValidity(int line) const
 {
-    if (!mp_node.expired())
-        throw InvalidPointerError(__FILE__, typeid(*this).name(), line);
+    if (mp_node.expired())
+        throw InvalidPointerError(__FILE__, typeid(this).name(), line);
 }
 
 template <typename T>
 void TreeIterator<T>::CheckNull(int line) const
 {
-    if (!mp_node)
-        throw InvalidPointerError(__FILE__, typeid(*this).name(), line, "Null pointer error");
+    if (!mp_node.lock())
+        throw InvalidPointerError(__FILE__, typeid(this).name(), line, "Null pointer error");
 }

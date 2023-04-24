@@ -10,8 +10,7 @@ template <typename T>
 class ConstTreeIterator : public BaseTreeIterator<T>
 {
 public:
-    ConstTreeIterator() = default;
-    explicit ConstTreeIterator(const IterSharedPtr<T> &node);
+    ConstTreeIterator(IterSharedPtr<T> &node, BinarySearchTree<T> &tree);
 
     ConstTreeIterator(const ConstTreeIterator<T> &other);
 
@@ -46,8 +45,8 @@ protected:
 private:
     friend BinarySearchTree<T>;
 
-    const IterWeakPtr<T> mp_tree;
-    const IterWeakPtr<T> mp_node = nullptr;
+    BinarySearchTree<T> &m_tree;
+    IterWeakPtr<T> mp_node;
 };
 
 #include "ConstTreeIterator.hpp"

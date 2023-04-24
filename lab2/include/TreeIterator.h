@@ -10,22 +10,20 @@ template <typename T>
 class TreeIterator : public BaseTreeIterator<T>
 {
 public:
-    TreeIterator() = default;
-    TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> *tree);
-    TreeIterator(const IterSharedPtr<T> &node, const std::shared_ptr<BinarySearchTree<T>> &tree);
-    explicit TreeIterator(const IterSharedPtr<T> &node);
+    TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree);
 
     TreeIterator(const TreeIterator<T> &other);
 
     TreeIterator<T> &operator=(const TreeIterator<T> &other);
 
-    T &operator*() const;
-    T *operator->() const;
+    const T &operator*() const;
 
     // const T &GetElement(int index) const;
 
     operator bool() const;
     bool Valid() const;
+
+    void SetNode(const IterSharedPtr<T> &node);
 
     TreeIterator<T> &operator++();
     TreeIterator<T> operator++(int);
@@ -41,15 +39,14 @@ public:
     bool operator!=(const TreeIterator<T> &other) const;
 
 protected:
-    // T *GetCurrentPtr() const;
     void CheckValidity(int) const;
     void CheckNull(int) const;
 
 private:
     friend BinarySearchTree<T>;
 
-    const std::weak_ptr<BinarySearchTree<T>> mp_tree;
-    const IterWeakPtr<T> mp_node;
+    const BinarySearchTree<T> &m_tree;
+    IterWeakPtr<T> mp_node;
 };
 
 #include "TreeIterator.hpp"

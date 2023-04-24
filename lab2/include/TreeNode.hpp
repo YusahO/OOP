@@ -6,14 +6,6 @@
 #include <memory>
 
 template <typename T>
-TreeNode<T>::TreeNode()
-    : mp_left(nullptr),
-      mp_right(nullptr),
-      mp_parent(nullptr)
-{
-}
-
-template <typename T>
 TreeNode<T>::TreeNode(const T &value, const BSTNodeSharedPtr<T> &parent)
     : m_value(value),
       mp_left(nullptr),
@@ -26,25 +18,30 @@ template <typename T>
 TreeNode<T>::TreeNode(const T &value)
     : m_value(value),
       mp_left(nullptr),
-      mp_right(nullptr),
-      mp_parent(nullptr)
+      mp_right(nullptr)
 {
 }
 
 template <typename T>
-T &TreeNode<T>::GetValue() const
+const T &TreeNode<T>::GetValue() const
 {
     return m_value;
 }
 
 template <typename T>
-BSTNodeSharedPtr<T> &TreeNode<T>::GetLeft() const
+BSTNodeWeakPtr<T> &TreeNode<T>::GetParent()
+{
+    return mp_parent;
+}
+
+template <typename T>
+BSTNodeSharedPtr<T> &TreeNode<T>::GetLeft()
 {
     return mp_left;
 }
 
 template <typename T>
-BSTNodeSharedPtr<T> &TreeNode<T>::GetRight() const
+BSTNodeSharedPtr<T> &TreeNode<T>::GetRight()
 {
     return mp_right;
 }
