@@ -4,6 +4,13 @@
 #include "TreeIterator.h"
 
 template <typename T>
+TreeIterator<T>::TreeIterator(const BinarySearchTree<T> &tree)
+    : mp_node(nullptr),
+      m_tree(tree)
+{
+}
+
+template <typename T>
 TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree)
     : mp_node(node),
       m_tree(tree)
@@ -144,45 +151,17 @@ inline TreeIterator<T> TreeIterator<T>::operator--(int)
 }
 
 template <typename T>
-bool TreeIterator<T>::operator<=(const TreeIterator<T> &other) const
-{
-    // CheckNull(__LINE__);
-    return mp_node <= other.mp_node;
-}
-
-template <typename T>
-bool TreeIterator<T>::operator<(const TreeIterator<T> &other) const
-{
-    // CheckNull(__LINE__);
-    return mp_node.lock().get() < other.mp_node.lock().get();
-}
-
-template <typename T>
-bool TreeIterator<T>::operator>=(const TreeIterator<T> &other) const
-{
-    // CheckNull(__LINE__);
-    return mp_node >= other.mp_node;
-}
-
-template <typename T>
-bool TreeIterator<T>::operator>(const TreeIterator<T> &other) const
-{
-    // CheckNull(__LINE__);
-    return mp_node > other.mp_node;
-}
-
-template <typename T>
 bool TreeIterator<T>::operator==(const TreeIterator<T> &other) const
 {
-    // CheckNull(__LINE__);
+    CheckValidity(__LINE__);
     return mp_node == other.mp_node;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
 {
-    // CheckNull(__LINE__);
-    return mp_node.lock() != other.mp_node.lock();
+    // CheckValidity(__LINE__);
+    return mp_node.lock().get() != other.mp_node.lock().get();
 }
 
 template <typename T>

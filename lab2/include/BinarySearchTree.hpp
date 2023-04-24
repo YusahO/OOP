@@ -94,7 +94,10 @@ template <typename T>
 template <class Iter>
 TreeIterator<T> BinarySearchTree<T>::Erase(Iter &pos)
 {
-    std::pair<BSTSharedPtr<T>, bool> nextAfterDeleted = _Erase(*pos);
+    std::pair<BSTSharedPtr<T>, bool> result = _Erase(*pos);
+    TreeIterator<T> iter(*this);
+    if (result.second)
+
     return {nextAfterDeleted.first, *this};
 }
 
@@ -103,9 +106,9 @@ template <class Iter>
 TreeIterator<T> BinarySearchTree<T>::Erase(Iter &first, Iter &last)
 {
     std::pair<BSTSharedPtr<T>, bool> result = { nullptr, true };
-    for (Iter it = first; result.second && it < last;)
+    for (Iter it = first; result.second && it != last;)
     {
-        result = _Erase(*it);
+        result = Erase;
         if (result.second)
             it.SetNode(result.first);
     }
@@ -127,7 +130,7 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
     if (!found)
         return {nullptr, false};
 
-    BSTSharedPtr<T> nextAfterDeleted;
+    BSTSharedPtr<T> deleted;
     BSTSharedPtr<T> parent = found->mp_parent.lock();
 
     if (found->mp_left == nullptr || found->mp_right == nullptr)
@@ -145,9 +148,8 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
                 parent->mp_left = newCurr;
             else
                 parent->mp_right = newCurr;
-
         }
-        nextAfterDeleted = newCurr;
+        deleted = newCurr;
     }
     else
     {
@@ -161,10 +163,10 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
 
         found->m_value = tmp->m_value;
 
-        nextAfterDeleted = found;
+        deleted = found;
     }
 
-    return {nextAfterDeleted, true};
+    return {deleted, true};
 }
 
 template <typename T>

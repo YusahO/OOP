@@ -10,6 +10,7 @@ template <typename T>
 class TreeIterator : public BaseTreeIterator<T>
 {
 public:
+    TreeIterator(const BinarySearchTree<T> &tree);
     TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree);
 
     TreeIterator(const TreeIterator<T> &other);
@@ -31,10 +32,6 @@ public:
     TreeIterator<T> &operator--();
     TreeIterator<T> operator--(int);
 
-    bool operator<=(const TreeIterator<T> &other) const;
-    bool operator<(const TreeIterator<T> &other) const;
-    bool operator>=(const TreeIterator<T> &other) const;
-    bool operator>(const TreeIterator<T> &other) const;
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
 
