@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <stack>
 #include <iostream>
 
 #include "BinarySearchTree.h"
@@ -42,8 +43,9 @@ protected:
 private:
     friend BinarySearchTree<T>;
 
-    const BinarySearchTree<T> &m_tree;
     IterWeakPtr<T> mp_node;
+    std::stack<IterWeakPtr<T>> m_stack;
+    const BinarySearchTree<T> &m_tree;
 };
 
 #include "TreeIterator.hpp"

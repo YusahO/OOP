@@ -64,14 +64,9 @@ void TreeIterator<T>::SetNode(const IterSharedPtr<T> &node)
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator++()
 {
-    CheckValidity(__LINE__);
+    // CheckValidity(__LINE__);
 
     IterSharedPtr<T> node = mp_node.lock();
-
-    if (!node)
-    {
-        return *this;
-    }
 
     if (node->GetRight())
     {
@@ -83,16 +78,15 @@ TreeIterator<T> &TreeIterator<T>::operator++()
     }
     else
     {
-        IterSharedPtr<T> parent = node->GetParent().lock();
+        BSTSharedPtr<T> parent = node->GetParent().lock();
         while (parent != nullptr && node == parent->GetRight())
         {
             node = parent;
-            parent = parent->GetParent().lock();
+            parent = parent->getParent().lock();
         }
         node = parent;
     }
 
-    mp_node = node;
     return *this;
 }
 
