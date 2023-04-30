@@ -37,15 +37,13 @@ public:
     bool operator!=(const TreeIterator<T> &other) const;
 
 protected:
-    void CheckValidity(int) const;
-    void CheckNull(int) const;
+    // void CheckValidity(int) const;
+    // void CheckNull(int) const;
+    void GetMinimum(IterSharedPtr<T> &node);
+    void GetMaximum(IterSharedPtr<T> &node);
 
 private:
-    friend BinarySearchTree<T>;
-
-    IterWeakPtr<T> mp_node;
-    std::stack<IterWeakPtr<T>> m_stack;
-    const BinarySearchTree<T> &m_tree;
+    std::stack<IterSharedPtr<T>> m_stack;
 };
 
 #include "TreeIterator.hpp"
