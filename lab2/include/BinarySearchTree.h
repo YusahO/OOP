@@ -4,7 +4,7 @@
 
 #include "TreeNode.h"
 #include "TreeIterator.h"
-#include "ConstTreeIterator.h"
+// #include "ConstTreeIterator.h"
 
 template <typename T>
 class TreeNode;
@@ -36,15 +36,15 @@ public:
     virtual TreeIterator<T> Insert(const T &value);
 
     // поиск
-    TreeIterator<T> Find(const T &value);
+    // TreeIterator<T> Find(const T &value);
     // ConstTreeIterator<T> Find(const T &value) const;
 
     // удаление
-    template <class Iter>
-    TreeIterator<T> Erase(Iter &pos);
-    template <class Iter>
-    TreeIterator<T> Erase(Iter &first, Iter &last);
-    virtual bool Erase(const T &value);
+    // template <class Iter>
+    // TreeIterator<T> Erase(Iter &pos);
+    // template <class Iter>
+    // TreeIterator<T> Erase(Iter &first, Iter &last);
+    // virtual bool Erase(const T &value);
 
     BSTSharedPtr<T> GetRoot() const;
 
@@ -58,14 +58,15 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
 
 protected:
-    std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
-    BSTSharedPtr<T> _Min(const BSTSharedPtr<T> &node);
-    BSTSharedPtr<T> _Max(const BSTSharedPtr<T> &node);
+    // std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
+    // BSTSharedPtr<T> _Min(const BSTSharedPtr<T> &node);
+    // BSTSharedPtr<T> _Max(const BSTSharedPtr<T> &node);
     BSTSharedPtr<T> _Find(const T &value);
     std::ostream &_Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const;
 
 private:
     BSTSharedPtr<T> mp_root = nullptr;
+    // static const TreeNode<T> s_sentinel;
 };
 
 template<typename P>

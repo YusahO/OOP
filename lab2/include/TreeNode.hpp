@@ -6,11 +6,10 @@
 #include <memory>
 
 template <typename T>
-TreeNode<T>::TreeNode(const T &value, const BSTNodeSharedPtr<T> &parent)
-    : m_value(value),
-      mp_left(nullptr),
-      mp_right(nullptr),
-      mp_parent(parent)
+TreeNode<T>::TreeNode()
+    : m_value(0),
+      mp_left(0),
+      mp_right(0)
 {
 }
 
@@ -19,6 +18,14 @@ TreeNode<T>::TreeNode(const T &value)
     : m_value(value),
       mp_left(nullptr),
       mp_right(nullptr)
+{
+}
+
+template <typename T>
+TreeNode<T>::TreeNode(const T &value, const BSTNodeSharedPtr<T> &left, const BSTNodeSharedPtr<T> &right)
+    : m_value(value),
+      mp_left(left),
+      mp_right(right)
 {
 }
 

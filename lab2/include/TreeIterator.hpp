@@ -4,33 +4,42 @@
 #include "TreeIterator.h"
 
 template <typename T>
-TreeIterator<T>::TreeIterator(const BinarySearchTree<T> &tree)
-    : mp_node(nullptr),
-    m_tree(tree)
+static void print_stack(std::stack<T> st)
+{
+    std::cout << "stack: ";
+    while (!st.empty())
+    {
+        std::cout << st.top().get() << " ";
+        st.pop();
+    }
+    std::cout << "\n";
+}
+
+template <typename T>
+TreeIterator<T>::TreeIterator()
+    : m_stack()
 {
 }
 
 template <typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree)
-    : mp_node(node),
-    m_tree(tree)
+TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &root)
 {
+    IterSharedPtr<T> node = root;
+    Leftmost(node);
 }
 
 template <typename T>
 TreeIterator<T>::TreeIterator(const TreeIterator<T> &other)
-    : mp_node(other.mp_node),
-    m_tree(other.m_tree)
+    : m_stack(other.m_stack)
 {
 }
 
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
 {
-    other.CheckValidity(__LINE__);
+    // other.CheckValidity(__LINE__);
 
-    mp_node = other.mp_node;
-    m_tree = other.m_tree;
+    m_stack = other.m_stack;
 
     return *this;
 }
@@ -38,9 +47,9 @@ TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
 template <typename T>
 const T &TreeIterator<T>::operator*() const
 {
-    CheckValidity(__LINE__);
-    CheckNull(__LINE__);
-    return mp_node.lock()->GetValue();
+    // CheckValidity(__LINE__);
+    // CheckNull(__LINE__);
+    return m_stack.top()->GetValue();
 }
 
 template <typename T>
@@ -52,56 +61,52 @@ TreeIterator<T>::operator bool() const
 template <typename T>
 bool TreeIterator<T>::Valid() const
 {
-    return mp_node.lock() != nullptr && !mp_node.expired();
+    IterSharedPtr<T> &node = m_stack.top();
+    return node != nullptr && !node.expired();
 }
 
-template <typename T>
-void TreeIterator<T>::SetNode(const IterSharedPtr<T> &node)
-{
-    mp_node = node;
-}
+// template <typename T>
+// void TreeIterator<T>::SetNode(const IterSharedPtr<T> &node)
+// {
+//     m_stack.top() = node;
+// }
 
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator++()
 {
-    // CheckValidity(__LINE__);
+    // if (m_stack.empty())
+    // {
+    //     throw InvalidIteratorError(__FILE__, typeid(*this).name(), __LINE__, "Incrementing and end() iterator");
+    // }
 
     if (m_stack.top() == nullptr)
     {
+        std::cout << "УЖЕ ПИСЮНЫ!\n";
         return *this;
     }
 
-    BSTSharedPtr<T> node = m_stack.top();
-    if (node->GetRight())
+    if (m_stack.top()->GetRight())
     {
-        node = node->GetRight();
-        m_stack.push(node);
-        while (node->GetLeft())
-        {
-            node = node->GetLeft();
-            m_stack.push(node);
-        }
+        IterSharedPtr<T> node = m_stack.top()->GetRight();
+        Leftmost(node);
     }
     else
     {
+        IterSharedPtr<T> node = m_stack.top();
         m_stack.pop();
-        BSTSharedPtr<T> parent = m_stack.top();
-        while (!m_stack.empty() && node == parent->GetRight())
+        while (!m_stack.empty() && m_stack.top()->GetRight() == node)
         {
-            node = parent;
+            node = m_stack.top();
             m_stack.pop();
-            if (!m_stack.empty())
+            if (m_stack.size() == 0)
             {
-                parent = m_stack.top();
-            }
-            else
-            {
-                GetMaximum(parent);
+                Rightmost(node);
                 m_stack.push(nullptr);
+                return *this;
             }
         }
-        node = parent;
     }
+
     return *this;
 }
 
@@ -109,45 +114,46 @@ template <typename T>
 TreeIterator<T> TreeIterator<T>::operator++(int)
 {
     auto saved = *this;
-    operator++();
+    ++(*this);
     return saved;
 }
 
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator--()
 {
+    // if (m_stack.empty())
+    // {
+    //     return *this;
+    // }
+
     if (m_stack.top() == nullptr)
     {
         m_stack.pop();
+        return *this;
     }
 
-    BSTSharedPtr<T> node = m_stack.top();
-    if (node->GetLeft())
+    if (m_stack.top()->GetLeft())
     {
-        node = node->GetLeft();
-        m_stack.push(node);
-        while (node->GetRight())
-        {
-            node = node->GetRight();
-            m_stack.push(node);
-        }
+        IterSharedPtr<T> node = m_stack.top()->GetLeft();
+        Rightmost(node);
     }
     else
     {
+        IterSharedPtr<T> node = m_stack.top();
         m_stack.pop();
-        BSTSharedPtr<T> parent = m_stack.top();
-        while (!m_stack.empty() && node == parent->getLeft())
+        while (!m_stack.empty() && m_stack.top()->GetLeft() == node)
         {
-            node = parent;
+            node = m_stack.top();
             m_stack.pop();
-            if (m_stack.empty())
+            if (m_stack.size() == 0)
             {
-                GetMaximum(parent);
+                std::cout << node->GetValue() << "\n";
+                Leftmost(node);
+                return *this;
             }
-            parent = m_stack.top();
         }
-        node = parent;
     }
+
     return *this;
 }
 
@@ -155,7 +161,7 @@ template <typename T>
 TreeIterator<T> TreeIterator<T>::operator--(int)
 {
     auto saved = *this;
-    operator--();
+    --(*this);
     return saved;
 }
 
@@ -163,14 +169,14 @@ template <typename T>
 bool TreeIterator<T>::operator==(const TreeIterator<T> &other) const
 {
     // CheckValidity(__LINE__);
-    return mp_node == other.mp_node;
+    return m_stack == other.m_stack;
 }
 
 template <typename T>
 bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
 {
     // CheckValidity(__LINE__);
-    return mp_node.get() != other.mp_node.get();
+    return m_stack != other.m_stack;
 }
 
 // template <typename T>
@@ -187,22 +193,24 @@ bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
 //         throw InvalidPointerError(__FILE__, typeid(this).name(), line, "Null pointer error");
 // }
 
-template<typename T>
-void TreeIterator<T>::GetMinimum(IterSharedPtr<T> &node)
+template <typename T>
+void TreeIterator<T>::Leftmost(const IterSharedPtr<T> &node)
 {
-    while (node)
+    IterSharedPtr<T> n = node;
+    while (n)
     {
-        m_stack.push(node);
-        node = node->GetLeft();
+        m_stack.push(n);
+        n = n->GetLeft();
     }
 }
 
-template<typename T>
-void TreeIterator<T>::GetMaximum(IterSharedPtr<T> &node)
+template <typename T>
+void TreeIterator<T>::Rightmost(const IterSharedPtr<T> &node)
 {
-    while (node)
+    IterSharedPtr<T> n = node;
+    while (n)
     {
-        m_stack.push(node);
-        node = node->GetRight();
+        m_stack.push(n);
+        n = n->GetRight();
     }
 }

@@ -11,8 +11,8 @@ template <typename T>
 class TreeIterator : public BaseTreeIterator<T>
 {
 public:
-    TreeIterator(const BinarySearchTree<T> &tree);
-    TreeIterator(const IterSharedPtr<T> &node, const BinarySearchTree<T> &tree);
+    TreeIterator();
+    explicit TreeIterator(const IterSharedPtr<T> &root);
 
     TreeIterator(const TreeIterator<T> &other);
 
@@ -25,7 +25,7 @@ public:
     operator bool() const;
     bool Valid() const;
 
-    void SetNode(const IterSharedPtr<T> &node);
+    // void SetNode(const IterSharedPtr<T> &node);
 
     TreeIterator<T> &operator++();
     TreeIterator<T> operator++(int);
@@ -36,14 +36,16 @@ public:
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
 
+    void Leftmost(const IterSharedPtr<T> &node);
+    void Rightmost(const IterSharedPtr<T> &node);
+
 protected:
     // void CheckValidity(int) const;
     // void CheckNull(int) const;
-    void GetMinimum(IterSharedPtr<T> &node);
-    void GetMaximum(IterSharedPtr<T> &node);
 
 private:
     std::stack<IterSharedPtr<T>> m_stack;
+    
 };
 
 #include "TreeIterator.hpp"
