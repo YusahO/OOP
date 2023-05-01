@@ -1,20 +1,11 @@
 #pragma once
 
-#include <memory>
-
-#include "TreeNode.h"
+#include "common.h"
 #include "TreeIterator.h"
 // #include "ConstTreeIterator.h"
 
 template <typename T>
 class TreeNode;
-
-
-template <typename T>
-using BSTWeakPtr = std::weak_ptr<TreeNode<T>>;
-
-template <typename T>
-using BSTSharedPtr = std::shared_ptr<TreeNode<T>>;
 
 template <typename T>
 class BinarySearchTree
@@ -36,7 +27,7 @@ public:
     virtual TreeIterator<T> Insert(const T &value);
 
     // поиск
-    // TreeIterator<T> Find(const T &value);
+    TreeIterator<T> Find(const T &value);
     // ConstTreeIterator<T> Find(const T &value) const;
 
     // удаление
@@ -62,7 +53,7 @@ protected:
     // BSTSharedPtr<T> _Min(const BSTSharedPtr<T> &node);
     // BSTSharedPtr<T> _Max(const BSTSharedPtr<T> &node);
     BSTSharedPtr<T> _Find(const T &value);
-    std::ostream &_Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const;
+    std::ostream &_Inorder(const BSTSharedPtr<T> &node, std::ostream &os) const;
 
 private:
     BSTSharedPtr<T> mp_root = nullptr;

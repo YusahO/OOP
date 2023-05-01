@@ -22,9 +22,9 @@ TreeIterator<T>::TreeIterator()
 }
 
 template <typename T>
-TreeIterator<T>::TreeIterator(const IterSharedPtr<T> &root)
+TreeIterator<T>::TreeIterator(const BSTSharedPtr<T> &root)
 {
-    IterSharedPtr<T> node = root;
+    BSTSharedPtr<T> node = root;
     Leftmost(node);
 }
 
@@ -61,12 +61,12 @@ TreeIterator<T>::operator bool() const
 template <typename T>
 bool TreeIterator<T>::Valid() const
 {
-    IterSharedPtr<T> &node = m_stack.top();
+    BSTSharedPtr<T> &node = m_stack.top();
     return node != nullptr && !node.expired();
 }
 
 // template <typename T>
-// void TreeIterator<T>::SetNode(const IterSharedPtr<T> &node)
+// void TreeIterator<T>::SetNode(const BSTSharedPtr<T> &node)
 // {
 //     m_stack.top() = node;
 // }
@@ -81,18 +81,17 @@ TreeIterator<T> &TreeIterator<T>::operator++()
 
     if (m_stack.top() == nullptr)
     {
-        std::cout << "УЖЕ ПИСЮНЫ!\n";
         return *this;
     }
 
     if (m_stack.top()->GetRight())
     {
-        IterSharedPtr<T> node = m_stack.top()->GetRight();
+        BSTSharedPtr<T> node = m_stack.top()->GetRight();
         Leftmost(node);
     }
     else
     {
-        IterSharedPtr<T> node = m_stack.top();
+        BSTSharedPtr<T> node = m_stack.top();
         m_stack.pop();
         while (!m_stack.empty() && m_stack.top()->GetRight() == node)
         {
@@ -134,12 +133,12 @@ TreeIterator<T> &TreeIterator<T>::operator--()
 
     if (m_stack.top()->GetLeft())
     {
-        IterSharedPtr<T> node = m_stack.top()->GetLeft();
+        BSTSharedPtr<T> node = m_stack.top()->GetLeft();
         Rightmost(node);
     }
     else
     {
-        IterSharedPtr<T> node = m_stack.top();
+        BSTSharedPtr<T> node = m_stack.top();
         m_stack.pop();
         while (!m_stack.empty() && m_stack.top()->GetLeft() == node)
         {
@@ -194,9 +193,9 @@ bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
 // }
 
 template <typename T>
-void TreeIterator<T>::Leftmost(const IterSharedPtr<T> &node)
+void TreeIterator<T>::Leftmost(const BSTSharedPtr<T> &node)
 {
-    IterSharedPtr<T> n = node;
+    BSTSharedPtr<T> n = node;
     while (n)
     {
         m_stack.push(n);
@@ -205,9 +204,9 @@ void TreeIterator<T>::Leftmost(const IterSharedPtr<T> &node)
 }
 
 template <typename T>
-void TreeIterator<T>::Rightmost(const IterSharedPtr<T> &node)
+void TreeIterator<T>::Rightmost(const BSTSharedPtr<T> &node)
 {
-    IterSharedPtr<T> n = node;
+    BSTSharedPtr<T> n = node;
     while (n)
     {
         m_stack.push(n);

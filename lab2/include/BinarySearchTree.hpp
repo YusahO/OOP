@@ -15,7 +15,7 @@ BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
 template <typename T>
 TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 {
-    BSTNodeSharedPtr<T> newNode = std::make_shared<TreeNode<T>>(value);
+    BSTSharedPtr<T> newNode = std::make_shared<TreeNode<T>>(value);
 
     if (!mp_root)
     {
@@ -30,13 +30,13 @@ TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
     while (curr)
     {
         parent = curr;
-        if (curr->m_value < value)
+        if (curr->GetValue() < value)
         {
-            curr = curr->mp_right;
+            curr = curr->GetRight();
         }
-        else if (curr->m_value > value)
+        else if (curr->GetValue() > value)
         {
-            curr = curr->mp_left;
+            curr = curr->GetLeft();
         }
         else
         {
@@ -44,24 +44,29 @@ TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
         }
     }
 
-    if (parent->m_value < value)
+    if (parent->GetValue() < value)
     {
-        parent->mp_right = newNode;
+        parent->GetRight() = newNode;
     }
     else
     {
-        parent->mp_left = newNode;
+        parent->GetLeft() = newNode;
     }
-    // newNode->SetParent(parent);
 
-    TreeIterator<T> iter(mp_root);
-    return iter;
+    return TreeIterator<T>(mp_root);;
 }
 
 template <typename T>
 TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
 {
     return Insert(std::move(value));
+}
+
+template<typename T>
+TreeIterator<T> BinarySearchTree<T>::Find(const T &value)
+{
+    BSTSharedPtr<T> found = _Find(value);
+    
 }
 
 // template <typename T>
@@ -211,7 +216,7 @@ BSTSharedPtr<T> BinarySearchTree<T>::_Find(const T &value)
 }
 
 template <typename T>
-std::ostream &BinarySearchTree<T>::_Inorder(const BSTNodeSharedPtr<T> &node, std::ostream &os) const
+std::ostream &BinarySearchTree<T>::_Inorder(const BSTSharedPtr<T> &node, std::ostream &os) const
 {
     if (node->mp_left)
     {

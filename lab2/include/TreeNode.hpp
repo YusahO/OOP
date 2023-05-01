@@ -22,7 +22,7 @@ TreeNode<T>::TreeNode(const T &value)
 }
 
 template <typename T>
-TreeNode<T>::TreeNode(const T &value, const BSTNodeSharedPtr<T> &left, const BSTNodeSharedPtr<T> &right)
+TreeNode<T>::TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTSharedPtr<T> &right)
     : m_value(value),
       mp_left(left),
       mp_right(right)
@@ -36,87 +36,37 @@ const T &TreeNode<T>::GetValue() const
 }
 
 template <typename T>
-BSTNodeWeakPtr<T> &TreeNode<T>::GetParent()
-{
-    return mp_parent;
-}
-
-template <typename T>
-BSTNodeSharedPtr<T> &TreeNode<T>::GetLeft()
+BSTSharedPtr<T> &TreeNode<T>::GetLeft()
 {
     return mp_left;
 }
 
 template <typename T>
-BSTNodeSharedPtr<T> &TreeNode<T>::GetRight()
+BSTSharedPtr<T> &TreeNode<T>::GetRight()
 {
     return mp_right;
 }
 
 template <typename T>
-void TreeNode<T>::SetLeft(const BSTNodeSharedPtr<T> &node)
+void TreeNode<T>::SetLeft(const BSTSharedPtr<T> &node)
 {
     mp_left = node;
 }
 
 template <typename T>
-void TreeNode<T>::SetLeft(BSTNodeSharedPtr<T> &&node)
+void TreeNode<T>::SetLeft(BSTSharedPtr<T> &&node)
 {
     mp_left = node;
 }
 
 template <typename T>
-void TreeNode<T>::SetRight(const BSTNodeSharedPtr<T> &node)
+void TreeNode<T>::SetRight(const BSTSharedPtr<T> &node)
 {
     mp_right = node;
 }
 
 template <typename T>
-void TreeNode<T>::SetRight(BSTNodeSharedPtr<T> &&node)
+void TreeNode<T>::SetRight(BSTSharedPtr<T> &&node)
 {
     mp_right = node;
-}
-
-template <typename T>
-void TreeNode<T>::SetParent(const BSTNodeSharedPtr<T> &node)
-{
-    mp_parent = node;
-}
-
-template <typename T>
-void TreeNode<T>::SetParent(BSTNodeSharedPtr<T> &&node)
-{
-    mp_parent = node;
-}
-
-template <typename T>
-BSTNodeSharedPtr<T> TreeNode<T>::GetMinimum()
-{
-    BSTNodeSharedPtr<T> minNode = std::make_shared<TreeNode<T>>(this);
-    while (minNode->mp_left)
-        minNode = minNode->mp_left;
-    return minNode;
-}
-
-template <typename T>
-const BSTNodeSharedPtr<T> TreeNode<T>::GetMinimum() const
-{
-    auto minNode = GetMinimum();
-    return const_cast<BSTNodeSharedPtr<T>>(minNode);
-}
-
-template <typename T>
-BSTNodeSharedPtr<T> TreeNode<T>::GetMaximum()
-{
-    BSTNodeSharedPtr<T> maxNode = std::make_shared<TreeNode<T>>(this);
-    while (maxNode->mp_right)
-        maxNode = maxNode->mp_right;
-    return maxNode;
-}
-
-template <typename T>
-const BSTNodeSharedPtr<T> TreeNode<T>::GetMaximum() const
-{
-    auto maxNode = GetMaximum();
-    return const_cast<BSTNodeSharedPtr<T>>(maxNode);
 }
