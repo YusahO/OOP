@@ -30,6 +30,12 @@ TreeNode<T>::TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTShar
 }
 
 template <typename T>
+T &TreeNode<T>::GetValue()
+{
+    return m_value;
+}
+
+template <typename T>
 const T &TreeNode<T>::GetValue() const
 {
     return m_value;

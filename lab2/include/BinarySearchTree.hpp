@@ -19,7 +19,6 @@ TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 
     if (!mp_root)
     {
-        std::cout << "hello\n";
         mp_root = newNode;
         return TreeIterator<T>(mp_root);
     }
@@ -53,7 +52,7 @@ TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
         parent->GetLeft() = newNode;
     }
 
-    return TreeIterator<T>(mp_root);;
+    return TreeIterator<T>(newNode);
 }
 
 template <typename T>
@@ -62,19 +61,12 @@ TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
     return Insert(std::move(value));
 }
 
-template<typename T>
+template <typename T>
 TreeIterator<T> BinarySearchTree<T>::Find(const T &value)
 {
     BSTSharedPtr<T> found = _Find(value);
-    
+    return {found, mp_root};
 }
-
-// template <typename T>
-// TreeIterator<T> BinarySearchTree<T>::Find(const T &value)
-// {
-//     BSTSharedPtr<T> found = _Find(value);
-//     return {found, *this};
-// }
 
 template <typename T>
 BSTSharedPtr<T> BinarySearchTree<T>::GetRoot() const
@@ -83,8 +75,15 @@ BSTSharedPtr<T> BinarySearchTree<T>::GetRoot() const
 }
 
 template <typename T>
+void BinarySearchTree<T>::Clean() noexcept
+{
+    mp_root = nullptr;
+}
+
+template <typename T>
 TreeIterator<T> BinarySearchTree<T>::begin()
 {
+    std::cout << mp_root << "\n";
     return TreeIterator<T>(mp_root);
 }
 
@@ -96,120 +95,114 @@ TreeIterator<T> BinarySearchTree<T>::end()
     return ++iter;
 }
 
-// template <typename T>
-// template <class Iter>
-// TreeIterator<T> BinarySearchTree<T>::Erase(Iter &pos)
-// {
-//     std::pair<BSTSharedPtr<T>, bool> result = _Erase(*pos);
-//     TreeIterator<T> iter(*this);
-//     if (result.second)
+template <typename T>
+template <class Iter>
+TreeIterator<T> BinarySearchTree<T>::Erase(Iter &pos)
+{
+    std::pair<BSTSharedPtr<T>, bool> result = _Erase(*pos);
+    return {result.first, mp_root};
+}
 
-//     return {*this};
-// }
+template <typename T>
+template <class Iter>
+TreeIterator<T> BinarySearchTree<T>::Erase(Iter &first, Iter &last)
+{
+    Iter it = first;
+    while (it != last)
+    {
+        std::cout << it << " " << last << "\n";
+        std::cout << mp_root->GetValue() << " tree: " << *this << std::endl;
+        it = Erase(it);
+        last.Recalculate(mp_root);
+    }
 
-// template <typename T>
-// template <class Iter>
-// TreeIterator<T> BinarySearchTree<T>::Erase(Iter &first, Iter &last)
-// {
-//     std::pair<BSTSharedPtr<T>, bool> result = { nullptr, true };
-//     for (Iter it = first; result.second && it != last;)
-//     {
-//         result = Erase;
-//         if (result.second)
-//             it.SetNode(result.first);
-//     }
-//     return {result.first, *this};
-// }
+    return it;
+}
 
-// template <typename T>
-// bool BinarySearchTree<T>::Erase(const T &value)
-// {
-//     std::pair<BSTSharedPtr<T>, bool> result = _Erase(value);
-//     return result.second;
-// }
+template <typename T>
+bool BinarySearchTree<T>::Erase(const T &value)
+{
+    std::pair<BSTSharedPtr<T>, bool> result = _Erase(value);
+    return result.second;
+}
 
-// template <typename T>
-// std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
-// {
-//     BSTSharedPtr<T> found = _Find(value);
+template <typename T>
+std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
+{
+    BSTSharedPtr<T> found = mp_root, parent;
+    while (found && found->GetValue() != value)
+    {
+        parent = found;
+        if (found->GetValue() < value)
+            found = found->GetRight();
+        else
+            found = found->GetLeft();
+    }
 
-//     if (!found)
-//         return {nullptr, false};
+    if (!found)
+        return {nullptr, false};
 
-//     BSTSharedPtr<T> deleted;
-//     BSTSharedPtr<T> parent = found->mp_parent.lock();
+    BSTSharedPtr<T> nextAfterDeleted;
 
-//     if (found->mp_left == nullptr || found->mp_right == nullptr)
-//     {
-//         BSTSharedPtr<T> newCurr;
+    if (found->GetLeft() == nullptr || found->GetRight() == nullptr)
+    {
+        BSTSharedPtr<T> newCurr;
 
-//         if (found->mp_left == nullptr)
-//             newCurr = found->mp_right;
-//         else
-//             newCurr = found->mp_left;
+        if (found->GetLeft() == nullptr)
+            newCurr = found->GetRight();
+        else
+            newCurr = found->GetLeft();
 
-//         if (parent != nullptr)
-//         {
-//             if (found == parent->mp_left)
-//                 parent->mp_left = newCurr;
-//             else
-//                 parent->mp_right = newCurr;
-//         }
-//         deleted = newCurr;
-//     }
-//     else
-//     {
-//         BSTSharedPtr<T> tmp = _Min(found->mp_right);
-//         parent = tmp->mp_parent.lock();
+        if (parent == nullptr)
+        {
+            mp_root = newCurr;
+            nextAfterDeleted = nullptr;
+        }
+        else
+        {
+            if (found == parent->GetLeft())
+                parent->GetLeft() = newCurr;
+            else
+                parent->GetRight() = newCurr;
+            nextAfterDeleted = parent;
+        }
+    }
+    else
+    {
+        BSTSharedPtr<T> tmp = found->GetRight();
+        parent.reset();
+        while (tmp->GetLeft())
+        {
+            parent = tmp;
+            tmp = tmp->GetLeft();
+        }
 
-//         if (parent != nullptr)
-//             parent->mp_left = tmp->mp_right;
-//         else
-//             found->mp_right = tmp->mp_right;
+        if (parent != nullptr)
+            parent->GetLeft() = tmp->GetRight();
+        else
+            found->GetRight() = tmp->GetRight();
 
-//         found->m_value = tmp->m_value;
+        found->GetValue() = tmp->GetValue();
 
-//         deleted = found;
-//     }
+        nextAfterDeleted = found;
+    }
 
-//     return {deleted, true};
-// }
-
-// template <typename T>
-// BSTSharedPtr<T> BinarySearchTree<T>::_Min(const BSTSharedPtr<T> &node)
-// {
-//     auto tmp = node;
-//     while (tmp->mp_left)
-//     {
-//         tmp = tmp->mp_left;
-//     }
-//     return tmp;
-// }
-
-// template <typename T>
-// BSTSharedPtr<T> BinarySearchTree<T>::_Max(const BSTSharedPtr<T> &node)
-// {
-//     auto tmp = node;
-//     while (tmp->mp_right)
-//     {
-//         tmp = tmp->mp_right;
-//     }
-//     return tmp;
-// }
+    return {nextAfterDeleted, true};
+}
 
 template <typename T>
 BSTSharedPtr<T> BinarySearchTree<T>::_Find(const T &value)
 {
     BSTSharedPtr<T> node = mp_root;
-    while (node && node->m_value != value)
+    while (node && node->GetValue() != value)
     {
-        if (node->m_value < value)
+        if (node->GetValue() < value)
         {
-            node = node->mp_right;
+            node = node->GetRight();
         }
         else
         {
-            node = node->mp_left;
+            node = node->GetLeft();
         }
     }
     return node;
@@ -218,16 +211,16 @@ BSTSharedPtr<T> BinarySearchTree<T>::_Find(const T &value)
 template <typename T>
 std::ostream &BinarySearchTree<T>::_Inorder(const BSTSharedPtr<T> &node, std::ostream &os) const
 {
-    if (node->mp_left)
+    if (node->GetLeft())
     {
-        _Inorder(node->mp_left, os);
+        _Inorder(node->GetLeft(), os);
     }
 
-    os << node->m_value << " ";
+    os << node->GetValue() << " ";
 
-    if (node->mp_right != nullptr)
+    if (node->GetRight() != nullptr)
     {
-        _Inorder(node->mp_right, os);
+        _Inorder(node->GetRight(), os);
     }
     return os;
 }

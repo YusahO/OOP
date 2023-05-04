@@ -1,10 +1,6 @@
 #pragma once
 
 #include "common.h"
-#include "BinarySearchTree.h"
-
-template <typename T>
-class BinarySearchTree;
 
 template <typename T>
 class TreeNode
@@ -16,6 +12,7 @@ public:
 
     virtual ~TreeNode() = default;
 
+    T &GetValue();
     const T &GetValue() const;
     BSTSharedPtr<T> &GetLeft();
     BSTSharedPtr<T> &GetRight();

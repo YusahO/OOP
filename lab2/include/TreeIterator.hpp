@@ -4,18 +4,6 @@
 #include "TreeIterator.h"
 
 template <typename T>
-static void print_stack(std::stack<T> st)
-{
-    std::cout << "stack: ";
-    while (!st.empty())
-    {
-        std::cout << st.top().get() << " ";
-        st.pop();
-    }
-    std::cout << "\n";
-}
-
-template <typename T>
 TreeIterator<T>::TreeIterator()
     : m_stack()
 {
@@ -24,8 +12,21 @@ TreeIterator<T>::TreeIterator()
 template <typename T>
 TreeIterator<T>::TreeIterator(const BSTSharedPtr<T> &root)
 {
-    BSTSharedPtr<T> node = root;
-    Leftmost(node);
+    Leftmost(root);
+}
+
+template <typename T>
+TreeIterator<T>::TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
+{
+    if (node != nullptr)
+    {
+        _Search(node, root);
+    }
+    else
+    {
+        Rightmost(root);
+        m_stack.emplace(node);
+    }
 }
 
 template <typename T>
@@ -61,15 +62,9 @@ TreeIterator<T>::operator bool() const
 template <typename T>
 bool TreeIterator<T>::Valid() const
 {
-    BSTSharedPtr<T> &node = m_stack.top();
-    return node != nullptr && !node.expired();
+    const BSTSharedPtr<T> &node = m_stack.top();
+    return node != nullptr;
 }
-
-// template <typename T>
-// void TreeIterator<T>::SetNode(const BSTSharedPtr<T> &node)
-// {
-//     m_stack.top() = node;
-// }
 
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator++()
@@ -79,7 +74,7 @@ TreeIterator<T> &TreeIterator<T>::operator++()
     //     throw InvalidIteratorError(__FILE__, typeid(*this).name(), __LINE__, "Incrementing and end() iterator");
     // }
 
-    if (m_stack.top() == nullptr)
+    if (m_stack.empty() || m_stack.top() == nullptr)
     {
         return *this;
     }
@@ -93,16 +88,21 @@ TreeIterator<T> &TreeIterator<T>::operator++()
     {
         BSTSharedPtr<T> node = m_stack.top();
         m_stack.pop();
-        while (!m_stack.empty() && m_stack.top()->GetRight() == node)
+
+        bool stackNotEmpty = !m_stack.empty();
+        while (stackNotEmpty && m_stack.top()->GetRight() == node)
         {
             node = m_stack.top();
             m_stack.pop();
-            if (m_stack.size() == 0)
-            {
-                Rightmost(node);
-                m_stack.push(nullptr);
-                return *this;
-            }
+
+            if (m_stack.empty())
+                stackNotEmpty = false;
+        }
+
+        if (!stackNotEmpty)
+        {
+            Rightmost(node);
+            m_stack.emplace(nullptr);
         }
     }
 
@@ -140,15 +140,15 @@ TreeIterator<T> &TreeIterator<T>::operator--()
     {
         BSTSharedPtr<T> node = m_stack.top();
         m_stack.pop();
-        while (!m_stack.empty() && m_stack.top()->GetLeft() == node)
+
+        bool stackNotEmpty = !m_stack.empty();
+        while (stackNotEmpty && m_stack.top()->GetLeft() == node)
         {
             node = m_stack.top();
             m_stack.pop();
-            if (m_stack.size() == 0)
+            if (m_stack.empty())
             {
-                std::cout << node->GetValue() << "\n";
                 Leftmost(node);
-                return *this;
             }
         }
     }
@@ -178,6 +178,30 @@ bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
     return m_stack != other.m_stack;
 }
 
+template <typename T>
+void TreeIterator<T>::Recalculate(const BSTSharedPtr<T> &root)
+{
+    BSTSharedPtr<T> top = m_stack.top();
+    Reset();
+    // std::cout << "5 nigga: " << top->GetValue();
+    if (top != nullptr)
+    {
+        _Search(top, root);
+    }
+    else
+    {
+        Rightmost(root);
+        m_stack.emplace(top);
+    }
+}
+
+template <typename T>
+void TreeIterator<T>::Reset()
+{
+    while (!m_stack.empty())
+        m_stack.pop();
+}
+
 // template <typename T>
 // void TreeIterator<T>::CheckValidity(int line) const
 // {
@@ -198,7 +222,7 @@ void TreeIterator<T>::Leftmost(const BSTSharedPtr<T> &node)
     BSTSharedPtr<T> n = node;
     while (n)
     {
-        m_stack.push(n);
+        m_stack.emplace(n);
         n = n->GetLeft();
     }
 }
@@ -209,7 +233,24 @@ void TreeIterator<T>::Rightmost(const BSTSharedPtr<T> &node)
     BSTSharedPtr<T> n = node;
     while (n)
     {
-        m_stack.push(n);
+        m_stack.emplace(n);
         n = n->GetRight();
     }
+}
+
+template <typename T>
+void TreeIterator<T>::_Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
+{
+    // std::cout  << "finding: " << node->GetValue() << " root: " << root->GetValue() << "\n";
+    BSTSharedPtr<T> found = root;
+    while (found && found->GetValue() != node->GetValue())
+    {
+        std::cout << "nigga...\n";
+        m_stack.emplace(found);
+        if (found->GetValue() < node->GetValue())
+            found = found->GetRight();
+        else
+            found = found->GetLeft();
+    }
+    m_stack.emplace(found);
 }
