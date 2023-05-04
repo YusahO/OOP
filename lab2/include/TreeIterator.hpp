@@ -46,10 +46,9 @@ TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
 }
 
 template <typename T>
-const T &TreeIterator<T>::operator*() const
+T &TreeIterator<T>::operator*()
 {
-    // CheckValidity(__LINE__);
-    // CheckNull(__LINE__);
+    CheckValidity(__LINE__);
     return m_stack.top()->GetValue();
 }
 
@@ -62,17 +61,13 @@ TreeIterator<T>::operator bool() const
 template <typename T>
 bool TreeIterator<T>::Valid() const
 {
-    const BSTSharedPtr<T> &node = m_stack.top();
-    return node != nullptr;
+    return !m_stack.empty() && m_stack.top();
 }
 
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator++()
 {
-    // if (m_stack.empty())
-    // {
-    //     throw InvalidIteratorError(__FILE__, typeid(*this).name(), __LINE__, "Incrementing and end() iterator");
-    // }
+    CheckValidity(__LINE__);
 
     if (m_stack.empty() || m_stack.top() == nullptr)
     {
@@ -120,10 +115,7 @@ TreeIterator<T> TreeIterator<T>::operator++(int)
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator--()
 {
-    // if (m_stack.empty())
-    // {
-    //     return *this;
-    // }
+    CheckValidity(__LINE__);
 
     if (m_stack.top() == nullptr)
     {
@@ -183,7 +175,7 @@ void TreeIterator<T>::Recalculate(const BSTSharedPtr<T> &root)
 {
     BSTSharedPtr<T> top = m_stack.top();
     Reset();
-    // std::cout << "5 nigga: " << top->GetValue();
+    
     if (top != nullptr)
     {
         _Search(top, root);
@@ -202,19 +194,12 @@ void TreeIterator<T>::Reset()
         m_stack.pop();
 }
 
-// template <typename T>
-// void TreeIterator<T>::CheckValidity(int line) const
-// {
-//     if (mp_node.expired())
-//         throw InvalidPointerError(__FILE__, typeid(this).name(), line);
-// }
-
-// template <typename T>
-// void TreeIterator<T>::CheckNull(int line) const
-// {
-//     if (!mp_node.lock())
-//         throw InvalidPointerError(__FILE__, typeid(this).name(), line, "Null pointer error");
-// }
+template <typename T>
+void TreeIterator<T>::CheckValidity(int line) const
+{
+    if (Valid())
+        throw InvalidPointerError(__FILE__, typeid(this).name(), line);
+}
 
 template <typename T>
 void TreeIterator<T>::Leftmost(const BSTSharedPtr<T> &node)
@@ -241,11 +226,9 @@ void TreeIterator<T>::Rightmost(const BSTSharedPtr<T> &node)
 template <typename T>
 void TreeIterator<T>::_Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
 {
-    // std::cout  << "finding: " << node->GetValue() << " root: " << root->GetValue() << "\n";
     BSTSharedPtr<T> found = root;
     while (found && found->GetValue() != node->GetValue())
     {
-        std::cout << "nigga...\n";
         m_stack.emplace(found);
         if (found->GetValue() < node->GetValue())
             found = found->GetRight();

@@ -1,15 +1,25 @@
 #pragma once
 
+namespace MyBST {
+
 #include "common.h"
 #include "TreeIterator.h"
 // #include "ConstTreeIterator.h"
 
 template <typename T>
-class TreeNode;
+concept Comparable = std::totally_ordered<T>;
+
+#include "TreeNode.h"
 
 template <typename T>
+class TreeNode;
+
+template <Comparable T>
 class BinarySearchTree
 {
+public:
+    friend TreeIterator<T>;
+
 public:
     BinarySearchTree() = default;
     explicit BinarySearchTree(std::initializer_list<T> lst);
@@ -70,3 +80,4 @@ std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree)
 }
 
 #include "BinarySearchTree.hpp"
+}

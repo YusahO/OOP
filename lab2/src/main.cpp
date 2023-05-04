@@ -16,7 +16,7 @@ int main()
     //     std::cout << p << " ";
     // std::cout << "\n";
 
-    BinarySearchTree<int> tree{4, 2, 5, 1, 3};
+    MyBST::BinarySearchTree<int> tree{4, 2, 5, 1, 3};
     // std::cout << "Inserted " << *(tree.Insert(8)) << "\n";
 
     auto iter = tree.begin();

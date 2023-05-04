@@ -8,11 +8,11 @@
 #include "BaseTreeIterator.h"
 
 template <typename T>
-class BinarySearchTree;
-
-template <typename T>
 class TreeIterator : public BaseTreeIterator<T>
 {
+public:
+    using IteratorCategory = std::bidirectional_iterator_tag;
+
 public:
     TreeIterator();
     explicit TreeIterator(const BSTSharedPtr<T> &root);
@@ -22,9 +22,7 @@ public:
 
     TreeIterator<T> &operator=(const TreeIterator<T> &other);
 
-    const T &operator*() const;
-
-    // const T &GetElement(int index) const;
+    T &operator*();
 
     operator bool() const;
     bool Valid() const;
@@ -43,16 +41,15 @@ public:
     template <typename P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
-protected:
     void Leftmost(const BSTSharedPtr<T> &node);
     void Rightmost(const BSTSharedPtr<T> &node);
+    
+protected:
     void Reset();
     void _Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
-    // void CheckValidity(int) const;
-    // void CheckNull(int) const;
+    void CheckValidity(int) const;
 
 private:
-    friend BinarySearchTree<T>;
     std::stack<BSTSharedPtr<T>> m_stack;
 };
 
