@@ -144,12 +144,6 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
 
             if (m_stack.empty())
                 stackNotEmpty = false;
-            // if (m_stack.empty())
-            // {
-            //     Leftmost(node);
-            //     m_stack.emplace(nullptr);
-            //     std::cout << m_stack.size() << "\n";
-            // }
         }
         if (!stackNotEmpty)
         {

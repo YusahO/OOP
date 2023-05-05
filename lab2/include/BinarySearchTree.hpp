@@ -12,11 +12,13 @@ template <Comparable T>
 class BinarySearchTree
 {
 public:
-    friend TreeIterator<T>;
+    using iterator = TreeIterator<T>;
 
 public:
     BinarySearchTree() = default;
     explicit BinarySearchTree(std::initializer_list<T> lst);
+    template<Container Con>
+    explicit BinarySearchTree(const Con& container);
 
     BinarySearchTree(const BinarySearchTree<T> &other);
     BinarySearchTree(BinarySearchTree<T> &&other) = default;
