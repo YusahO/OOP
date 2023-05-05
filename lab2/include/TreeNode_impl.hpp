@@ -55,6 +55,18 @@ BSTSharedPtr<T> &TreeNode<T>::GetRight()
     return mp_right;
 }
 
+template<typename T>
+inline void TreeNode<T>::SetValue(T &value)
+{
+    m_value = value;
+}
+
+template<typename T>
+inline void TreeNode<T>::SetValue(const T &value)
+{
+    m_value = value;
+}
+
 template <typename T>
 void TreeNode<T>::SetLeft(const BSTSharedPtr<T> &node)
 {

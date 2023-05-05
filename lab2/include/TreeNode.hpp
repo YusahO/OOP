@@ -19,6 +19,8 @@ public:
     BSTSharedPtr<T> &GetLeft();
     BSTSharedPtr<T> &GetRight();
 
+    void SetValue(T &value);
+    void SetValue(const T &value);
     void SetLeft(const BSTSharedPtr<T> &node);
     void SetLeft(BSTSharedPtr<T> &&node);
     void SetRight(const BSTSharedPtr<T> &node);

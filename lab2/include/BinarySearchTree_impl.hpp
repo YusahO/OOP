@@ -20,7 +20,13 @@ BinarySearchTree<T>::BinarySearchTree(const BinarySearchTree<T> &other)
 {
 }
 
-template <typename T>
+template<Comparable T>
+BinarySearchTree<T> &BinarySearchTree<T>::operator=(const BinarySearchTree<T> &other)
+{
+    return _DeepCopy(other.GetRoot());    
+}
+
+template <Comparable T>
 BSTSharedPtr<T> BinarySearchTree<T>::_DeepCopy(const BSTSharedPtr<T> &other)
 {
     if (!other)
@@ -30,9 +36,9 @@ BSTSharedPtr<T> BinarySearchTree<T>::_DeepCopy(const BSTSharedPtr<T> &other)
     else
     {
         BSTSharedPtr<T> newNode;
-        newNode->GetValue() = other->GetValue();
-        newNode->GetLeft() = _DeepCopy(other->GetLeft());
-        newNode->GetRight() = _DeepCopy(other->GetRight());
+        newNode->SetValue(other->GetValue());
+        newNode->SetLeft(_DeepCopy(other->GetLeft()));
+        newNode->SetRight(_DeepCopy(other->GetRight()));
         return newNode;
     }
 }

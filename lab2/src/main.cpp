@@ -181,11 +181,13 @@ int main()
         std::cout << std::endl;
         std::cout << "--- REMOVE ---" << std::endl;
         {
-            auto beg_del = ++tree.begin();
-            auto end_del = --tree.end();
-            std::cout << "before del [" << *beg_del << ", " << *end_del << "):\n" << tree << std::endl;
-            tree.Erase(beg_del, end_del);
-            std::cout << "after: " << tree << std::endl;
+            auto tree_cp = tree;
+            std::cout << tree_cp << std::endl;
+            auto beg_del = ++tree_cp.begin();
+            auto end_del = --tree_cp.end();
+            std::cout << "before del [" << *beg_del << ", " << *end_del << "):\n" << tree_cp << std::endl;
+            tree_cp.Erase(beg_del, end_del);
+            std::cout << "after: " << tree_cp << std::endl;
         }
         std::cout << std::endl;
     }

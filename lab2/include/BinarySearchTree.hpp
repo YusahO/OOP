@@ -21,7 +21,7 @@ public:
     BinarySearchTree(const BinarySearchTree<T> &other);
     BinarySearchTree(BinarySearchTree<T> &&other) = default;
 
-    BinarySearchTree &operator=(const BinarySearchTree<T> &other) = default;
+    BinarySearchTree &operator=(const BinarySearchTree<T> &other);
     BinarySearchTree &operator=(BinarySearchTree<T> &&other) = default;
 
     virtual ~BinarySearchTree() = default;
