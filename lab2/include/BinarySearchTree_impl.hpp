@@ -14,6 +14,29 @@ BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
     }
 }
 
+template<Comparable T>
+BinarySearchTree<T>::BinarySearchTree(const BinarySearchTree<T> &other)
+    : mp_root(_DeepCopy(other.GetRoot()))
+{
+}
+
+template <typename T>
+BSTSharedPtr<T> BinarySearchTree<T>::_DeepCopy(const BSTSharedPtr<T> &other)
+{
+    if (!other)
+    {
+        return nullptr;
+    }
+    else
+    {
+        BSTSharedPtr<T> newNode;
+        newNode->GetValue() = other->GetValue();
+        newNode->GetLeft() = _DeepCopy(other->GetLeft());
+        newNode->GetRight() = _DeepCopy(other->GetRight());
+        return newNode;
+    }
+}
+
 template <Comparable T>
 TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 {
@@ -67,7 +90,7 @@ template <Comparable T>
 TreeIterator<T> BinarySearchTree<T>::Find(const T &value)
 {
     BSTSharedPtr<T> found = _Find(value);
-    return {found, mp_root};
+    return { found, mp_root };
 }
 
 template <Comparable T>
@@ -117,7 +140,7 @@ template <class Iter>
 TreeIterator<T> BinarySearchTree<T>::Erase(Iter &pos)
 {
     std::pair<BSTSharedPtr<T>, bool> result = _Erase(*pos);
-    return {result.first, mp_root};
+    return { result.first, mp_root };
 }
 
 template <Comparable T>
@@ -157,7 +180,7 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
     }
 
     if (!found)
-        return {nullptr, false};
+        return { nullptr, false };
 
     BSTSharedPtr<T> nextAfterDeleted;
 
@@ -204,7 +227,7 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
         nextAfterDeleted = found;
     }
 
-    return {nextAfterDeleted, true};
+    return { nextAfterDeleted, true };
 }
 
 template <Comparable T>

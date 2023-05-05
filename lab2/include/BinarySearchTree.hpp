@@ -18,7 +18,7 @@ public:
     BinarySearchTree() = default;
     explicit BinarySearchTree(std::initializer_list<T> lst);
 
-    BinarySearchTree(const BinarySearchTree<T> &other) = default;
+    BinarySearchTree(const BinarySearchTree<T> &other);
     BinarySearchTree(BinarySearchTree<T> &&other) = default;
 
     BinarySearchTree &operator=(const BinarySearchTree<T> &other) = default;
@@ -48,7 +48,7 @@ public:
     virtual void Clean() noexcept;
     // std::size_t GetSize() const noexcept;
 
-    TreeIterator<T> begin()const;
+    TreeIterator<T> begin() const;
     TreeIterator<T> end() const;
     ReverseTreeIterator<T> rbegin() const;
     ReverseTreeIterator<T> rend() const;
@@ -57,6 +57,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
 
 protected:
+    BSTSharedPtr<T> _DeepCopy(const BSTSharedPtr<T> &other);
     std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
     BSTSharedPtr<T> _Find(const T &value);
     std::ostream &_Inorder(const BSTSharedPtr<T> &node, std::ostream &os) const;

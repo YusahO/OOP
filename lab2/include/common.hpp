@@ -2,11 +2,19 @@
 
 #include <memory>
 
+
+namespace MyBST {
+
 template <typename T>
 concept Comparable = std::totally_ordered<T>;
 
+template <typename T>
+concept Container = requires (T t)
+{
+    { t.begin() } -> std::same_as<typename T::iterator>;
+    { t.end() } -> std::same_as<typename T::iterator>;
+};
 
-namespace MyBST {
 
 template <typename T>
 class TreeNode;
