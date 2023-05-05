@@ -10,9 +10,13 @@ int main()
     {
         BinarySearchTree<int> tree1{1, 2, 3, 4, 5};
         BinarySearchTree<int> tree2;
-        std::cout << "Tree before move " << tree1 << std::endl;
+        std::cout << "Tree1 before move " << tree1 << std::endl;
+        std::cout << "Tree2 before move " << tree2 << std::endl;
         tree2 = std::move(tree1);
-        std::cout << "Tree after move " << (tree2.GetRoot() ? "null" : "has value") << std::endl;
+        std::cout << "--- MOVING ---" << std::endl;
+        std::cout << "Tree1 after move " << tree1 << std::endl;
+        std::cout << "Tree2 after move " << tree2 << std::endl;
+        std::cout << std::endl;
     }
         
     //     size_t q = 2, w = 3;
