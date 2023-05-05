@@ -2,6 +2,7 @@
 
 #include "Errors.hpp"
 #include "TreeIterator.hpp"
+#include <utility>
 
 namespace MyBST {
 
@@ -37,13 +38,25 @@ TreeIterator<T>::TreeIterator(const TreeIterator<T> &other)
 {
 }
 
+template<typename T>
+TreeIterator<T>::TreeIterator(TreeIterator<T> &&other)
+    : m_stack(std::move(m_stack))
+{
+}
+
 template <typename T>
 TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
 {
-    // other.CheckValidity(__LINE__);
-
+    other.CheckValidity(__LINE__);
     m_stack = other.m_stack;
+    return *this;
+}
 
+template<typename T>
+TreeIterator<T> &TreeIterator<T>::operator=(TreeIterator<T> &&other)
+{
+    other.CheckValidity(__LINE__);
+    m_stack = std::move(other.m_stack);
     return *this;
 }
 

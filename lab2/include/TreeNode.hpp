@@ -9,17 +9,17 @@ class TreeNode
 {
 public:
     TreeNode();
+    explicit TreeNode(T &&value);
     explicit TreeNode(const T &value);
     TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTSharedPtr<T> &right);
 
     virtual ~TreeNode() = default;
 
-    T &GetValue();
     const T &GetValue() const;
     BSTSharedPtr<T> &GetLeft();
     BSTSharedPtr<T> &GetRight();
 
-    void SetValue(T &value);
+    void SetValue(T &&value);
     void SetValue(const T &value);
     void SetLeft(const BSTSharedPtr<T> &node);
     void SetLeft(BSTSharedPtr<T> &&node);

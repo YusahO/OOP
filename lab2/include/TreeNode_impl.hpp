@@ -15,6 +15,14 @@ TreeNode<T>::TreeNode()
 {
 }
 
+template<typename T>
+TreeNode<T>::TreeNode(T &&value)
+    : m_value(0),
+      mp_left(0),
+      mp_right(0)
+{
+}
+
 template <typename T>
 TreeNode<T>::TreeNode(const T &value)
     : m_value(value),
@@ -29,12 +37,6 @@ TreeNode<T>::TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTShar
       mp_left(left),
       mp_right(right)
 {
-}
-
-template <typename T>
-T &TreeNode<T>::GetValue()
-{
-    return m_value;
 }
 
 template <typename T>
@@ -56,7 +58,7 @@ BSTSharedPtr<T> &TreeNode<T>::GetRight()
 }
 
 template<typename T>
-inline void TreeNode<T>::SetValue(T &value)
+inline void TreeNode<T>::SetValue(T &&value)
 {
     m_value = value;
 }

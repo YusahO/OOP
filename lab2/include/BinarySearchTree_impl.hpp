@@ -2,8 +2,15 @@
 
 #include "BinarySearchTree.hpp"
 #include "Errors.hpp"
+#include <utility>
 
 namespace MyBST {
+
+template <Comparable T>
+BinarySearchTree<T>::BinarySearchTree()
+    : mp_root(nullptr)
+{
+}
 
 template <Comparable T>
 BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
@@ -16,14 +23,36 @@ BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
 
 template<Comparable T>
 BinarySearchTree<T>::BinarySearchTree(const BinarySearchTree<T> &other)
-    : mp_root(_DeepCopy(other.GetRoot()))
+    : mp_root(_DeepCopy(other.mp_root))
+{
+}
+
+template<Comparable T>
+BinarySearchTree<T>::BinarySearchTree(BinarySearchTree<T> &&other)
+    : mp_root(std::exchange(other.mp_root, nullptr))
 {
 }
 
 template<Comparable T>
 BinarySearchTree<T> &BinarySearchTree<T>::operator=(const BinarySearchTree<T> &other)
 {
-    return _DeepCopy(other.GetRoot());    
+    return _DeepCopy(other.mp_root);    
+}
+
+template<Comparable T>
+BinarySearchTree<T> &BinarySearchTree<T>::operator=(BinarySearchTree<T> &&other)
+{
+    mp_root = std::exchange(other.mp_root, nullptr);
+    return *this;
+}
+
+template<Comparable T>
+std::size_t BinarySearchTree<T>::_Size(const BSTSharedPtr<T> &node)
+{
+    if (!node)
+        return 0;
+    else
+        return(_Size(node->GetLeft()) + 1 + _Size(node->GetRight()));
 }
 
 template <Comparable T>
@@ -35,8 +64,7 @@ BSTSharedPtr<T> BinarySearchTree<T>::_DeepCopy(const BSTSharedPtr<T> &other)
     }
     else
     {
-        BSTSharedPtr<T> newNode;
-        newNode->SetValue(other->GetValue());
+        BSTSharedPtr<T> newNode(other);
         newNode->SetLeft(_DeepCopy(other->GetLeft()));
         newNode->SetRight(_DeepCopy(other->GetRight()));
         return newNode;
@@ -112,15 +140,20 @@ void BinarySearchTree<T>::Clean() noexcept
     mp_root = nullptr;
 }
 
-template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::begin() const
+template<Comparable T>
+std::size_t BinarySearchTree<T>::size() const noexcept
 {
-    // std::cout << mp_root << "\n";
+    return _Size(mp_root);
+}
+
+template <Comparable T>
+TreeIterator<T> BinarySearchTree<T>::begin() const noexcept
+{
     return TreeIterator<T>(mp_root);
 }
 
 template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::end() const
+TreeIterator<T> BinarySearchTree<T>::end() const noexcept
 {
     TreeIterator<T> iter;
     iter.Rightmost(mp_root);
@@ -128,7 +161,7 @@ TreeIterator<T> BinarySearchTree<T>::end() const
 }
 
 template<Comparable T>
-ReverseTreeIterator<T> BinarySearchTree<T>::rbegin() const
+ReverseTreeIterator<T> BinarySearchTree<T>::rbegin() const noexcept
 {
     ReverseTreeIterator<T> iter;
     iter.Rightmost(mp_root);
@@ -136,17 +169,16 @@ ReverseTreeIterator<T> BinarySearchTree<T>::rbegin() const
 }
 
 template<Comparable T>
-ReverseTreeIterator<T> BinarySearchTree<T>::rend() const
+ReverseTreeIterator<T> BinarySearchTree<T>::rend() const noexcept
 {
-    // std::cout << mp_root << "\n";
     return ReverseTreeIterator<T>(mp_root);
 }
 
 template<Comparable T>
 template<Container Con>
-inline BinarySearchTree<T>::BinarySearchTree(const Con &container)
+BinarySearchTree<T>::BinarySearchTree(const Con &container)
 {
-    for(auto elem: container)
+    for(const auto &elem : container)
     {
         Insert(elem);
     }
@@ -167,8 +199,6 @@ TreeIterator<T> BinarySearchTree<T>::Erase(Iter &first, Iter &last)
     Iter it = first;
     while (it != last)
     {
-        // std::cout << it << " " << last << "\n";
-        // std::cout << mp_root->GetValue() << " tree: " << *this << std::endl;
         it = Erase(it);
         last.Recalculate(mp_root);
     }
@@ -239,7 +269,7 @@ std::pair<BSTSharedPtr<T>, bool> BinarySearchTree<T>::_Erase(const T &value)
         else
             found->GetRight() = tmp->GetRight();
 
-        found->GetValue() = tmp->GetValue();
+        found->SetValue(tmp->GetValue());
 
         nextAfterDeleted = found;
     }

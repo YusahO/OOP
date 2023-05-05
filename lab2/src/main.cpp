@@ -6,8 +6,15 @@ using namespace MyBST;
 
 int main()
 {
-    // std::cout << "=== CONSTRUCTORS ===" << std::endl;
-    // {
+    std::cout << "=== CONSTRUCTORS ===" << std::endl;
+    {
+        BinarySearchTree<int> tree1{1, 2, 3, 4, 5};
+        BinarySearchTree<int> tree2;
+        std::cout << "Tree before move " << tree1 << std::endl;
+        tree2 = std::move(tree1);
+        std::cout << "Tree after move " << (tree2.GetRoot() ? "null" : "has value") << std::endl;
+    }
+        
     //     size_t q = 2, w = 3;
     //     std::cout << "Constructor with two numbers:\n";
     //     BinarySearchTree<int> a(q, w);
@@ -19,7 +26,7 @@ int main()
     //     Matrix<float> c({{1.,  2.},
     //                      {-3., -4.}});
     //     std::cout << c << std::endl;
-    //     std::cout << "Constructor with copy \tMatrix<float> d(c):\n";
+    // //     std::cout << "Constructor with copy \tMatrix<float> d(c):\n";
     //     const Matrix<float>& d(c);
     //     std::cout << d << std::endl;
     //     std::cout << "Constructor for C matrix \tint c_matr[][3] = {{1, 2, 3}, {4, 5, 6}}:\n";

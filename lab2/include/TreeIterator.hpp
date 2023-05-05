@@ -21,8 +21,10 @@ public:
     TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
 
     TreeIterator(const TreeIterator<T> &other);
+    TreeIterator(TreeIterator<T> &&other);
 
     TreeIterator<T> &operator=(const TreeIterator<T> &other);
+    TreeIterator<T> &operator=(TreeIterator<T> &&other);
 
     const T &operator*();
 

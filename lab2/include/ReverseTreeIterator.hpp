@@ -21,10 +21,12 @@ public:
     ReverseTreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
 
     ReverseTreeIterator(const ReverseTreeIterator<T> &other);
+    ReverseTreeIterator(ReverseTreeIterator<T> &&other);
 
     ReverseTreeIterator<T> &operator=(const ReverseTreeIterator<T> &other);
+    ReverseTreeIterator<T> &operator=(ReverseTreeIterator<T> &&other);
 
-    T &operator*();
+    const T &operator*() const;
 
     operator bool() const;
     bool Valid() const;

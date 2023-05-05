@@ -2,6 +2,7 @@
 
 #include "Errors.hpp"
 #include "ReverseTreeIterator.hpp"
+#include <utility>
 
 namespace MyBST {
 
@@ -38,18 +39,30 @@ ReverseTreeIterator<T>::ReverseTreeIterator(const ReverseTreeIterator<T> &other)
 {
 }
 
+template<typename T>
+ReverseTreeIterator<T>::ReverseTreeIterator(ReverseTreeIterator<T> &&other)
+    : m_stack(std::move(other.m_stack))
+{
+}
+
 template <typename T>
 ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(const ReverseTreeIterator<T> &other)
 {
-    // other.CheckValidity(__LINE__);
-
+    other.CheckValidity(__LINE__);
     m_stack = other.m_stack;
+    return *this;
+}
 
+template<typename T>
+ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(ReverseTreeIterator<T> &&other)
+{
+    other.CheckValidity(__LINE__);
+    m_stack = std::move(other.m_stack);
     return *this;
 }
 
 template <typename T>
-T &ReverseTreeIterator<T>::operator*()
+const T &ReverseTreeIterator<T>::operator*() const
 {
     CheckValidity(__LINE__);
     return m_stack.top()->GetValue();
