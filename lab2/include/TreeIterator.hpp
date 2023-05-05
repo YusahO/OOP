@@ -7,6 +7,8 @@
 #include "BinarySearchTree.hpp"
 #include "BaseTreeIterator.hpp"
 
+namespace MyBST {
+
 template <typename T>
 class TreeIterator : public BaseTreeIterator<T>
 {
@@ -53,8 +55,6 @@ private:
     std::stack<BSTSharedPtr<T>> m_stack;
 };
 
-#include "TreeIterator_impl.hpp"
-
 template <typename P>
 std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
 {
@@ -74,3 +74,7 @@ std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
     }
     return os << "]";
 }
+
+}
+
+#include "TreeIterator_impl.hpp"

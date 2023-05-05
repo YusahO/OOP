@@ -3,6 +3,8 @@
 #include "BinarySearchTree.hpp"
 #include "Errors.hpp"
 
+namespace MyBST {
+
 template <Comparable T>
 BinarySearchTree<T>::BinarySearchTree(std::initializer_list<T> lst)
 {
@@ -238,4 +240,6 @@ std::ostream &BinarySearchTree<T>::_Inorder(const BSTSharedPtr<T> &node, std::os
         _Inorder(node->GetRight(), os);
     }
     return os;
+}
+
 }

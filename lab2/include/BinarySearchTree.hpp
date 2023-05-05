@@ -1,15 +1,12 @@
 #pragma once
 
-// #include <concepts>
 #include "common.hpp"
 #include "TreeIterator.hpp"
 #include "ReverseTreeIterator.hpp"
-// #include "ConstTreeIterator.hpp"
 
 #include "TreeNode.hpp"
 
-template <typename T>
-class TreeNode;
+namespace MyBST {
 
 template <Comparable T>
 class BinarySearchTree
@@ -66,7 +63,6 @@ protected:
 
 private:
     BSTSharedPtr<T> mp_root = nullptr;
-    // static const TreeNode<T> s_sentinel;
 };
 
 template <typename P>
@@ -78,5 +74,6 @@ std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree)
     return os;
 }
 
-#include "BinarySearchTree_impl.hpp"
+}
 
+#include "BinarySearchTree_impl.hpp"

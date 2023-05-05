@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 
+namespace MyBST {
+
 template <typename T>
 class TreeNode
 {
@@ -27,5 +29,7 @@ private:
     BSTSharedPtr<T> mp_left;
     BSTSharedPtr<T> mp_right;
 };
+
+}
 
 #include "TreeNode_impl.hpp"

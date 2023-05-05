@@ -3,6 +3,8 @@
 #include "Errors.hpp"
 #include "TreeIterator.hpp"
 
+namespace MyBST {
+
 template <typename T>
 TreeIterator<T>::TreeIterator()
     : m_stack()
@@ -236,4 +238,6 @@ void TreeIterator<T>::_Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T>
             found = found->GetLeft();
     }
     m_stack.emplace(found);
+}
+
 }
