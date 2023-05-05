@@ -4,42 +4,42 @@
 #include <stack>
 #include <iostream>
 
-#include "BinarySearchTree.h"
-#include "BaseTreeIterator.h"
+#include "BinarySearchTree.hpp"
+#include "BaseTreeIterator.hpp"
 
 template <typename T>
-class TreeIterator : public BaseTreeIterator<T>
+class ReverseTreeIterator : public BaseTreeIterator<T>
 {
 public:
     using IteratorCategory = std::bidirectional_iterator_tag;
 
 public:
-    TreeIterator();
-    explicit TreeIterator(const BSTSharedPtr<T> &root);
-    TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
+    ReverseTreeIterator();
+    explicit ReverseTreeIterator(const BSTSharedPtr<T> &root);
+    ReverseTreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
 
-    TreeIterator(const TreeIterator<T> &other);
+    ReverseTreeIterator(const ReverseTreeIterator<T> &other);
 
-    TreeIterator<T> &operator=(const TreeIterator<T> &other);
+    ReverseTreeIterator<T> &operator=(const ReverseTreeIterator<T> &other);
 
     T &operator*();
 
     operator bool() const;
     bool Valid() const;
 
-    TreeIterator<T> &operator++();
-    TreeIterator<T> operator++(int);
+    ReverseTreeIterator<T> &operator++();
+    ReverseTreeIterator<T> operator++(int);
 
-    TreeIterator<T> &operator--();
-    TreeIterator<T> operator--(int);
+    ReverseTreeIterator<T> &operator--();
+    ReverseTreeIterator<T> operator--(int);
 
-    bool operator==(const TreeIterator<T> &other) const;
-    bool operator!=(const TreeIterator<T> &other) const;
+    bool operator==(const ReverseTreeIterator<T> &other) const;
+    bool operator!=(const ReverseTreeIterator<T> &other) const;
 
     void Recalculate(const BSTSharedPtr<T> &root);
 
     template <typename P>
-    friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
+    friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
     void Leftmost(const BSTSharedPtr<T> &node);
     void Rightmost(const BSTSharedPtr<T> &node);
@@ -53,10 +53,10 @@ private:
     std::stack<BSTSharedPtr<T>> m_stack;
 };
 
-#include "TreeIterator.hpp"
+#include "ReverseTreeIterator_impl.hpp"
 
 template <typename P>
-std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
+std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
 {
     std::stack<BSTSharedPtr<P>> st = iter.m_stack;
     os << "[ ";

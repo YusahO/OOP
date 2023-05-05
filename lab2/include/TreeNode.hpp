@@ -1,78 +1,31 @@
 #pragma once
 
-#include "TreeNode.h"
-// const std::shared_ptr<TreeNode<T>> &parent
-
-#include <memory>
+#include "common.hpp"
 
 template <typename T>
-TreeNode<T>::TreeNode()
-    : m_value(0),
-      mp_left(0),
-      mp_right(0)
+class TreeNode
 {
-}
+public:
+    TreeNode();
+    explicit TreeNode(const T &value);
+    TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTSharedPtr<T> &right);
 
-template <typename T>
-TreeNode<T>::TreeNode(const T &value)
-    : m_value(value),
-      mp_left(nullptr),
-      mp_right(nullptr)
-{
-}
+    virtual ~TreeNode() = default;
 
-template <typename T>
-TreeNode<T>::TreeNode(const T &value, const BSTSharedPtr<T> &left, const BSTSharedPtr<T> &right)
-    : m_value(value),
-      mp_left(left),
-      mp_right(right)
-{
-}
+    T &GetValue();
+    const T &GetValue() const;
+    BSTSharedPtr<T> &GetLeft();
+    BSTSharedPtr<T> &GetRight();
 
-template <typename T>
-T &TreeNode<T>::GetValue()
-{
-    return m_value;
-}
+    void SetLeft(const BSTSharedPtr<T> &node);
+    void SetLeft(BSTSharedPtr<T> &&node);
+    void SetRight(const BSTSharedPtr<T> &node);
+    void SetRight(BSTSharedPtr<T> &&node);
 
-template <typename T>
-const T &TreeNode<T>::GetValue() const
-{
-    return m_value;
-}
+private:
+    T m_value;
+    BSTSharedPtr<T> mp_left;
+    BSTSharedPtr<T> mp_right;
+};
 
-template <typename T>
-BSTSharedPtr<T> &TreeNode<T>::GetLeft()
-{
-    return mp_left;
-}
-
-template <typename T>
-BSTSharedPtr<T> &TreeNode<T>::GetRight()
-{
-    return mp_right;
-}
-
-template <typename T>
-void TreeNode<T>::SetLeft(const BSTSharedPtr<T> &node)
-{
-    mp_left = node;
-}
-
-template <typename T>
-void TreeNode<T>::SetLeft(BSTSharedPtr<T> &&node)
-{
-    mp_left = node;
-}
-
-template <typename T>
-void TreeNode<T>::SetRight(const BSTSharedPtr<T> &node)
-{
-    mp_right = node;
-}
-
-template <typename T>
-void TreeNode<T>::SetRight(BSTSharedPtr<T> &&node)
-{
-    mp_right = node;
-}
+#include "TreeNode_impl.hpp"

@@ -8,38 +8,38 @@
 #include "BaseTreeIterator.hpp"
 
 template <typename T>
-class TreeIterator : public BaseTreeIterator<T>
+class ConstTreeIterator : public BaseTreeIterator<T>
 {
 public:
     using IteratorCategory = std::bidirectional_iterator_tag;
 
 public:
-    TreeIterator();
-    explicit TreeIterator(const BSTSharedPtr<T> &root);
-    TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
+    ConstTreeIterator();
+    explicit ConstTreeIterator(const BSTSharedPtr<T> &root);
+    ConstTreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
 
-    TreeIterator(const TreeIterator<T> &other);
+    ConstTreeIterator(const ConstTreeIterator<T> &other);
 
-    TreeIterator<T> &operator=(const TreeIterator<T> &other);
+    ConstTreeIterator<T> &operator=(const ConstTreeIterator<T> &other);
 
-    T &operator*();
+    const T & operator*() const;
 
     operator bool() const;
     bool Valid() const;
 
-    TreeIterator<T> &operator++();
-    TreeIterator<T> operator++(int);
+    ConstTreeIterator<T> &operator++();
+    ConstTreeIterator<T> operator++(int);
 
-    TreeIterator<T> &operator--();
-    TreeIterator<T> operator--(int);
+    ConstTreeIterator<T> &operator--();
+    ConstTreeIterator<T> operator--(int);
 
-    bool operator==(const TreeIterator<T> &other) const;
-    bool operator!=(const TreeIterator<T> &other) const;
+    bool operator==(const ConstTreeIterator<T> &other) const;
+    bool operator!=(const ConstTreeIterator<T> &other) const;
 
     void Recalculate(const BSTSharedPtr<T> &root);
 
     template <typename P>
-    friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
+    friend std::ostream &operator<<(std::ostream &os, const ConstTreeIterator<P> &iter);
 
     void Leftmost(const BSTSharedPtr<T> &node);
     void Rightmost(const BSTSharedPtr<T> &node);
@@ -53,10 +53,10 @@ private:
     std::stack<BSTSharedPtr<T>> m_stack;
 };
 
-#include "TreeIterator_impl.hpp"
+#include "ConstTreeIterator_impl.hpp"
 
 template <typename P>
-std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
+std::ostream &operator<<(std::ostream &os, const ConstTreeIterator<P> &iter)
 {
     std::stack<BSTSharedPtr<P>> st = iter.m_stack;
     os << "[ ";

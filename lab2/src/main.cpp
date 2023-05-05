@@ -1,7 +1,30 @@
 #include <iostream>
 
 #include <set>
-#include "BinarySearchTree.h"
+#include "BinarySearchTree.hpp"
+
+
+class MyClass {
+public:
+    int value;
+
+    MyClass(int val): value(val) {}
+
+    auto operator<=>(const MyClass &other) const
+    {
+        return value <=> other.value;
+    }
+
+    bool operator==(const MyClass &other) const {
+        return value == other.value;
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, MyClass &abober)
+    {
+        return os << abober.value;
+    }
+};
+
 
 int main()
 {
@@ -16,8 +39,12 @@ int main()
     //     std::cout << p << " ";
     // std::cout << "\n";
 
-    MyBST::BinarySearchTree<int> tree{4, 2, 5, 1, 3};
+    BinarySearchTree<MyClass> tree{4, 2, 5, 1, 3};
     // std::cout << "Inserted " << *(tree.Insert(8)) << "\n";
+    for(auto x = tree.rbegin(); x != tree.rend(); ++x)
+    {
+        std::cout << *x << " ";
+    }
 
     auto iter = tree.begin();
     auto end = tree.end();
