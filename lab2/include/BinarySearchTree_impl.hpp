@@ -38,7 +38,7 @@ BSTSharedPtr<T> BinarySearchTree<T>::_DeepCopy(const BSTSharedPtr<T> &other)
 }
 
 template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
+TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
 {
     BSTSharedPtr<T> newNode = std::make_shared<TreeNode<T>>(value);
 
@@ -81,9 +81,9 @@ TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 }
 
 template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
+TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 {
-    return Insert(std::move(value));
+    return Insert(value);
 }
 
 template <Comparable T>
@@ -150,8 +150,8 @@ TreeIterator<T> BinarySearchTree<T>::Erase(Iter &first, Iter &last)
     Iter it = first;
     while (it != last)
     {
-        std::cout << it << " " << last << "\n";
-        std::cout << mp_root->GetValue() << " tree: " << *this << std::endl;
+        // std::cout << it << " " << last << "\n";
+        // std::cout << mp_root->GetValue() << " tree: " << *this << std::endl;
         it = Erase(it);
         last.Recalculate(mp_root);
     }

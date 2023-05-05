@@ -163,15 +163,41 @@ int main()
     //     std::cout << "Inverse B {1, 2}, {3, 4}\n" << buffer << std::endl;
     //     std::cout << std::endl << std::endl;
     // }
+    std::cout << "=== TREE OPERATIONS ===" << std::endl;
+    {
+        std::cout << "--- INSERTION ---" << std::endl;
+        BinarySearchTree<int> tree;
+        int arr[] = { 5, 3, 7, 2, 4, 6, 8, 1, 9};
+        for (size_t i = 0; i < sizeof(arr) / sizeof(int); ++i)
+        {
+            tree.Insert(arr[i]);
+        }
+        std::cout << "tree: " << tree << std::endl;
+        std::cout << "--- FIND ---" << std::endl;
+        for (size_t i = 0; i < sizeof(arr) / sizeof(int); ++i)
+        {
+            std::cout << *tree.Find(arr[i]) << " ";
+        }
+        std::cout << std::endl;
+        std::cout << "--- REMOVE ---" << std::endl;
+        {
+            auto beg_del = ++tree.begin();
+            auto end_del = --tree.end();
+            std::cout << "before del [" << *beg_del << ", " << *end_del << "):\n" << tree << std::endl;
+            tree.Erase(beg_del, end_del);
+            std::cout << "after: " << tree << std::endl;
+        }
+        std::cout << std::endl;
+    }
 
     std::cout << "=== ITERATORS ===" << std::endl;
     {
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
-        BinarySearchTree<int> a({1, 5, 2, 3, 4, 0, 6, 8, 7});
+        BinarySearchTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
         std::cout << "INIT A\n" << a << std::endl;
 
         std::cout << "For each const auto &elem with separate ' '\n";
-        for (const auto &elem: a)
+        for (const auto &elem : a)
             std::cout << elem << " ";
         std::cout << std::endl;
         std::cout << "For each reverse auto &elem with separate ' '\n";
@@ -186,7 +212,7 @@ int main()
         std::cout << "--- ITERATORS const tree ---" << std::endl;
         const BinarySearchTree<float> const_c{1, 5, 2, 3, 4, 0, 6, 8, 7};
         std::cout << "For each const auto &elem with separate ' '\n";
-        for (const auto &elem: const_c)
+        for (const auto &elem : const_c)
             std::cout << elem << " ";
         std::cout << std::endl;
         std::cout << "For each const reverse auto &elem with separate ' '\n";
