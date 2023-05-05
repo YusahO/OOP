@@ -5,6 +5,8 @@
 
 #include <memory>
 
+namespace MyBST {
+
 template <typename T>
 TreeNode<T>::TreeNode()
     : m_value(0),
@@ -75,4 +77,6 @@ template <typename T>
 void TreeNode<T>::SetRight(BSTSharedPtr<T> &&node)
 {
     mp_right = node;
+}
+
 }

@@ -1,7 +1,7 @@
 #include <iostream>
 #include "BinarySearchTree.hpp"
 
-// using namespace MyMatrix;
+using namespace MyBST;
 
 int main()
 {

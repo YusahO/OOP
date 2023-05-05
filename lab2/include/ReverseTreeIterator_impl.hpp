@@ -3,6 +3,8 @@
 #include "Errors.hpp"
 #include "ReverseTreeIterator.hpp"
 
+namespace MyBST {
+
 template <typename T>
 ReverseTreeIterator<T>::ReverseTreeIterator()
     : m_stack()
@@ -247,4 +249,6 @@ void ReverseTreeIterator<T>::_Search(const BSTSharedPtr<T> &node, const BSTShare
             found = found->GetLeft();
     }
     m_stack.emplace(found);
+}
+
 }
