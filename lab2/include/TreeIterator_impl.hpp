@@ -46,7 +46,7 @@ TreeIterator<T> &TreeIterator<T>::operator=(const TreeIterator<T> &other)
 }
 
 template <typename T>
-T &TreeIterator<T>::operator*()
+const T &TreeIterator<T>::operator*()
 {
     CheckValidity(__LINE__);
     return m_stack.top()->GetValue();

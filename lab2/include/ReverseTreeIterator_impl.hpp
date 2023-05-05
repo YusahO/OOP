@@ -13,6 +13,7 @@ template <typename T>
 ReverseTreeIterator<T>::ReverseTreeIterator(const BSTSharedPtr<T> &root)
 {
     Leftmost(root);
+    m_stack.emplace(nullptr);
 }
 
 template <typename T>
@@ -138,10 +139,20 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
         {
             node = m_stack.top();
             m_stack.pop();
+
             if (m_stack.empty())
-            {
-                Leftmost(node);
-            }
+                stackNotEmpty = false;
+            // if (m_stack.empty())
+            // {
+            //     Leftmost(node);
+            //     m_stack.emplace(nullptr);
+            //     std::cout << m_stack.size() << "\n";
+            // }
+        }
+        if (!stackNotEmpty)
+        {
+            Leftmost(node);
+            m_stack.emplace(nullptr);
         }
     }
 
@@ -175,7 +186,7 @@ void ReverseTreeIterator<T>::Recalculate(const BSTSharedPtr<T> &root)
 {
     BSTSharedPtr<T> top = m_stack.top();
     Reset();
-    
+
     if (top != nullptr)
     {
         _Search(top, root);

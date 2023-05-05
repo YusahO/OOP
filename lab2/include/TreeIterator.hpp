@@ -22,7 +22,7 @@ public:
 
     TreeIterator<T> &operator=(const TreeIterator<T> &other);
 
-    T &operator*();
+    const T &operator*();
 
     operator bool() const;
     bool Valid() const;
@@ -43,7 +43,7 @@ public:
 
     void Leftmost(const BSTSharedPtr<T> &node);
     void Rightmost(const BSTSharedPtr<T> &node);
-    
+
 protected:
     void Reset();
     void _Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);

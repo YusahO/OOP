@@ -81,14 +81,14 @@ void BinarySearchTree<T>::Clean() noexcept
 }
 
 template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::begin()
+TreeIterator<T> BinarySearchTree<T>::begin() const
 {
     // std::cout << mp_root << "\n";
     return TreeIterator<T>(mp_root);
 }
 
 template <Comparable T>
-TreeIterator<T> BinarySearchTree<T>::end()
+TreeIterator<T> BinarySearchTree<T>::end() const
 {
     TreeIterator<T> iter;
     iter.Rightmost(mp_root);
@@ -96,7 +96,7 @@ TreeIterator<T> BinarySearchTree<T>::end()
 }
 
 template<Comparable T>
-ReverseTreeIterator<T> BinarySearchTree<T>::rbegin()
+ReverseTreeIterator<T> BinarySearchTree<T>::rbegin() const
 {
     ReverseTreeIterator<T> iter;
     iter.Rightmost(mp_root);
@@ -104,7 +104,7 @@ ReverseTreeIterator<T> BinarySearchTree<T>::rbegin()
 }
 
 template<Comparable T>
-ReverseTreeIterator<T> BinarySearchTree<T>::rend()
+ReverseTreeIterator<T> BinarySearchTree<T>::rend() const
 {
     // std::cout << mp_root << "\n";
     return ReverseTreeIterator<T>(mp_root);

@@ -4,7 +4,6 @@
 #include "common.hpp"
 #include "TreeIterator.hpp"
 #include "ReverseTreeIterator.hpp"
-#include "ConstTreeIterator.hpp"
 // #include "ConstTreeIterator.hpp"
 
 #include "TreeNode.hpp"
@@ -52,10 +51,10 @@ public:
     virtual void Clean() noexcept;
     // std::size_t GetSize() const noexcept;
 
-    TreeIterator<T> begin();
-    TreeIterator<T> end();
-    ReverseTreeIterator<T> rbegin();
-    ReverseTreeIterator<T> rend();
+    TreeIterator<T> begin()const;
+    TreeIterator<T> end() const;
+    ReverseTreeIterator<T> rbegin() const;
+    ReverseTreeIterator<T> rend() const;
 
     template <typename P>
     friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
