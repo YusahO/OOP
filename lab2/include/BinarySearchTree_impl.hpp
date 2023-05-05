@@ -80,6 +80,7 @@ TreeIterator<T> BinarySearchTree<T>::Insert(const T &value)
     return TreeIterator<T>(newNode);
 }
 
+
 template <Comparable T>
 TreeIterator<T> BinarySearchTree<T>::Insert(T &&value)
 {
@@ -133,6 +134,16 @@ ReverseTreeIterator<T> BinarySearchTree<T>::rend() const
 {
     // std::cout << mp_root << "\n";
     return ReverseTreeIterator<T>(mp_root);
+}
+
+template<Comparable T>
+template<Container Con>
+inline BinarySearchTree<T>::BinarySearchTree(const Con &container)
+{
+    for(auto elem: container)
+    {
+        Insert(elem);
+    }
 }
 
 template <Comparable T>

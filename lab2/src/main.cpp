@@ -1,6 +1,7 @@
 #include <iostream>
 #include "BinarySearchTree.hpp"
 
+#include <list>
 using namespace MyBST;
 
 int main()
