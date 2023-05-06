@@ -23,7 +23,7 @@ TreeIterator<T>::TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T>
 {
     if (node != nullptr)
     {
-        _Search(node, root);
+        Search(node, root);
     }
     else
     {
@@ -40,7 +40,7 @@ TreeIterator<T>::TreeIterator(const TreeIterator<T> &other)
 
 template<typename T>
 TreeIterator<T>::TreeIterator(TreeIterator<T> &&other)
-    : m_stack(std::move(m_stack))
+    : m_stack(std::move(other.m_stack))
 {
 }
 
@@ -84,10 +84,10 @@ TreeIterator<T> &TreeIterator<T>::operator++()
 {
     CheckValidity(__LINE__);
 
-    if (m_stack.empty() || m_stack.top() == nullptr)
-    {
-        return *this;
-    }
+    // if (m_stack.empty() || m_stack.top() == nullptr)
+    // {
+    //     return *this;
+    // }
 
     if (m_stack.top()->GetRight())
     {
@@ -193,7 +193,7 @@ void TreeIterator<T>::Recalculate(const BSTSharedPtr<T> &root)
     
     if (top != nullptr)
     {
-        _Search(top, root);
+        Search(top, root);
     }
     else
     {
@@ -213,7 +213,7 @@ template <typename T>
 void TreeIterator<T>::CheckValidity(int line) const
 {
     if (!Valid())
-        throw InvalidPointerError(__FILE__, typeid(this).name(), line);
+        throw TreeOutOfBoundsError(__FILE__, typeid(this).name(), line);
 }
 
 template <typename T>
@@ -239,7 +239,7 @@ void TreeIterator<T>::Rightmost(const BSTSharedPtr<T> &node)
 }
 
 template <typename T>
-void TreeIterator<T>::_Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
+void TreeIterator<T>::Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
 {
     BSTSharedPtr<T> found = root;
     while (found && found->GetValue() != node->GetValue())

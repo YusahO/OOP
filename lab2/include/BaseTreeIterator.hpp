@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include <cstddef>
 
 template <typename T>
 class BaseTreeIterator

@@ -20,6 +20,7 @@ namespace MyBST {
         explicit BinarySearchTree(std::initializer_list<T> lst);
 
         template<Container Con>
+        requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
         explicit BinarySearchTree(const Con &container);
 
         BinarySearchTree(const BinarySearchTree<T> &other);
@@ -43,7 +44,6 @@ namespace MyBST {
         TreeIterator<T> Erase(Iter &first, Iter &last);
         bool Erase(const T &value);
 
-        BSTSharedPtr<T> GetRoot() const;
 
         virtual void Clean() noexcept;
         std::size_t size() const noexcept;
@@ -57,7 +57,8 @@ namespace MyBST {
         friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
 
     protected:
-        std::size_t _Size(const BSTSharedPtr<T> &node);
+        BSTSharedPtr<T> GetRoot() const;
+        std::size_t _Size(const BSTSharedPtr<T> &node) const;
         BSTSharedPtr<T> _DeepCopy(const BSTSharedPtr<T> &other);
         std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
         BSTSharedPtr<T> _Find(const T &value);

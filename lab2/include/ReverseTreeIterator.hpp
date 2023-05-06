@@ -50,7 +50,7 @@ public:
     
 protected:
     void Reset();
-    void _Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
+    void Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
     void CheckValidity(int) const;
 
 private:
