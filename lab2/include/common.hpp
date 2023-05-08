@@ -27,16 +27,29 @@ concept Assignable = requires (From fm, To to)
 template <typename From, typename To>
 concept Convertible = std::convertible_to<From, To>;
 
+template <typename T> 
+concept Iterator = requires (T t, T p)
+{   
+    typename T::value_type;
 
-template <typename T>
-class TreeNode;
+    { ++t } -> std::same_as<T&>;
+    { --t } -> std::same_as<T&>;
 
-template <typename T>
-using BSTSharedPtr = std::shared_ptr<TreeNode<T>>;
+    { *t } -> std::same_as<typename T::value_type const&>;
+    { t != p } -> std::same_as<bool>;
+};
 
-// template <typename T>
-// using BSTWeakPtr = std::weak_ptr<TreeNode<T>>;
+
+// template <Comparable T>
+// class BST;
+
+// template <Comparable T>
+// using BSTSharedPtr = std::shared_ptr<BST<T>::TreeNode>;
+
+// template <Comparable T>
+// using BSTWeakPtr = std::weak_ptr<BST<T>::TreeNode>;
 
 }
 
-#include "TreeNode.hpp"
+// #include "TreeNode.hpp"
+#include "BinarySearchTree.hpp"

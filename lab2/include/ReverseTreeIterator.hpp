@@ -7,75 +7,84 @@
 #include "BinarySearchTree.hpp"
 #include "BaseTreeIterator.hpp"
 
-namespace MyBST {
-
-template <typename T>
-class ReverseTreeIterator : public BaseTreeIterator<T>
+namespace MyBST
 {
-public:
-    using IteratorCategory = std::bidirectional_iterator_tag;
 
-public:
-    ReverseTreeIterator();
-    explicit ReverseTreeIterator(const BSTSharedPtr<T> &root);
-    ReverseTreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
-
-    ReverseTreeIterator(const ReverseTreeIterator<T> &other);
-    ReverseTreeIterator(ReverseTreeIterator<T> &&other);
-
-    ReverseTreeIterator<T> &operator=(const ReverseTreeIterator<T> &other);
-    ReverseTreeIterator<T> &operator=(ReverseTreeIterator<T> &&other);
-
-    const T &operator*() const;
-
-    operator bool() const;
-    bool Valid() const;
-
-    ReverseTreeIterator<T> &operator++();
-    ReverseTreeIterator<T> operator++(int);
-
-    ReverseTreeIterator<T> &operator--();
-    ReverseTreeIterator<T> operator--(int);
-
-    bool operator==(const ReverseTreeIterator<T> &other) const;
-    bool operator!=(const ReverseTreeIterator<T> &other) const;
-
-    void Recalculate(const BSTSharedPtr<T> &root);
-
-    template <typename P>
-    friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
-
-    void Leftmost(const BSTSharedPtr<T> &node);
-    void Rightmost(const BSTSharedPtr<T> &node);
-    
-protected:
-    void Reset();
-    void Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
-    void CheckValidity(int) const;
-
-private:
-    std::stack<BSTSharedPtr<T>> m_stack;
-};
-
-template <typename P>
-std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
-{
-    std::stack<BSTSharedPtr<P>> st = iter.m_stack;
-    os << "[ ";
-    while (!st.empty())
+    template <typename T>
+    class ReverseTreeIterator : public BaseTreeIterator<T>
     {
-        if (st.top().get() == nullptr)
-        {
-            os << "null ";
-        }
-        else
-        {
-            os << st.top().get()->GetValue() << " ";
-        }
-        st.pop();
-    }
-    return os << "]";
-}
+    public:
+        using iterator_category = std::bidirectional_iterator_tag;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
+        using difference_type = std::ptrdiff_t;
+
+    private:
+        using bst_shared_ptr = typename BST<T>::bst_shared_ptr;
+        using bst_weak_ptr = typename BST<T>::bst_weak_ptr;
+
+    public:
+        ReverseTreeIterator();
+        explicit ReverseTreeIterator(const bst_shared_ptr &root);
+        ReverseTreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root);
+
+        ReverseTreeIterator(const ReverseTreeIterator<T> &other);
+        ReverseTreeIterator(ReverseTreeIterator<T> &&other);
+
+        ReverseTreeIterator<T> &operator=(const ReverseTreeIterator<T> &other);
+        ReverseTreeIterator<T> &operator=(ReverseTreeIterator<T> &&other);
+
+        const T &operator*() const;
+
+        operator bool() const;
+        bool valid() const;
+
+        ReverseTreeIterator<T> &operator++();
+        ReverseTreeIterator<T> operator++(int);
+
+        ReverseTreeIterator<T> &operator--();
+        ReverseTreeIterator<T> operator--(int);
+
+        bool operator==(const ReverseTreeIterator<T> &other) const;
+        bool operator!=(const ReverseTreeIterator<T> &other) const;
+
+        void recalculate(const bst_shared_ptr &root);
+
+        // template <typename P>
+        // friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
+
+        void leftmost(const bst_shared_ptr &node);
+        void rightmost(const bst_shared_ptr &node);
+
+    protected:
+        void reset();
+        void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
+        void check_validity(int) const;
+
+    private:
+        std::stack<bst_shared_ptr> m_stack;
+    };
+
+    // template <typename P>
+    // std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
+    // {
+    //     std::stack<BSTSharedPtr<P>> st = iter.m_stack;
+    //     os << "[ ";
+    //     while (!st.empty())
+    //     {
+    //         if (st.top().get() == nullptr)
+    //         {
+    //             os << "null ";
+    //         }
+    //         else
+    //         {
+    //             os << st.top().get()->GetValue() << " ";
+    //         }
+    //         st.pop();
+    //     }
+    //     return os << "]";
+    // }
 
 }
 

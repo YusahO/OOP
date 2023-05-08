@@ -9,16 +9,27 @@
 
 namespace MyBST {
 
-template <typename T>
+template <Comparable T>
+class BST;
+
+template <Comparable T>
 class TreeIterator : public BaseTreeIterator<T>
 {
 public:
-    using IteratorCategory = std::bidirectional_iterator_tag;
+    using iterator_category = std::bidirectional_iterator_tag;
+    using value_type = T;
+    using pointer = T*;
+    using reference = T&;
+    using difference_type = std::ptrdiff_t;
+
+private:
+    using bst_shared_ptr = typename BST<T>::bst_shared_ptr;
+    using bst_weak_ptr = typename BST<T>::bst_weak_ptr;
 
 public:
     TreeIterator();
-    explicit TreeIterator(const BSTSharedPtr<T> &root);
-    TreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
+    explicit TreeIterator(const bst_shared_ptr &root);
+    TreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root);
 
     TreeIterator(const TreeIterator<T> &other);
     TreeIterator(TreeIterator<T> &&other);
@@ -29,7 +40,7 @@ public:
     const T &operator*();
 
     operator bool() const;
-    bool Valid() const;
+    bool valid() const;
 
     TreeIterator<T> &operator++();
     TreeIterator<T> operator++(int);
@@ -40,42 +51,42 @@ public:
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
 
-    void Recalculate(const BSTSharedPtr<T> &root);
+    void recalculate(const bst_shared_ptr &root);
 
-    template <typename P>
-    friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
+    // template <Comparable P>
+    // friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
-    void Leftmost(const BSTSharedPtr<T> &node);
-    void Rightmost(const BSTSharedPtr<T> &node);
+    void leftmost(const bst_shared_ptr &node);
+    void rightmost(const bst_shared_ptr &node);
 
 protected:
-    void Reset();
-    void Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root);
-    void CheckValidity(int) const;
+    void reset();
+    void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
+    void check_validity(int) const;
 
 private:
-    std::stack<BSTSharedPtr<T>> m_stack;
+    std::stack<bst_weak_ptr> m_stack;
 };
 
-template <typename P>
-std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
-{
-    std::stack<BSTSharedPtr<P>> st = iter.m_stack;
-    os << "[ ";
-    while (!st.empty())
-    {
-        if (st.top().get() == nullptr)
-        {
-            os << "null ";
-        }
-        else
-        {
-            os << st.top().get()->GetValue() << " ";
-        }
-        st.pop();
-    }
-    return os << "]";
-}
+// template <Comparable P>
+// std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
+// {
+//     std::stack<std::weak_ptr<BST<P>::TreeNode>> st = iter.m_stack;
+//     os << "[ ";
+//     while (!st.empty())
+//     {
+//         if (st.top().expired())
+//         {
+//             os << "null ";
+//         }
+//         else
+//         {
+//             os << st.top().lock()->m_value << " ";
+//         }
+//         st.pop();
+//     }
+//     return os << "]";
+// }
 
 }
 

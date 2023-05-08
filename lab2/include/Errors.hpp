@@ -118,7 +118,7 @@ public:
     TreeValueError(const std::string &filename,
                    const std::string &classname,
                    int line,
-                   std::string errType = "Insertion of existent value error\n")
+                   std::string errType = "insertion of existent value error\n")
         : BaseError(filename, classname, line, errType)
     {
     }

@@ -13,22 +13,22 @@ ReverseTreeIterator<T>::ReverseTreeIterator()
 }
 
 template <typename T>
-ReverseTreeIterator<T>::ReverseTreeIterator(const BSTSharedPtr<T> &root)
+ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &root)
 {
-    Leftmost(root);
+    leftmost(root);
     m_stack.emplace(nullptr);
 }
 
 template <typename T>
-ReverseTreeIterator<T>::ReverseTreeIterator(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
+ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root)
 {
     if (node != nullptr)
     {
-        Search(node, root);
+        search(node, root);
     }
     else
     {
-        Rightmost(root);
+        rightmost(root);
         m_stack.emplace(node);
     }
 }
@@ -48,7 +48,7 @@ ReverseTreeIterator<T>::ReverseTreeIterator(ReverseTreeIterator<T> &&other)
 template <typename T>
 ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(const ReverseTreeIterator<T> &other)
 {
-    other.CheckValidity(__LINE__);
+    other.check_validity(__LINE__);
     m_stack = other.m_stack;
     return *this;
 }
@@ -56,7 +56,7 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(const ReverseTreeItera
 template<typename T>
 ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(ReverseTreeIterator<T> &&other)
 {
-    other.CheckValidity(__LINE__);
+    other.check_validity(__LINE__);
     m_stack = std::move(other.m_stack);
     return *this;
 }
@@ -64,18 +64,18 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(ReverseTreeIterator<T>
 template <typename T>
 const T &ReverseTreeIterator<T>::operator*() const
 {
-    CheckValidity(__LINE__);
-    return m_stack.top()->GetValue();
+    check_validity(__LINE__);
+    return m_stack.top()->m_value;
 }
 
 template <typename T>
 ReverseTreeIterator<T>::operator bool() const
 {
-    return Valid();
+    return valid();
 }
 
 template <typename T>
-bool ReverseTreeIterator<T>::Valid() const
+bool ReverseTreeIterator<T>::valid() const
 {
     return !m_stack.empty() && m_stack.top() != nullptr;
 }
@@ -83,25 +83,25 @@ bool ReverseTreeIterator<T>::Valid() const
 template <typename T>
 ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--()
 {
-    CheckValidity(__LINE__);
+    check_validity(__LINE__);
 
     // if (m_stack.empty() || m_stack.top() == nullptr)
     // {
     //     return *this;
     // }
 
-    if (m_stack.top()->GetRight())
+    if (m_stack.top()->mp_right)
     {
-        BSTSharedPtr<T> node = m_stack.top()->GetRight();
-        Leftmost(node);
+        bst_shared_ptr node = m_stack.top()->mp_right;
+        leftmost(node);
     }
     else
     {
-        BSTSharedPtr<T> node = m_stack.top();
+        bst_shared_ptr node = m_stack.top();
         m_stack.pop();
 
         bool stackNotEmpty = !m_stack.empty();
-        while (stackNotEmpty && m_stack.top()->GetRight() == node)
+        while (stackNotEmpty && m_stack.top()->mp_right == node)
         {
             node = m_stack.top();
             m_stack.pop();
@@ -112,7 +112,7 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--()
 
         if (!stackNotEmpty)
         {
-            Rightmost(node);
+            rightmost(node);
             m_stack.emplace(nullptr);
         }
     }
@@ -131,7 +131,7 @@ ReverseTreeIterator<T> ReverseTreeIterator<T>::operator--(int)
 template <typename T>
 ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
 {
-    CheckValidity(__LINE__);
+    check_validity(__LINE__);
 
     if (m_stack.top() == nullptr)
     {
@@ -139,18 +139,18 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
         return *this;
     }
 
-    if (m_stack.top()->GetLeft())
+    if (m_stack.top()->mp_left)
     {
-        BSTSharedPtr<T> node = m_stack.top()->GetLeft();
-        Rightmost(node);
+        bst_shared_ptr node = m_stack.top()->mp_left;
+        rightmost(node);
     }
     else
     {
-        BSTSharedPtr<T> node = m_stack.top();
+        bst_shared_ptr node = m_stack.top();
         m_stack.pop();
 
         bool stackNotEmpty = !m_stack.empty();
-        while (stackNotEmpty && m_stack.top()->GetLeft() == node)
+        while (stackNotEmpty && m_stack.top()->mp_left == node)
         {
             node = m_stack.top();
             m_stack.pop();
@@ -160,7 +160,7 @@ ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
         }
         if (!stackNotEmpty)
         {
-            Leftmost(node);
+            leftmost(node);
             m_stack.emplace(nullptr);
         }
     }
@@ -179,81 +179,81 @@ ReverseTreeIterator<T> ReverseTreeIterator<T>::operator++(int)
 template <typename T>
 bool ReverseTreeIterator<T>::operator==(const ReverseTreeIterator<T> &other) const
 {
-    // CheckValidity(__LINE__);
+    // check_validity(__LINE__);
     return m_stack == other.m_stack;
 }
 
 template <typename T>
 bool ReverseTreeIterator<T>::operator!=(const ReverseTreeIterator<T> &other) const
 {
-    // CheckValidity(__LINE__);
+    // check_validity(__LINE__);
     return m_stack != other.m_stack;
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::Recalculate(const BSTSharedPtr<T> &root)
+void ReverseTreeIterator<T>::recalculate(const bst_shared_ptr &root)
 {
-    BSTSharedPtr<T> top = m_stack.top();
-    Reset();
+    bst_shared_ptr top = m_stack.top();
+    reset();
 
     if (top != nullptr)
     {
-        Search(top, root);
+        search(top, root);
     }
     else
     {
-        Rightmost(root);
+        rightmost(root);
         m_stack.emplace(top);
     }
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::Reset()
+void ReverseTreeIterator<T>::reset()
 {
     while (!m_stack.empty())
         m_stack.pop();
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::CheckValidity(int line) const
+void ReverseTreeIterator<T>::check_validity(int line) const
 {
-    if (!Valid())
+    if (!valid())
         throw TreeOutOfBoundsError(__FILE__, typeid(this).name(), line);
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::Leftmost(const BSTSharedPtr<T> &node)
+void ReverseTreeIterator<T>::leftmost(const bst_shared_ptr &node)
 {
-    BSTSharedPtr<T> n = node;
+    bst_shared_ptr n = node;
     while (n)
     {
         m_stack.emplace(n);
-        n = n->GetLeft();
+        n = n->mp_left;
     }
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::Rightmost(const BSTSharedPtr<T> &node)
+void ReverseTreeIterator<T>::rightmost(const bst_shared_ptr &node)
 {
-    BSTSharedPtr<T> n = node;
+    bst_shared_ptr n = node;
     while (n)
     {
         m_stack.emplace(n);
-        n = n->GetRight();
+        n = n->mp_right;
     }
 }
 
 template <typename T>
-void ReverseTreeIterator<T>::Search(const BSTSharedPtr<T> &node, const BSTSharedPtr<T> &root)
+void ReverseTreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
 {
-    BSTSharedPtr<T> found = root;
-    while (found && found->GetValue() != node->GetValue())
+    bst_shared_ptr found = root;
+    while (found && found->m_value != node->m_value)
     {
         m_stack.emplace(found);
-        if (found->GetValue() < node->GetValue())
-            found = found->GetRight();
+        if (found->m_value < node->m_value)
+            found = found->mp_right;
         else
-            found = found->GetLeft();
+            found = found->mp_left;
     }
     m_stack.emplace(found);
 }

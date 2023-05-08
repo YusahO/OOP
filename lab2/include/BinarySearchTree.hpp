@@ -4,85 +4,113 @@
 #include "TreeIterator.hpp"
 #include "ReverseTreeIterator.hpp"
 
-#include "TreeNode.hpp"
+namespace MyBST
+{
 
-namespace MyBST {
+template <Comparable T>
+class BST
+{
+public:
+    friend class TreeIterator<T>;
+    friend class ReverseTreeIterator<T>;
 
-    template <Comparable T>
-    class BinarySearchTree
+    using iterator = TreeIterator<T>;
+    using reverse_iterator = ReverseTreeIterator<T>;
+    using value_type = T;
+    using size_type = size_t;
+
+private:
+    class TreeNode;
+    using bst_shared_ptr = typename std::shared_ptr<TreeNode>;
+    using bst_weak_ptr = typename std::weak_ptr<TreeNode>;
+
+private:
+    struct TreeNode
     {
-    public:
-        using iterator = TreeIterator<T>;
-        using value_type = T;
+        TreeNode();
+        explicit TreeNode(T &&value);
+        explicit TreeNode(const T &value);
+        TreeNode(T &&value, const bst_shared_ptr &left, const bst_shared_ptr &right);
+        TreeNode(const T &value, const bst_shared_ptr &left, const bst_shared_ptr &right);
 
-    public:
-        BinarySearchTree();
-        explicit BinarySearchTree(std::initializer_list<T> lst);
-
-        template<Container Con>
-        requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
-        explicit BinarySearchTree(const Con &container);
-
-        BinarySearchTree(const BinarySearchTree<T> &other);
-        BinarySearchTree(BinarySearchTree<T> &&other);
-        BinarySearchTree &operator=(const BinarySearchTree<T> &other);
-        BinarySearchTree &operator=(BinarySearchTree<T> &&other);
-
-        virtual ~BinarySearchTree() = default;
-
-        // вставка
-        virtual TreeIterator<T> Insert(T &&value);
-        virtual TreeIterator<T> Insert(const T &value);
-
-        // поиск
-        TreeIterator<T> Find(const T &value);
-
-        // удаление
-        template <class Iter>
-        TreeIterator<T> Erase(Iter &pos);
-        template <class Iter>
-        TreeIterator<T> Erase(Iter &first, Iter &last);
-        bool Erase(const T &value);
-
-
-        virtual void Clean() noexcept;
-        std::size_t size() const noexcept;
-
-        TreeIterator<T> begin() const noexcept;
-        TreeIterator<T> end() const noexcept;
-        ReverseTreeIterator<T> rbegin() const noexcept;
-        ReverseTreeIterator<T> rend() const noexcept;
-
-        template <typename P>
-        friend std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree);
-
-    protected:
-        BSTSharedPtr<T> GetRoot() const;
-        std::size_t _Size(const BSTSharedPtr<T> &node) const;
-        BSTSharedPtr<T> _DeepCopy(const BSTSharedPtr<T> &other);
-        std::pair<BSTSharedPtr<T>, bool> _Erase(const T &value);
-        BSTSharedPtr<T> _Find(const T &value);
-        std::ostream &_Inorder(const BSTSharedPtr<T> &node, std::ostream &os) const;
-
-    private:
-        BSTSharedPtr<T> mp_root = nullptr;
+        T m_value;
+        bst_shared_ptr mp_left;
+        bst_shared_ptr mp_right;
     };
 
+public:
+    BST();
+    explicit BST(std::initializer_list<T> lst);
+
+    template <Iterator Iter>
+        requires Assignable<typename Iter::value_type, T>
+    explicit BST(Iter first, Iter last);
+
+    template <Container Con>
+        requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+    explicit BST(const Con &container);
+
+    BST(const BST<T> &other);
+    BST(BST<T> &&other);
+    BST &operator=(const BST<T> &other);
+    BST &operator=(BST<T> &&other);
+
+    ~BST() = default;
+
+    // вставка
+    TreeIterator<T> insert(T &&value);
+    TreeIterator<T> insert(const T &value);
+
+    // поиск
+    TreeIterator<T> find(const T &value);
+
+    // удаление
+    template <Iterator Iter>
+        requires Assignable<typename Iter::value_type, T>
+    TreeIterator<T> erase(Iter &pos);
+    template <Iterator Iter>
+        requires Assignable<typename Iter::value_type, T>
+    TreeIterator<T> erase(Iter &first, Iter &last);
+    bool erase(const T &value);
+
+    void clean() noexcept;
+    std::size_t size() const noexcept;
+
+    TreeIterator<T> begin() const noexcept;
+    TreeIterator<T> end() const noexcept;
+    ReverseTreeIterator<T> rbegin() const noexcept;
+    ReverseTreeIterator<T> rend() const noexcept;
+
     template <typename P>
-    std::ostream &operator<<(std::ostream &os, const BinarySearchTree<P> &tree)
+    friend std::ostream &operator<<(std::ostream &os, const BST<P> &tree);
+
+protected:
+    bst_shared_ptr get_root() const;
+    std::size_t _size(const bst_shared_ptr &node) const;
+    bst_shared_ptr _deep_copy(const bst_shared_ptr &other);
+    std::pair<bst_shared_ptr, bool> _erase(const T &value);
+    bst_shared_ptr _find(const T &value);
+    std::ostream &_inorder(const bst_shared_ptr &node, std::ostream &os) const;
+
+private:
+    bst_shared_ptr mp_root = nullptr;
+};
+
+template <typename P>
+std::ostream &operator<<(std::ostream &os, const BST<P> &tree)
+{
+    os << "{ ";
+    if (tree.mp_root)
     {
-        os << "{ ";
-        if (tree.mp_root)
-        {
-            tree._Inorder(tree.mp_root, os);
-        }
-        else
-        {
-            std::cout << "empty ";
-        }
-        os << "}";
-        return os;
+        tree._inorder(tree.mp_root, os);
     }
+    else
+    {
+        std::cout << "empty ";
+    }
+    os << "}";
+    return os;
+}
 
 }
 
