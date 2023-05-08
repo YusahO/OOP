@@ -194,6 +194,14 @@ ReverseTreeIterator<T> BST<T>::rend() const noexcept
 }
 
 template <Comparable T>
+BST<T>::bst_shared_ptr BST<T>::find_min(bst_shared_ptr &node) const
+{
+    while (node->mp_left)
+        node = node->mp_left;
+    return node;
+}
+
+template <Comparable T>
 template <Iterator Iter> 
     requires Assignable<typename Iter::value_type, T>
 BST<T>::BST(Iter first, Iter last)
@@ -306,7 +314,6 @@ std::pair<typename BST<T>::bst_shared_ptr, bool> BST<T>::_erase(const T &value)
             found->mp_right = tmp->mp_right;
 
         found->m_value = tmp->m_value;
-        // std::swap(tmp, found);
 
         nextAfterDeleted = found;
     }
@@ -359,32 +366,36 @@ BST<T>::TreeNode::TreeNode()
 template <Comparable T>
 BST<T>::TreeNode::TreeNode(T &&value)
     : m_value(value),
-        mp_left(nullptr),
-        mp_right(nullptr)
+      m_height(1),
+      mp_left(nullptr),
+      mp_right(nullptr)
 {
 }
 
 template <Comparable T>
 BST<T>::TreeNode::TreeNode(const T &value)
     : m_value(value),
-        mp_left(nullptr),
-        mp_right(nullptr)
+      m_height(1),
+      mp_left(nullptr),
+      mp_right(nullptr)
 {
 }
 
 template <Comparable T>
 BST<T>::TreeNode::TreeNode(T &&value, const bst_shared_ptr &left, const bst_shared_ptr &right)
     : m_value(value),
-        mp_left(left),
-        mp_right(right)
+      m_height(1),
+      mp_left(left),
+      mp_right(right)
 {
 }
 
 template <Comparable T>
 BST<T>::TreeNode::TreeNode(const T &value, const bst_shared_ptr &left, const bst_shared_ptr &right)
     : m_value(value),
-        mp_left(left),
-        mp_right(right)
+      m_height(1),
+      mp_left(left),
+      mp_right(right)
 {
 }
 

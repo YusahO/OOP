@@ -36,6 +36,7 @@ public:
         bool operator!=(const TreeNode &other) const; 
 
         T m_value;
+        size_t m_height;
         bst_shared_ptr mp_left;
         bst_shared_ptr mp_right;
     };
@@ -87,6 +88,15 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const BST<P> &tree);
 
 protected:
+    bst_shared_ptr find_min(bst_shared_ptr &node) const;
+    bst_shared_ptr remove_min(const bst_shared_ptr &node);
+    size_t get_height(const bst_shared_ptr &node) const;
+    size_t get_balance(const bst_shared_ptr &node) const;
+    void fix_height(bst_shared_ptr &node);
+    bst_shared_ptr rotate_left(bst_shared_ptr &node);
+    bst_shared_ptr rotate_right(bst_shared_ptr &node);
+    bst_shared_ptr do_balance(bst_shared_ptr &node);
+
     bst_shared_ptr get_root() const;
     std::size_t _size(const bst_shared_ptr &node) const;
     bst_shared_ptr _deep_copy(const bst_shared_ptr &other);
