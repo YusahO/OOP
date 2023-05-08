@@ -233,6 +233,7 @@ TreeIterator<T> BST<T>::erase(Iter &first, Iter &last)
     while (it != last)
     {
         std::cout << *it << " ";
+        std::cout << it << " " << last << "\n";
         it = erase(it);
         last.recalculate(mp_root);
     }
@@ -383,6 +384,12 @@ BST<T>::TreeNode::TreeNode(const T &value, const bst_shared_ptr &left, const bst
         mp_left(left),
         mp_right(right)
 {
+}
+
+template <Comparable T>
+bool BST<T>::TreeNode::operator!=(const TreeNode &other) const
+{
+    return m_value != other.m_value;
 }
 
 }

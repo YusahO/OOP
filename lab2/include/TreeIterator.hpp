@@ -53,8 +53,8 @@ public:
 
     void recalculate(const bst_shared_ptr &root);
 
-    // template <Comparable P>
-    // friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
+    template <Comparable P>
+    friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
     void leftmost(const bst_shared_ptr &node);
     void rightmost(const bst_shared_ptr &node);
@@ -68,25 +68,25 @@ private:
     std::stack<bst_weak_ptr> m_stack;
 };
 
-// template <Comparable P>
-// std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
-// {
-//     std::stack<std::weak_ptr<BST<P>::TreeNode>> st = iter.m_stack;
-//     os << "[ ";
-//     while (!st.empty())
-//     {
-//         if (st.top().expired())
-//         {
-//             os << "null ";
-//         }
-//         else
-//         {
-//             os << st.top().lock()->m_value << " ";
-//         }
-//         st.pop();
-//     }
-//     return os << "]";
-// }
+template <Comparable P>
+std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
+{
+    std::stack<std::weak_ptr<typename BST<P>::TreeNode>> st = iter.m_stack;
+    os << "[ ";
+    while (!st.empty())
+    {
+        if (st.top().expired())
+        {
+            os << "null ";
+        }
+        else
+        {
+            os << st.top().lock()->m_value << " ";
+        }
+        st.pop();
+    }
+    return os << "]";
+}
 
 }
 

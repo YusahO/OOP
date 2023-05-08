@@ -19,12 +19,12 @@ public:
     using value_type = T;
     using size_type = size_t;
 
-private:
+public: // TODO: change to private
     class TreeNode;
     using bst_shared_ptr = typename std::shared_ptr<TreeNode>;
     using bst_weak_ptr = typename std::weak_ptr<TreeNode>;
 
-private:
+public:
     struct TreeNode
     {
         TreeNode();
@@ -32,6 +32,8 @@ private:
         explicit TreeNode(const T &value);
         TreeNode(T &&value, const bst_shared_ptr &left, const bst_shared_ptr &right);
         TreeNode(const T &value, const bst_shared_ptr &left, const bst_shared_ptr &right);
+
+        bool operator!=(const TreeNode &other) const; 
 
         T m_value;
         bst_shared_ptr mp_left;

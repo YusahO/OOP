@@ -178,26 +178,25 @@ namespace MyBST
         auto stack1(m_stack);
         auto stack2(other.m_stack);
 
-        while (!stack1.empty() && !stack2.empty())
+        bool equal = true;
+        while (equal && !stack1.empty() && !stack2.empty())
         {
-            std::weak_ptr<int> weakPtr1 = stack1.top();
-            std::weak_ptr<int> weakPtr2 = stack2.top();
-            if (!weakPtr1.expired() && !weakPtr2.expired())
+            bst_weak_ptr wptr1 = stack1.top();
+            bst_weak_ptr wptr2 = stack2.top();
+            if (!wptr1.expired() && !wptr2.expired())
             {
-                std::shared_ptr<int> sptr1 = weakPtr1.lock();
-                std::shared_ptr<int> sptr2 = weakPtr2.lock();
-                if (*sptr1 != *sptr2)
+                bst_shared_ptr sptr1 = wptr1.lock();
+                bst_shared_ptr sptr2 = wptr2.lock();
+                if (*(sptr1.get()) != *(sptr2.get()))
                 {
-                    // The two stacks are not equal
-                    break;
+                    equal = false;
                 }
             }
             stack1.pop();
             stack2.pop();
         }
-        if (stack1.empty() && stack2.empty())
-        {
-        }
+
+        return stack1.empty() && stack2.empty();
     }
 
     template <Comparable T>
