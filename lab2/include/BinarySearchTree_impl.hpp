@@ -232,9 +232,10 @@ TreeIterator<T> BST<T>::erase(Iter &first, Iter &last)
     Iter it = first;
     while (it != last)
     {
-        std::cout << *it << " ";
-        std::cout << it << " " << last << "\n";
+        std::cout << std::endl;
+        std::cout << "before erase " << *it << " " << it << " " << last << "\n";
         it = erase(it);
+        std::cout << "after erase " << *it << " " << it << " " << last << "\n";
         last.recalculate(mp_root);
     }
 
@@ -305,6 +306,7 @@ std::pair<typename BST<T>::bst_shared_ptr, bool> BST<T>::_erase(const T &value)
             found->mp_right = tmp->mp_right;
 
         found->m_value = tmp->m_value;
+        // std::swap(tmp, found);
 
         nextAfterDeleted = found;
     }

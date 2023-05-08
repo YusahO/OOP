@@ -104,6 +104,7 @@ int main()
             // std::cout << tree_cp << std::endl;
             auto beg_del = ++tree_cp.begin();
             auto end_del = --tree_cp.end();
+            --end_del;
             std::cout << "before del [" << *beg_del << ", " << *end_del << "): " << tree_cp << std::endl;
             tree_cp.erase(beg_del, end_del);
             std::cout << "after: " << tree_cp << std::endl;

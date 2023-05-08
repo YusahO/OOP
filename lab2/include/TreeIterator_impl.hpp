@@ -210,15 +210,17 @@ namespace MyBST
     {
         bst_shared_ptr top = m_stack.top().lock();
         reset();
+        // std::cout << "[ last: " << top << ", " << root->m_value << "]\n";
 
         if (top != nullptr)
         {
             search(top, root);
+            // std::cout << *this << "\n";
         }
         else
         {
             rightmost(root);
-            m_stack.emplace(top);
+            // m_stack.emplace(top);
         }
     }
 
@@ -261,6 +263,7 @@ namespace MyBST
     template <Comparable T>
     void TreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
+        std::cout << "searching: " << node->m_value << " root: " << root->m_value << std::endl;
         bst_shared_ptr found = root;
         while (found && found->m_value != node->m_value)
         {
