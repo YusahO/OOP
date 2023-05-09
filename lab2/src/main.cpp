@@ -113,8 +113,18 @@ int main()
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
         AVLTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
         std::cout << "INIT A\n" << a << std::endl;
-
+        std::ofstream output("abober.dot");
+        a.Export(output);
+        output.close();
         std::cout << "For each const auto &elem with separate ' '\n";
+        // std::cout << "end: " << a.end();
+        // for(auto elem = a.begin(); elem != a.end(); ++elem)
+        // {
+        //     std::cout << elem << "\n";
+        //     auto cp = elem;
+        //     ++cp;
+        //     std::cout << "elem+1" << cp << "\n";
+        // }
         for (const auto &elem : a)
             std::cout << elem << " ";
         std::cout << std::endl;

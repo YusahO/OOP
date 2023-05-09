@@ -21,12 +21,12 @@ namespace MyBST
         using value_type = T;
         using size_type = size_t;
 
-    private:
+    public:
         class TreeNode;
         using avl_shared_ptr = typename std::shared_ptr<TreeNode>;
         using avl_weak_ptr = typename std::weak_ptr<TreeNode>;
 
-    private:
+    public:
         struct TreeNode
         {
             TreeNode();

@@ -170,28 +170,19 @@ namespace MyBST
     template <Comparable T>
     bool TreeIterator<T>::operator==(const TreeIterator<T> &other) const
     {
-        auto stack1(m_stack);
-        auto stack2(other.m_stack);
-
-        bool equal = true;
-        while (equal && !stack1.empty() && !stack2.empty())
+        if (m_stack.size() != other.m_stack.size())
         {
-            avl_weak_ptr wptr1 = stack1.top();
-            avl_weak_ptr wptr2 = stack2.top();
-            if (!wptr1.expired() && !wptr2.expired())
-            {
-                avl_shared_ptr sptr1 = wptr1.lock();
-                avl_shared_ptr sptr2 = wptr2.lock();
-                if (*(sptr1.get()) != *(sptr2.get()))
-                {
-                    equal = false;
-                }
-            }
-            stack1.pop();
-            stack2.pop();
+            return false;
         }
 
-        return stack1.empty() && stack2.empty();
+        if (!m_stack.empty() && !other.m_stack.empty())
+        {
+            avl_shared_ptr f = m_stack.top().lock();
+            avl_shared_ptr s = other.m_stack.top().lock();
+            return f == s;
+        }
+
+        return false;
     }
 
     template <Comparable T>

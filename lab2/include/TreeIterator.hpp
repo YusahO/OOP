@@ -66,6 +66,7 @@ protected:
 
 private:
     std::stack<avl_weak_ptr> m_stack;
+
 };
 
 template <Comparable P>
