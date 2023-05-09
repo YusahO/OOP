@@ -10,7 +10,7 @@
 namespace MyBST {
 
 template <Comparable T>
-class BST;
+class AVLTree;
 
 template <Comparable T>
 class TreeIterator : public BaseTreeIterator<T>
@@ -23,13 +23,13 @@ public:
     using difference_type = std::ptrdiff_t;
 
 private:
-    using bst_shared_ptr = typename BST<T>::bst_shared_ptr;
-    using bst_weak_ptr = typename BST<T>::bst_weak_ptr;
+    using avl_shared_ptr = typename AVLTree<T>::avl_shared_ptr;
+    using avl_weak_ptr = typename AVLTree<T>::avl_weak_ptr;
 
 public:
     TreeIterator();
-    explicit TreeIterator(const bst_shared_ptr &root);
-    TreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root);
+    explicit TreeIterator(const avl_shared_ptr &root);
+    TreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root);
 
     TreeIterator(const TreeIterator<T> &other);
     TreeIterator(TreeIterator<T> &&other);
@@ -51,27 +51,27 @@ public:
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
 
-    void recalculate(const bst_shared_ptr &root);
+    void recalculate(const avl_shared_ptr &root);
 
     template <Comparable P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
-    void leftmost(const bst_shared_ptr &node);
-    void rightmost(const bst_shared_ptr &node);
+    void leftmost(const avl_shared_ptr &node);
+    void rightmost(const avl_shared_ptr &node);
 
 protected:
     void reset();
-    void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
+    void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
     void check_validity(int) const;
 
 private:
-    std::stack<bst_weak_ptr> m_stack;
+    std::stack<avl_weak_ptr> m_stack;
 };
 
 template <Comparable P>
 std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
 {
-    std::stack<std::weak_ptr<typename BST<P>::TreeNode>> st = iter.m_stack;
+    std::stack<std::weak_ptr<typename AVLTree<P>::TreeNode>> st = iter.m_stack;
     os << "[ ";
     while (!st.empty())
     {

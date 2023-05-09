@@ -41,13 +41,13 @@ concept Iterator = requires (T t, T p)
 
 
 // template <Comparable T>
-// class BST;
+// class AVLTree;
 
 // template <Comparable T>
-// using BSTSharedPtr = std::shared_ptr<BST<T>::TreeNode>;
+// using BSTSharedPtr = std::shared_ptr<AVLTree<T>::TreeNode>;
 
 // template <Comparable T>
-// using BSTWeakPtr = std::weak_ptr<BST<T>::TreeNode>;
+// using BSTWeakPtr = std::weak_ptr<AVLTree<T>::TreeNode>;
 
 }
 

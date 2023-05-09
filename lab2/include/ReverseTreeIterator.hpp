@@ -21,13 +21,13 @@ namespace MyBST
         using difference_type = std::ptrdiff_t;
 
     private:
-        using bst_shared_ptr = typename BST<T>::bst_shared_ptr;
-        using bst_weak_ptr = typename BST<T>::bst_weak_ptr;
+        using avl_shared_ptr = typename AVLTree<T>::avl_shared_ptr;
+        using avl_weak_ptr = typename AVLTree<T>::avl_weak_ptr;
 
     public:
         ReverseTreeIterator();
-        explicit ReverseTreeIterator(const bst_shared_ptr &root);
-        ReverseTreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root);
+        explicit ReverseTreeIterator(const avl_shared_ptr &root);
+        ReverseTreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root);
 
         ReverseTreeIterator(const ReverseTreeIterator<T> &other);
         ReverseTreeIterator(ReverseTreeIterator<T> &&other);
@@ -49,21 +49,21 @@ namespace MyBST
         bool operator==(const ReverseTreeIterator<T> &other) const;
         bool operator!=(const ReverseTreeIterator<T> &other) const;
 
-        void recalculate(const bst_shared_ptr &root);
+        void recalculate(const avl_shared_ptr &root);
 
         // template <typename P>
         // friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
-        void leftmost(const bst_shared_ptr &node);
-        void rightmost(const bst_shared_ptr &node);
+        void leftmost(const avl_shared_ptr &node);
+        void rightmost(const avl_shared_ptr &node);
 
     protected:
         void reset();
-        void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
+        void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
         void check_validity(int) const;
 
     private:
-        std::stack<bst_shared_ptr> m_stack;
+        std::stack<avl_shared_ptr> m_stack;
     };
 
     // template <typename P>

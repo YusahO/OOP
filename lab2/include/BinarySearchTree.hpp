@@ -4,125 +4,180 @@
 #include "TreeIterator.hpp"
 #include "ReverseTreeIterator.hpp"
 
+#include <fstream>
+
 namespace MyBST
 {
 
-template <Comparable T>
-class BST
-{
-public:
-    friend class TreeIterator<T>;
-    friend class ReverseTreeIterator<T>;
-
-    using iterator = TreeIterator<T>;
-    using reverse_iterator = ReverseTreeIterator<T>;
-    using value_type = T;
-    using size_type = size_t;
-
-public: // TODO: change to private
-    class TreeNode;
-    using bst_shared_ptr = typename std::shared_ptr<TreeNode>;
-    using bst_weak_ptr = typename std::weak_ptr<TreeNode>;
-
-public:
-    struct TreeNode
+    template <Comparable T>
+    class AVLTree
     {
-        TreeNode();
-        explicit TreeNode(T &&value);
-        explicit TreeNode(const T &value);
-        TreeNode(T &&value, const bst_shared_ptr &left, const bst_shared_ptr &right);
-        TreeNode(const T &value, const bst_shared_ptr &left, const bst_shared_ptr &right);
+    public:
+        friend class TreeIterator<T>;
+        friend class ReverseTreeIterator<T>;
 
-        bool operator!=(const TreeNode &other) const; 
+        using iterator = TreeIterator<T>;
+        using reverse_iterator = ReverseTreeIterator<T>;
+        using value_type = T;
+        using size_type = size_t;
 
-        T m_value;
-        size_t m_height;
-        bst_shared_ptr mp_left;
-        bst_shared_ptr mp_right;
+    private:
+        class TreeNode;
+        using avl_shared_ptr = typename std::shared_ptr<TreeNode>;
+        using avl_weak_ptr = typename std::weak_ptr<TreeNode>;
+
+    private:
+        struct TreeNode
+        {
+            TreeNode();
+            explicit TreeNode(T &&value, size_t height = 1);
+            explicit TreeNode(const T &value, size_t height = 1);
+
+            bool operator!=(const TreeNode &other) const;
+
+            T m_value;
+            size_t m_height;
+            avl_shared_ptr mp_left;
+            avl_shared_ptr mp_right;
+        };
+
+    public:
+        AVLTree();
+        explicit AVLTree(std::initializer_list<T> lst);
+
+        template <Iterator Iter>
+            requires Assignable<typename Iter::value_type, T>
+        explicit AVLTree(Iter first, Iter last);
+
+        template <Container Con>
+            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+        explicit AVLTree(const Con &container);
+
+        AVLTree(const AVLTree<T> &other);
+        AVLTree(AVLTree<T> &&other);
+        AVLTree &operator=(const AVLTree<T> &other);
+        AVLTree &operator=(AVLTree<T> &&other);
+
+        ~AVLTree() = default;
+
+        bool operator==(const AVLTree &other) const;
+
+        // вставка
+        bool insert(T &&value);
+        bool insert(const T &value);
+
+        // поиск
+        TreeIterator<T> find(T &&value) const;
+        TreeIterator<T> find(const T &value) const;
+        bool contains(const T &value) const;
+
+        // удаление
+        template <Iterator Iter>
+            requires Assignable<typename Iter::value_type, T>
+        bool erase(Iter pos);
+        // bool erase(T &&value);
+        bool erase(const T &value);
+
+        void clear() noexcept;
+        bool empty() const noexcept;
+        std::size_t size() const noexcept;
+
+        TreeIterator<T> begin() const noexcept;
+        TreeIterator<T> end() const noexcept;
+        ReverseTreeIterator<T> rbegin() const noexcept;
+        ReverseTreeIterator<T> rend() const noexcept;
+
+        void Export(std::ostream &f)
+        {
+            avl_shared_ptr tmp = mp_root;
+            avl_export_to_dot(f);
+        }
+
+        void to_dot(avl_shared_ptr &tree, std::ostream &f)
+        {
+            if (tree->mp_left)
+            {
+                f << "\"" << tree->m_value << ":" << tree->m_height << "\""
+                  << " -> "
+                  << "\"" << tree->mp_left->m_value << ":" << tree->mp_left->m_height << "\""
+                  << " [color = blue];\n";
+            }
+
+            if (tree->mp_right)
+            {
+                f << "\"" << tree->m_value << ":" << tree->m_height << "\""
+                  << " -> "
+                  << "\"" << tree->mp_right->m_value << ":" << tree->mp_right->m_height << "\""
+                  << " [color = red];\n";
+            }
+        }
+
+        void apply_print(avl_shared_ptr p, std::ostream &arg)
+        {
+            if (!p)
+                return;
+
+            apply_print(p->mp_left, arg);
+            to_dot(p, arg);
+            apply_print(p->mp_right, arg);
+        }
+
+        void avl_export_to_dot(std::ostream &f)
+        {
+            if (!mp_root)
+                return;
+
+            f << "digraph " << "G" << " {\n";
+
+            if (!mp_root->mp_left && !mp_root->mp_right)
+            {
+                f << mp_root->m_value << "\n";
+            }
+
+            apply_print(mp_root, f);
+
+            f << "}\n";
+        }
+
+        template <typename P>
+        friend std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree);
+
+    protected:
+        avl_shared_ptr find_min(avl_shared_ptr &node) const;
+        avl_shared_ptr remove_min(avl_shared_ptr node);
+        size_t get_height(const avl_shared_ptr &node) const;
+        int get_balance(const avl_shared_ptr &node) const;
+        void fix_height(avl_shared_ptr &node);
+        avl_shared_ptr rotate_left(avl_shared_ptr &node);
+        avl_shared_ptr rotate_right(avl_shared_ptr &node);
+        avl_shared_ptr do_balance(avl_shared_ptr &node);
+
+        avl_shared_ptr get_root() const;
+        avl_shared_ptr _deep_copy(const avl_shared_ptr &other);
+
+        bool _erase(const T &value);
+        avl_shared_ptr _find(const T &value) const;
+        std::ostream &_inorder(const avl_shared_ptr &node, std::ostream &os) const;
+
+    private:
+        avl_shared_ptr mp_root = nullptr;
     };
 
-public:
-    BST();
-    explicit BST(std::initializer_list<T> lst);
-
-    template <Iterator Iter>
-        requires Assignable<typename Iter::value_type, T>
-    explicit BST(Iter first, Iter last);
-
-    template <Container Con>
-        requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
-    explicit BST(const Con &container);
-
-    BST(const BST<T> &other);
-    BST(BST<T> &&other);
-    BST &operator=(const BST<T> &other);
-    BST &operator=(BST<T> &&other);
-
-    ~BST() = default;
-
-    // вставка
-    TreeIterator<T> insert(T &&value);
-    TreeIterator<T> insert(const T &value);
-
-    // поиск
-    TreeIterator<T> find(const T &value);
-
-    // удаление
-    template <Iterator Iter>
-        requires Assignable<typename Iter::value_type, T>
-    TreeIterator<T> erase(Iter &pos);
-    template <Iterator Iter>
-        requires Assignable<typename Iter::value_type, T>
-    TreeIterator<T> erase(Iter &first, Iter &last);
-    bool erase(const T &value);
-
-    void clean() noexcept;
-    std::size_t size() const noexcept;
-
-    TreeIterator<T> begin() const noexcept;
-    TreeIterator<T> end() const noexcept;
-    ReverseTreeIterator<T> rbegin() const noexcept;
-    ReverseTreeIterator<T> rend() const noexcept;
-
     template <typename P>
-    friend std::ostream &operator<<(std::ostream &os, const BST<P> &tree);
-
-protected:
-    bst_shared_ptr find_min(bst_shared_ptr &node) const;
-    bst_shared_ptr remove_min(const bst_shared_ptr &node);
-    size_t get_height(const bst_shared_ptr &node) const;
-    size_t get_balance(const bst_shared_ptr &node) const;
-    void fix_height(bst_shared_ptr &node);
-    bst_shared_ptr rotate_left(bst_shared_ptr &node);
-    bst_shared_ptr rotate_right(bst_shared_ptr &node);
-    bst_shared_ptr do_balance(bst_shared_ptr &node);
-
-    bst_shared_ptr get_root() const;
-    std::size_t _size(const bst_shared_ptr &node) const;
-    bst_shared_ptr _deep_copy(const bst_shared_ptr &other);
-    std::pair<bst_shared_ptr, bool> _erase(const T &value);
-    bst_shared_ptr _find(const T &value);
-    std::ostream &_inorder(const bst_shared_ptr &node, std::ostream &os) const;
-
-private:
-    bst_shared_ptr mp_root = nullptr;
-};
-
-template <typename P>
-std::ostream &operator<<(std::ostream &os, const BST<P> &tree)
-{
-    os << "{ ";
-    if (tree.mp_root)
+    std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree)
     {
-        tree._inorder(tree.mp_root, os);
+        os << "{ ";
+        if (tree.mp_root)
+        {
+            tree._inorder(tree.mp_root, os);
+        }
+        else
+        {
+            std::cout << "empty ";
+        }
+        os << "}";
+        return os;
     }
-    else
-    {
-        std::cout << "empty ";
-    }
-    os << "}";
-    return os;
-}
 
 }
 
