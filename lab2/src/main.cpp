@@ -110,6 +110,11 @@ int main()
 
     std::cout << "=== ITERATORS ===" << std::endl;
     {
+        std::cout << "ITERATORS empty tree" << std::endl;
+        AVLTree<int> tree;
+        std::cout << "begin() == end(): " << (tree.begin() == tree.end()) << std::endl;
+    }
+    {
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
         AVLTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
         std::cout << "INIT A\n" << a << std::endl;
@@ -160,38 +165,17 @@ int main()
         {
             std::cout << e.what();
         }
+
         try
         {
             AVLTree<int> test;
-
-            *test.rend();
+            *test.end();
         }
         catch (const std::exception &e)
         {
             std::cout << e.what();
         }
-        try
-        {
-            AVLTree<int> test;
-
-            *test.begin();
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << e.what();
-        }
-        try
-        {
-            AVLTree<int> test;
-            test.insert(12);
-            test.insert(12);
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << e.what();
-        }
-
-        std::cout << std::endl;
+        std::cout << std::endl;    
     }
     return 0;
 }

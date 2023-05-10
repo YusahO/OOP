@@ -135,10 +135,6 @@ namespace MyBST
     {
         check_validity(__LINE__);
 
-        // if (m_stack.empty())
-        // {
-        //     return *this;
-        // }
         if (m_stack.top().expired())
         {
             m_stack.pop();
@@ -207,25 +203,6 @@ namespace MyBST
     }
 
     template <Comparable T>
-    void ReverseTreeIterator<T>::recalculate(const avl_shared_ptr &root)
-    {
-        avl_shared_ptr top = m_stack.top().lock();
-        reset();
-        // std::cout << "[ last: " << top << ", " << root->m_value << "]\n";
-
-        if (top != nullptr)
-        {
-            search(top, root);
-            // std::cout << *this << "\n";
-        }
-        else
-        {
-            rightmost(root);
-            // m_stack.emplace(top);
-        }
-    }
-
-    template <Comparable T>
     void ReverseTreeIterator<T>::reset()
     {
         while (!m_stack.empty())
@@ -236,6 +213,18 @@ namespace MyBST
     void ReverseTreeIterator<T>::check_validity(int line) const
     {
         if (!valid())
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+        }
+    }
+
+    template<Comparable T>
+    void ReverseTreeIterator<T>::check_dereferenceable(int line) const
+    {
+        check_validity(line);
+        if (m_stack.top().expired())
         {
             time_t timer = time(nullptr);
             auto loc = std::source_location::current();

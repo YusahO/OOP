@@ -19,6 +19,8 @@ namespace MyBST
 
         using iterator = TreeIterator<T>;
         using reverse_iterator = ReverseTreeIterator<T>;
+        using const_iterator = const TreeIterator<T>;
+        using const_reverse_iterator = const ReverseTreeIterator<T>;
         using value_type = T;
         using size_type = size_t;
 
@@ -82,12 +84,12 @@ namespace MyBST
 
         void clear() noexcept;
         bool empty() const noexcept;
-        std::size_t size() const noexcept;
+        std::size_t size() const;
 
-        TreeIterator<T> begin() const noexcept;
-        TreeIterator<T> end() const noexcept;
-        ReverseTreeIterator<T> rbegin() const noexcept;
-        ReverseTreeIterator<T> rend() const noexcept;
+        TreeIterator<T> begin() const;
+        TreeIterator<T> end() const;
+        ReverseTreeIterator<T> rbegin() const;
+        ReverseTreeIterator<T> rend() const;
 
         // void Export(std::ostream &f)
         // {
@@ -157,6 +159,7 @@ namespace MyBST
         bool _erase(const T &value);
         avl_shared_ptr _find(const T &value) const;
         std::ostream &_inorder(const avl_shared_ptr &node, std::ostream &os) const;
+        avl_shared_ptr try_alloc_node(const T &value, int height = 1) const;
 
     private:
         avl_shared_ptr mp_root = nullptr;

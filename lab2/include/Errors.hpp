@@ -17,8 +17,8 @@ public:
         const char *errortype = "Error")
     {
         sprintf(msg,
-                "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
-                errortype, filename, line, funcname, time);
+            "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
+            errortype, filename, line, funcname, time);
     }
 
     virtual const char *what() const noexcept override
@@ -40,6 +40,20 @@ public:
         const int line,
         const char *time,
         const char *errortype = "Invalid object access error")
+        : BaseError(filename, funcname, line, time, errortype)
+    {
+    }
+};
+
+class TreeBadAlloc : public BaseError
+{
+    public:
+    TreeBadAlloc(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Could not allocate tree element")
         : BaseError(filename, funcname, line, time, errortype)
     {
     }

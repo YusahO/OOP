@@ -15,9 +15,17 @@ namespace MyBST
     }
 
     template <Comparable T>
-    TreeIterator<T>::TreeIterator(const avl_shared_ptr &root)
+    TreeIterator<T>::TreeIterator(const avl_shared_ptr &root, bool end)
     {
-        leftmost(root);
+        if (end || !root)
+        {
+            rightmost(root);
+            m_stack.emplace();
+        }
+        else
+        {
+            leftmost(root);
+        }
     }
 
     template <Comparable T>
@@ -65,14 +73,14 @@ namespace MyBST
     template <Comparable T>
     const T &TreeIterator<T>::operator*() const
     {
-        check_validity(__LINE__);
+        check_dereferenceable(__LINE__);
         return m_stack.top().lock()->m_value;
     }
 
     template <Comparable T>
     const T *TreeIterator<T>::operator->() const
     {
-        check_validity(__LINE__);
+        check_dereferenceable(__LINE__);
         return &(m_stack.top().lock()->m_value);
     }
 
@@ -210,6 +218,18 @@ namespace MyBST
     void TreeIterator<T>::check_validity(int line) const
     {
         if (!valid())
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+        }
+    }
+
+    template<Comparable T>
+    void TreeIterator<T>::check_dereferenceable(int line) const
+    {
+        check_validity(line);
+        if (m_stack.top().expired())
         {
             time_t timer = time(nullptr);
             auto loc = std::source_location::current();

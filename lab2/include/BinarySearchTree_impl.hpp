@@ -78,7 +78,7 @@ namespace MyBST
         }
 
         std::stack<AVLTree<T>::avl_shared_ptr> st;
-        AVLTree<T>::avl_shared_ptr new_root = std::make_shared<TreeNode>(other->m_value, other->m_height);
+        AVLTree<T>::avl_shared_ptr new_root = try_alloc_node(other->m_value, other->m_height);
         st.push(other);
         st.push(new_root);
         while (!st.empty())
@@ -90,14 +90,14 @@ namespace MyBST
 
             if (old_node->mp_left)
             {
-                new_node->mp_left = std::make_shared<TreeNode>(old_node->mp_left->m_value, old_node->mp_right->m_height);
+                new_node->mp_left = try_alloc_node(old_node->mp_left->m_value, old_node->mp_right->m_height);
                 st.push(old_node->mp_left);
                 st.push(new_node->mp_left);
             }
 
             if (old_node->mp_right)
             {
-                new_node->mp_right = std::make_shared<TreeNode>(old_node->mp_right->m_value, old_node->mp_right->m_height);
+                new_node->mp_right = try_alloc_node(old_node->mp_right->m_value, old_node->mp_right->m_height);
                 st.push(old_node->mp_right);
                 st.push(new_node->mp_right);
             }
@@ -108,7 +108,7 @@ namespace MyBST
     template <Comparable T>
     bool AVLTree<T>::insert(const T &value)
     {
-        AVLTree<T>::avl_shared_ptr new_node = std::make_shared<TreeNode>(value);
+        AVLTree<T>::avl_shared_ptr new_node;
 
         if (!mp_root)
         {
@@ -183,14 +183,14 @@ namespace MyBST
     TreeIterator<T> AVLTree<T>::find(T &&value) const
     {
         AVLTree<T>::avl_shared_ptr found = _find(value);
-        return {found, mp_root};
+        return { found, mp_root };
     }
 
     template <Comparable T>
     TreeIterator<T> AVLTree<T>::find(const T &value) const
     {
         AVLTree<T>::avl_shared_ptr found = _find(value);
-        return {found, mp_root};
+        return { found, mp_root };
     }
 
     template <Comparable T>
@@ -212,7 +212,7 @@ namespace MyBST
     }
 
     template <Comparable T>
-    std::size_t AVLTree<T>::size() const noexcept
+    std::size_t AVLTree<T>::size() const
     {
         std::size_t s = 0;
         for (const auto &p : *this)
@@ -221,21 +221,19 @@ namespace MyBST
     }
 
     template <Comparable T>
-    TreeIterator<T> AVLTree<T>::begin() const noexcept
+    TreeIterator<T> AVLTree<T>::begin() const
     {
         return TreeIterator<T>(mp_root);
     }
 
     template <Comparable T>
-    TreeIterator<T> AVLTree<T>::end() const noexcept
+    TreeIterator<T> AVLTree<T>::end() const
     {
-        TreeIterator<T> iter;
-        iter.rightmost(mp_root);
-        return ++iter;
+        return { mp_root, true };
     }
 
     template <Comparable T>
-    ReverseTreeIterator<T> AVLTree<T>::rbegin() const noexcept
+    ReverseTreeIterator<T> AVLTree<T>::rbegin() const
     {
         ReverseTreeIterator<T> iter;
         iter.rightmost(mp_root);
@@ -243,7 +241,7 @@ namespace MyBST
     }
 
     template <Comparable T>
-    ReverseTreeIterator<T> AVLTree<T>::rend() const noexcept
+    ReverseTreeIterator<T> AVLTree<T>::rend() const
     {
         return ReverseTreeIterator<T>(mp_root);
     }
@@ -261,7 +259,7 @@ namespace MyBST
 
     template <Comparable T>
     template <Container Con>
-        requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+        requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
     AVLTree<T>::AVLTree(const Con &container)
     {
         for (const auto &elem : container)
@@ -470,28 +468,45 @@ namespace MyBST
         return os;
     }
 
+    template<Comparable T>
+    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::try_alloc_node(const T &value, int height) const
+    {
+        AVLTree<T>::avl_shared_ptr node;
+        try
+        {
+            node = std::make_shared<TreeNode>(value, height);
+        }
+        catch (const std::bad_alloc &e)
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw TreeBadAlloc(loc.file_name(), loc.function_name(), __LINE__, ctime(&timer));
+        }
+        return node;
+    }
+
     template <Comparable T>
     AVLTree<T>::TreeNode::TreeNode()
         : mp_left(nullptr),
-          mp_right(nullptr)
+        mp_right(nullptr)
     {
     }
 
     template <Comparable T>
     AVLTree<T>::TreeNode::TreeNode(T &&value, size_t height)
         : m_value(value),
-          m_height(height),
-          mp_left(nullptr),
-          mp_right(nullptr)
+        m_height(height),
+        mp_left(nullptr),
+        mp_right(nullptr)
     {
     }
 
     template <Comparable T>
     AVLTree<T>::TreeNode::TreeNode(const T &value, size_t height)
         : m_value(value),
-          m_height(height),
-          mp_left(nullptr),
-          mp_right(nullptr)
+        m_height(height),
+        mp_left(nullptr),
+        mp_right(nullptr)
     {
     }
 

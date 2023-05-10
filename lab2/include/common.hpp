@@ -12,8 +12,7 @@ template <typename T>
 concept Container = requires (T t)
 {
     typename T::value_type;
-
-    { *t.begin() } -> std::same_as<typename T::value_type&>;
+    
     { t.begin() } -> std::same_as<typename T::iterator>;
     { t.end() } -> std::same_as<typename T::iterator>;
 };

@@ -6,5 +6,5 @@ class BaseTree
 {
 public:
     virtual size_t size() const = 0;
-    virtual ~BaseTree(){};
+    virtual ~BaseTree() {};
 };

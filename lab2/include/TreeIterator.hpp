@@ -13,14 +13,13 @@ template <Comparable T>
 class AVLTree;
 
 template <Comparable T>
-class TreeIterator : public BaseTreeIterator<T>
+class TreeIterator : public BaseTreeIterator
 {
 public:
     using iterator_category = std::bidirectional_iterator_tag;
     using value_type = T;
     using pointer = T*;
     using reference = T&;
-    using difference_type = std::ptrdiff_t;
 
 private:
     friend AVLTree<T>;
@@ -29,7 +28,7 @@ private:
 
 public:
     TreeIterator();
-    explicit TreeIterator(const avl_shared_ptr &root);
+    TreeIterator(const avl_shared_ptr &root, bool end = false);
     TreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root);
 
     TreeIterator(const TreeIterator<T> &other);
@@ -40,7 +39,7 @@ public:
 
     const T &operator*() const;
     const T *operator->() const;
-
+    
     operator bool() const;
     bool valid() const;
 
@@ -62,10 +61,10 @@ protected:
     void reset();
     void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
     void check_validity(int) const;
+    void check_dereferenceable(int) const;
 
 private:
     std::stack<avl_weak_ptr> m_stack;
-
 };
 
 template <Comparable P>

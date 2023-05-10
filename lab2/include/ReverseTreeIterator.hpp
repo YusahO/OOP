@@ -9,16 +9,14 @@
 
 namespace MyBST
 {
-
     template <Comparable T>
-    class ReverseTreeIterator : public BaseTreeIterator<T>
+    class ReverseTreeIterator : public BaseTreeIterator
     {
     public:
         using iterator_category = std::bidirectional_iterator_tag;
         using value_type = T;
         using pointer = T *;
         using reference = T &;
-        using difference_type = std::ptrdiff_t;
 
     private:
         friend AVLTree<T>;
@@ -51,8 +49,6 @@ namespace MyBST
         bool operator==(const ReverseTreeIterator<T> &other) const;
         bool operator!=(const ReverseTreeIterator<T> &other) const;
 
-        void recalculate(const avl_shared_ptr &root);
-
         template <Comparable P>
         friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
@@ -62,6 +58,7 @@ namespace MyBST
         void reset();
         void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
         void check_validity(int) const;
+        void check_dereferenceable(int) const;
 
     private:
         std::stack<avl_weak_ptr> m_stack;
