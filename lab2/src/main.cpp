@@ -84,10 +84,10 @@ int main()
     {
         std::cout << "--- INSERTION ---" << std::endl;
         AVLTree<int> tree;
-        int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         for (size_t i = 0; i < sizeof(arr) / sizeof(int); ++i)
         {
-            std::cout << "result: " << (tree.insert(arr[i]) ? "true" : "false") << "\n";
+            std::cout << "insert " << i + 1 << ": " << (tree.insert(arr[i]) ? "true" : "false") << "\n";
         }
         std::cout << "tree: " << tree << std::endl;
         std::cout << "--- FIND ---" << std::endl;
@@ -101,8 +101,14 @@ int main()
         std::cout << "--- REMOVE ---" << std::endl;
         {
             auto tree_cp = tree;
-            std::cout << "before del of 6" << tree_cp << std::endl;
+            std::cout << "before del of 6: " << tree_cp << std::endl;
             std::cout << "result: " << (tree_cp.erase(6) ? "true" : "false") << std::endl;
+            std::cout << "after: " << tree_cp << std::endl;
+        }
+        {
+            auto tree_cp = tree;
+            std::cout << "before del of 10 (not in tree): " << tree_cp << std::endl;
+            std::cout << "result: " << (tree_cp.erase(10) ? "true" : "false") << std::endl;
             std::cout << "after: " << tree_cp << std::endl;
         }
         std::cout << std::endl;
@@ -119,7 +125,7 @@ int main()
         AVLTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
         std::cout << "INIT A\n" << a << std::endl;
         std::cout << "For each const auto &elem with separate ' '\n";
-        for(auto elem = a.begin(); elem != a.end(); ++elem)
+        for (auto elem = a.begin(); elem != a.end(); ++elem)
             std::cout << *elem << " ";
         std::cout << std::endl;
         for (const auto &elem : a)
@@ -147,7 +153,7 @@ int main()
         std::cout << std::endl;
         {
             std::cout << "ITERATORS operator*" << std::endl;
-            AVLTree<int> tree{1,2,3,4,5,6};
+            AVLTree<int> tree{1, 2, 3, 4, 5, 6};
             std::cout << "tree: " << tree << "\n";
             auto it = tree.begin();
             std::cout << "*it: " << *it << "\n";
@@ -165,6 +171,7 @@ int main()
         {
             std::cout << e.what();
         }
+        std::cout << std::endl;
 
         try
         {
@@ -175,7 +182,30 @@ int main()
         {
             std::cout << e.what();
         }
-        std::cout << std::endl;    
+        std::cout << std::endl;
+
+        try
+        {
+            AVLTree<int> test1;
+            AVLTree<int> test2(test1);
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << e.what();
+        }
+        std::cout << std::endl;
+
+        try
+        {
+            AVLTree<int> test1;
+            AVLTree<int> test2;
+            test1 = test2;
+        }
+        catch (const std::exception &e)
+        {
+            std::cout << e.what();
+        }
+        std::cout << std::endl;
     }
     return 0;
 }

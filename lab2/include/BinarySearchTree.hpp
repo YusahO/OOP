@@ -53,7 +53,7 @@ namespace MyBST
         explicit AVLTree(Iter first, Iter last);
 
         template <Container Con>
-            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+            requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
         explicit AVLTree(const Con &container);
 
         AVLTree(const AVLTree<T> &other);
@@ -84,69 +84,18 @@ namespace MyBST
 
         void clear() noexcept;
         bool empty() const noexcept;
-        std::size_t size() const;
+        std::size_t size() const override;
 
         TreeIterator<T> begin() const;
         TreeIterator<T> end() const;
         ReverseTreeIterator<T> rbegin() const;
         ReverseTreeIterator<T> rend() const;
 
-        // void Export(std::ostream &f)
-        // {
-        //     avl_shared_ptr tmp = mp_root;
-        //     avl_export_to_dot(f);
-        // }
-
-        // void to_dot(avl_shared_ptr &tree, std::ostream &f)
-        // {
-        //     if (tree->mp_left)
-        //     {
-        //         f << "\"" << tree->m_value << ":" << tree->m_height << "\""
-        //           << " -> "
-        //           << "\"" << tree->mp_left->m_value << ":" << tree->mp_left->m_height << "\""
-        //           << " [color = blue];\n";
-        //     }
-
-        //     if (tree->mp_right)
-        //     {
-        //         f << "\"" << tree->m_value << ":" << tree->m_height << "\""
-        //           << " -> "
-        //           << "\"" << tree->mp_right->m_value << ":" << tree->mp_right->m_height << "\""
-        //           << " [color = red];\n";
-        //     }
-        // }
-
-        // void apply_print(avl_shared_ptr p, std::ostream &arg)
-        // {
-        //     if (!p)
-        //         return;
-
-        //     apply_print(p->mp_left, arg);
-        //     to_dot(p, arg);
-        //     apply_print(p->mp_right, arg);
-        // }
-
-        // void avl_export_to_dot(std::ostream &f)
-        // {
-        //     if (!mp_root)
-        //         return;
-
-        //     f << "digraph " << "G" << " {\n";
-
-        //     if (!mp_root->mp_left && !mp_root->mp_right)
-        //     {
-        //         f << mp_root->m_value << "\n";
-        //     }
-
-        //     apply_print(mp_root, f);
-
-        //     f << "}\n";
-        // }
-
         template <typename P>
         friend std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree);
 
     protected:
+        // методы АВЛ-дерева
         size_t get_height(const avl_shared_ptr &node) const;
         int get_balance(const avl_shared_ptr &node) const;
         void fix_height(avl_shared_ptr &node);
@@ -155,28 +104,26 @@ namespace MyBST
         avl_shared_ptr do_balance(avl_shared_ptr &node);
 
         avl_shared_ptr deep_copy(const avl_shared_ptr &other);
-
-        bool _erase(const T &value);
-        avl_shared_ptr _find(const T &value) const;
-        std::ostream &_inorder(const avl_shared_ptr &node, std::ostream &os) const;
         avl_shared_ptr try_alloc_node(const T &value, int height = 1) const;
 
+        avl_shared_ptr _find(const T &value) const;
+
     private:
-        avl_shared_ptr mp_root = nullptr;
+        avl_shared_ptr mp_root;
     };
 
     template <typename P>
     std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree)
     {
+        if (tree.empty())
+        {
+            os << "{ empty }";
+            return os;
+        }
+
         os << "{ ";
-        if (tree.mp_root)
-        {
-            tree._inorder(tree.mp_root, os);
-        }
-        else
-        {
-            std::cout << "empty ";
-        }
+        for (const auto &elem : tree)
+            os << elem << " ";
         os << "}";
         return os;
     }

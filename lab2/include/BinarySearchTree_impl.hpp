@@ -7,25 +7,6 @@
 
 namespace MyBST
 {
-    // template <Comparable T>
-    // void print_stack(std::stack<typename AVLTree<T>::avl_shared_ptr> st)
-    // {
-    //     std::cout << "[ ";
-    //     while (!st.empty())
-    //     {
-    //         if (st.top() == nullptr)
-    //         {
-    //             std::cout << "null ";
-    //         }
-    //         else
-    //         {
-    //             std::cout << st.top()->m_value << " ";
-    //         }
-    //         st.pop();
-    //     }
-    //     std::cout << "]\n";
-    // }
-
     template <Comparable T>
     AVLTree<T>::AVLTree()
         : mp_root(nullptr)
@@ -43,7 +24,7 @@ namespace MyBST
 
     template <Comparable T>
     AVLTree<T>::AVLTree(const AVLTree<T> &other)
-        : mp_root(other.mp_root)
+        : mp_root(deep_copy(other.mp_root))
     {
     }
 
@@ -108,7 +89,7 @@ namespace MyBST
     template <Comparable T>
     bool AVLTree<T>::insert(const T &value)
     {
-        AVLTree<T>::avl_shared_ptr new_node;
+        AVLTree<T>::avl_shared_ptr new_node = try_alloc_node(value);
 
         if (!mp_root)
         {
@@ -274,11 +255,6 @@ namespace MyBST
         return erase(value);
     }
 
-    template <Comparable T>
-    bool AVLTree<T>::erase(const T &value)
-    {
-        return _erase(value);
-    }
 
     template <Comparable T>
     template <Iterator Iter>
@@ -289,7 +265,7 @@ namespace MyBST
     }
 
     template <Comparable T>
-    bool AVLTree<T>::_erase(const T &value)
+    bool AVLTree<T>::erase(const T &value)
     {
         AVLTree<T>::avl_shared_ptr found = mp_root, parent;
         std::stack<avl_shared_ptr> st;
@@ -451,23 +427,7 @@ namespace MyBST
         return node;
     }
 
-    template <Comparable T>
-    std::ostream &AVLTree<T>::_inorder(const AVLTree<T>::avl_shared_ptr &node, std::ostream &os) const
-    {
-        if (node->mp_left)
-        {
-            _inorder(node->mp_left, os);
-        }
-
-        os << node->m_value << " ";
-
-        if (node->mp_right != nullptr)
-        {
-            _inorder(node->mp_right, os);
-        }
-        return os;
-    }
-
+    
     template<Comparable T>
     typename AVLTree<T>::avl_shared_ptr AVLTree<T>::try_alloc_node(const T &value, int height) const
     {

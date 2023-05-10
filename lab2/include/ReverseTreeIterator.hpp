@@ -58,7 +58,7 @@ namespace MyBST
         void reset();
         void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
         void check_validity(int) const;
-        void check_dereferenceable(int) const;
+        void check_in_bounds(int) const;
 
     private:
         std::stack<avl_weak_ptr> m_stack;

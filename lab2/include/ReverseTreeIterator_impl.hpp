@@ -221,14 +221,13 @@ namespace MyBST
     }
 
     template<Comparable T>
-    void ReverseTreeIterator<T>::check_dereferenceable(int line) const
+    void ReverseTreeIterator<T>::check_in_bounds(int line) const
     {
-        check_validity(line);
         if (m_stack.top().expired())
         {
             time_t timer = time(nullptr);
             auto loc = std::source_location::current();
-            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+            throw IteratorOutOfBoundsError(loc.file_name(), loc.function_name(), line, ctime(&timer));
         }
     }
 

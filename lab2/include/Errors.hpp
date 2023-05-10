@@ -31,10 +31,10 @@ private:
     char msg[size_buf]{};
 };
 
-class InvalidIteratorError : public BaseError
+class IteratorError : public BaseError
 {
 public:
-    InvalidIteratorError(
+    IteratorError(
         const char *filename,
         const char *funcname,
         const int line,
@@ -45,35 +45,63 @@ public:
     }
 };
 
-class TreeBadAlloc : public BaseError
+class TreeError : public BaseError
 {
-    public:
+public:
+    TreeError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Invalid object access error")
+        : BaseError(filename, funcname, line, time, errortype)
+    {
+    }
+};
+
+class InvalidIteratorError : public IteratorError
+{
+public:
+    InvalidIteratorError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Invalid object access error")
+        : IteratorError(filename, funcname, line, time, errortype)
+    {
+    }
+};
+
+class IteratorOutOfBoundsError : public IteratorError
+{
+public:
+    IteratorOutOfBoundsError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Out of bounds access error")
+        : IteratorError(filename, funcname, line, time, errortype)
+    {
+    }
+};
+
+class TreeBadAlloc : public TreeError
+{
+public:
     TreeBadAlloc(
         const char *filename,
         const char *funcname,
         const int line,
         const char *time,
         const char *errortype = "Could not allocate tree element")
-        : BaseError(filename, funcname, line, time, errortype)
+        : TreeError(filename, funcname, line, time, errortype)
     {
     }
 };
 
-class TreeOutOfBoundsError : public BaseError
-{
-public:
-    TreeOutOfBoundsError(
-        const char *filename,
-        const char *funcname,
-        const int line,
-        const char *time,
-        const char *errortype = "Out of bounds access error")
-        : BaseError(filename, funcname, line, time, errortype)
-    {
-    }
-};
-
-class TreeCopyError : public BaseError
+class TreeCopyError : public TreeError
 {
 public:
     TreeCopyError(
@@ -82,12 +110,12 @@ public:
         const int line,
         const char *time,
         const char *errortype = "Tree copy from invalid source error")
-        : BaseError(filename, funcname, line, time, errortype)
+        : TreeError(filename, funcname, line, time, errortype)
     {
     }
 };
 
-class InvalidTreeError : public BaseError
+class InvalidTreeError : public TreeError
 {
 public:
     InvalidTreeError(
@@ -96,7 +124,7 @@ public:
         const int line,
         const char *time,
         const char *errortype = "Empty tree access error")
-        : BaseError(filename, funcname, line, time, errortype)
+        : TreeError(filename, funcname, line, time, errortype)
     {
     }
 };
