@@ -3,6 +3,7 @@
 #include "Errors.hpp"
 #include "TreeIterator.hpp"
 #include <utility>
+#include <source_location>
 
 namespace MyBST
 {
@@ -62,16 +63,23 @@ namespace MyBST
     }
 
     template <Comparable T>
-    const T &TreeIterator<T>::operator*()
+    const T &TreeIterator<T>::operator*() const
     {
         check_validity(__LINE__);
         return m_stack.top().lock()->m_value;
     }
 
     template <Comparable T>
+    const T *TreeIterator<T>::operator->() const
+    {
+        check_validity(__LINE__);
+        return &(m_stack.top().lock()->m_value);
+    }
+
+    template <Comparable T>
     TreeIterator<T>::operator bool() const
     {
-        return valid();
+        return valid() && !m_stack.top().expired();
     }
 
     template <Comparable T>
@@ -192,25 +200,6 @@ namespace MyBST
     }
 
     template <Comparable T>
-    void TreeIterator<T>::recalculate(const avl_shared_ptr &root)
-    {
-        avl_shared_ptr top = m_stack.top().lock();
-        reset();
-        // std::cout << "[ last: " << top << ", " << root->m_value << "]\n";
-
-        if (top != nullptr)
-        {
-            search(top, root);
-            // std::cout << *this << "\n";
-        }
-        else
-        {
-            rightmost(root);
-            // m_stack.emplace(top);
-        }
-    }
-
-    template <Comparable T>
     void TreeIterator<T>::reset()
     {
         while (!m_stack.empty())
@@ -221,7 +210,11 @@ namespace MyBST
     void TreeIterator<T>::check_validity(int line) const
     {
         if (!valid())
-            throw TreeOutOfBoundsError(__FILE__, typeid(this).name(), line);
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+        }
     }
 
     template <Comparable T>
@@ -249,7 +242,6 @@ namespace MyBST
     template <Comparable T>
     void TreeIterator<T>::search(const avl_shared_ptr &node, const avl_shared_ptr &root)
     {
-        std::cout << "searching: " << node->m_value << " root: " << root->m_value << std::endl;
         avl_shared_ptr found = root;
         while (found && found->m_value != node->m_value)
         {

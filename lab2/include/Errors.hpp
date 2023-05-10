@@ -1,89 +1,46 @@
 #pragma once
 
 #include <exception>
-#include <string>
+#include <cstdio>
+#include <source_location>
+
+#define ERROR_MESSAGE_BUFFER_SIZE 512
 
 class BaseError : public std::exception
 {
 public:
-    BaseError(const std::string &filename,
-              const std::string &classname,
-              int line,
-              const std::string &errType = "Error")
+    BaseError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Error")
     {
-        m_errorInfo = "\n" + errType +
-                      " in file " + filename +
-                      "(" + std::to_string(line) + ")\n" +
-                      "Class: " + classname + "\n";
+        sprintf(msg,
+                "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
+                errortype, filename, line, funcname, time);
     }
 
     virtual const char *what() const noexcept override
     {
-        return m_errorInfo.c_str();
+        return msg;
     }
 
-    virtual ~BaseError() = default;
-
-protected:
-    std::string m_errorInfo;
-};
-
-class MemoryError : public BaseError
-{
-public:
-    MemoryError(const std::string &filename,
-                const std::string &classname,
-                int line,
-                const std::string &errType = "Memory allocation error")
-        : BaseError(filename, classname, line, errType)
-    {
-    }
-};
-
-class DeletedObjectError : public BaseError
-{
-public:
-    DeletedObjectError(const std::string &filename,
-                       const std::string &classname,
-                       int line,
-                       const std::string &errType = "Deleted object access error")
-        : BaseError(filename, classname, line, errType)
-    {
-    }
+private:
+    static constexpr size_t size_buf = ERROR_MESSAGE_BUFFER_SIZE;
+    char msg[size_buf]{};
 };
 
 class InvalidIteratorError : public BaseError
 {
 public:
-    InvalidIteratorError(const std::string &filename,
-                         const std::string &classname,
-                         int line,
-                         const std::string &errType = "Invalid iterator access error")
-        : BaseError(filename, classname, line, errType)
-    {
-    }
-};
-
-class InvalidPointerError : public BaseError
-{
-public:
-    InvalidPointerError(const std::string &filename,
-                        const std::string &classname,
-                        int line,
-                        const std::string &errType = "Invalid pointer access error")
-        : BaseError(filename, classname, line, errType)
-    {
-    }
-};
-
-class EmptyTreeError : public BaseError
-{
-public:
-    EmptyTreeError(const std::string &filename,
-                   const std::string &classname,
-                   int line,
-                   const std::string &errType = "Empty tree error")
-        : BaseError(filename, classname, line, errType)
+    InvalidIteratorError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Invalid object access error")
+        : BaseError(filename, funcname, line, time, errortype)
     {
     }
 };
@@ -91,11 +48,13 @@ public:
 class TreeOutOfBoundsError : public BaseError
 {
 public:
-    TreeOutOfBoundsError(const std::string &filename,
-                         const std::string &classname,
-                         int line,
-                         const std::string &errType = "Out of bounds access error")
-        : BaseError(filename, classname, line, errType)
+    TreeOutOfBoundsError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Out of bounds access error")
+        : BaseError(filename, funcname, line, time, errortype)
     {
     }
 };
@@ -103,23 +62,28 @@ public:
 class TreeCopyError : public BaseError
 {
 public:
-    TreeCopyError(const std::string &filename,
-                  const std::string &classname,
-                  int line,
-                  std::string errType = "Tree copy from non-existent source error\n")
-        : BaseError(filename, classname, line, errType)
+    TreeCopyError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Tree copy from invalid source error")
+        : BaseError(filename, funcname, line, time, errortype)
     {
     }
 };
 
-class TreeValueError : public BaseError
+class InvalidTreeError : public BaseError
 {
 public:
-    TreeValueError(const std::string &filename,
-                   const std::string &classname,
-                   int line,
-                   std::string errType = "insertion of existent value error\n")
-        : BaseError(filename, classname, line, errType)
+    InvalidTreeError(
+        const char *filename,
+        const char *funcname,
+        const int line,
+        const char *time,
+        const char *errortype = "Empty tree access error")
+        : BaseError(filename, funcname, line, time, errortype)
     {
     }
 };
+

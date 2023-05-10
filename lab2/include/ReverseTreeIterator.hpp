@@ -21,6 +21,7 @@ namespace MyBST
         using difference_type = std::ptrdiff_t;
 
     private:
+        friend AVLTree<T>;
         using avl_shared_ptr = typename AVLTree<T>::avl_shared_ptr;
         using avl_weak_ptr = typename AVLTree<T>::avl_weak_ptr;
 
@@ -35,7 +36,8 @@ namespace MyBST
         ReverseTreeIterator<T> &operator=(const ReverseTreeIterator<T> &other);
         ReverseTreeIterator<T> &operator=(ReverseTreeIterator<T> &&other);
 
-        const T &operator*();
+        const T &operator*() const;
+        const T *operator->() const;
 
         operator bool() const;
         bool valid() const;
@@ -54,38 +56,36 @@ namespace MyBST
         template <Comparable P>
         friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
+    protected:
         void leftmost(const avl_shared_ptr &node);
         void rightmost(const avl_shared_ptr &node);
-
-    protected:
         void reset();
         void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
         void check_validity(int) const;
 
     private:
         std::stack<avl_weak_ptr> m_stack;
-
     };
 
-template <Comparable P>
-std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
-{
-    std::stack<std::weak_ptr<typename AVLTree<P>::TreeNode>> st = iter.m_stack;
-    os << "[ ";
-    while (!st.empty())
+    template <Comparable P>
+    std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
     {
-        if (st.top().expired())
+        std::stack<std::weak_ptr<typename AVLTree<P>::TreeNode>> st = iter.m_stack;
+        os << "[ ";
+        while (!st.empty())
         {
-            os << "null ";
+            if (st.top().expired())
+            {
+                os << "null ";
+            }
+            else
+            {
+                os << st.top().lock()->m_value << " ";
+            }
+            st.pop();
         }
-        else
-        {
-            os << st.top().lock()->m_value << " ";
-        }
-        st.pop();
+        return os << "]";
     }
-    return os << "]";
-}
 }
 
 #include "ReverseTreeIterator_impl.hpp"

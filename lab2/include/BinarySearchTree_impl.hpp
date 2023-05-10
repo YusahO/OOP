@@ -3,6 +3,7 @@
 #include "BinarySearchTree.hpp"
 #include "Errors.hpp"
 #include <utility>
+#include <ctime>
 
 namespace MyBST
 {
@@ -37,15 +38,12 @@ namespace MyBST
         for (auto val : lst)
         {
             insert(std::move(val));
-            std::ofstream f("abober.dot");
-            Export(f);
-            f.close();
         }
     }
 
     template <Comparable T>
     AVLTree<T>::AVLTree(const AVLTree<T> &other)
-        : mp_root(_deep_copy(other.mp_root))
+        : mp_root(other.mp_root)
     {
     }
 
@@ -58,7 +56,7 @@ namespace MyBST
     template <Comparable T>
     AVLTree<T> &AVLTree<T>::operator=(const AVLTree<T> &other)
     {
-        mp_root = _deep_copy(other.mp_root);
+        mp_root = deep_copy(other.mp_root);
         return *this;
     }
 
@@ -70,10 +68,14 @@ namespace MyBST
     }
 
     template <Comparable T>
-    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::_deep_copy(const AVLTree<T>::avl_shared_ptr &other)
+    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::deep_copy(const AVLTree<T>::avl_shared_ptr &other)
     {
         if (!other)
-            return nullptr;
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw TreeCopyError(loc.file_name(), loc.function_name(), __LINE__, ctime(&timer));
+        }
 
         std::stack<AVLTree<T>::avl_shared_ptr> st;
         AVLTree<T>::avl_shared_ptr new_root = std::make_shared<TreeNode>(other->m_value, other->m_height);
@@ -157,7 +159,18 @@ namespace MyBST
     template <Comparable T>
     bool AVLTree<T>::operator==(const AVLTree &other) const
     {
-        return false;
+        for (auto it1 = begin(), it2 = other.begin(); it1 != end() && it2 != other.end(); ++it1, ++it2)
+        {
+            if (*it1 != *it2)
+                return false;
+        }
+        return true;
+    }
+
+    template <Comparable T>
+    bool AVLTree<T>::operator!=(const AVLTree &other) const
+    {
+        return !(*this == other);
     }
 
     template <Comparable T>
@@ -184,12 +197,6 @@ namespace MyBST
     bool AVLTree<T>::contains(const T &value) const
     {
         return _find(value) != nullptr;
-    }
-
-    template <Comparable T>
-    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::get_root() const
-    {
-        return mp_root;
     }
 
     template <Comparable T>
@@ -264,6 +271,12 @@ namespace MyBST
     }
 
     template <Comparable T>
+    bool AVLTree<T>::erase(T &&value)
+    {
+        return erase(value);
+    }
+
+    template <Comparable T>
     bool AVLTree<T>::erase(const T &value)
     {
         return _erase(value);
@@ -281,7 +294,6 @@ namespace MyBST
     bool AVLTree<T>::_erase(const T &value)
     {
         AVLTree<T>::avl_shared_ptr found = mp_root, parent;
-
         std::stack<avl_shared_ptr> st;
 
         while (found && found->m_value != value)
@@ -361,23 +373,6 @@ namespace MyBST
     }
 
     template <Comparable T>
-    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::remove_min(typename AVLTree<T>::avl_shared_ptr node)
-    {
-        if (!node->mp_left)
-            return node->mp_right;
-        node->mp_left = remove_min(node->mp_left);
-        return do_balance(node);
-    }
-
-    template <Comparable T>
-    typename AVLTree<T>::avl_shared_ptr AVLTree<T>::find_min(typename AVLTree<T>::avl_shared_ptr &node) const
-    {
-        while (node->mp_left)
-            node = node->mp_left;
-        return node;
-    }
-
-    template <Comparable T>
     size_t AVLTree<T>::get_height(const avl_shared_ptr &node) const
     {
         return node ? node->m_height : 0;
@@ -440,6 +435,13 @@ namespace MyBST
     template <Comparable T>
     typename AVLTree<T>::avl_shared_ptr AVLTree<T>::_find(const T &value) const
     {
+        if (!mp_root)
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw InvalidTreeError(loc.file_name(), loc.function_name(), __LINE__, ctime(&timer));
+        }
+
         AVLTree<T>::avl_shared_ptr node = mp_root;
         while (node && node->m_value != value)
         {

@@ -23,6 +23,7 @@ public:
     using difference_type = std::ptrdiff_t;
 
 private:
+    friend AVLTree<T>;
     using avl_shared_ptr = typename AVLTree<T>::avl_shared_ptr;
     using avl_weak_ptr = typename AVLTree<T>::avl_weak_ptr;
 
@@ -37,7 +38,8 @@ public:
     TreeIterator<T> &operator=(const TreeIterator<T> &other);
     TreeIterator<T> &operator=(TreeIterator<T> &&other);
 
-    const T &operator*();
+    const T &operator*() const;
+    const T *operator->() const;
 
     operator bool() const;
     bool valid() const;
@@ -50,16 +52,13 @@ public:
 
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
-
-    void recalculate(const avl_shared_ptr &root);
-
+    
     template <Comparable P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
+protected:
     void leftmost(const avl_shared_ptr &node);
     void rightmost(const avl_shared_ptr &node);
-
-protected:
     void reset();
     void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
     void check_validity(int) const;

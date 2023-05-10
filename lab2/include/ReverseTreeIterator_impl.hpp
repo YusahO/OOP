@@ -4,7 +4,8 @@
 #include "ReverseTreeIterator.hpp"
 #include <utility>
 
-namespace MyBST {
+namespace MyBST
+{
     template <Comparable T>
     ReverseTreeIterator<T>::ReverseTreeIterator()
         : m_stack()
@@ -61,16 +62,23 @@ namespace MyBST {
     }
 
     template <Comparable T>
-    const T &ReverseTreeIterator<T>::operator*()
+    const T &ReverseTreeIterator<T>::operator*() const
     {
         check_validity(__LINE__);
         return m_stack.top().lock()->m_value;
     }
 
     template <Comparable T>
+    const T *ReverseTreeIterator<T>::operator->() const
+    {
+        check_validity(__LINE__);
+        return &(m_stack.top().lock()->m_value);
+    }
+
+    template <Comparable T>
     ReverseTreeIterator<T>::operator bool() const
     {
-        return valid();
+        return valid() && !m_stack.top().expired();
     }
 
     template <Comparable T>
@@ -228,7 +236,11 @@ namespace MyBST {
     void ReverseTreeIterator<T>::check_validity(int line) const
     {
         if (!valid())
-            throw TreeOutOfBoundsError(__FILE__, typeid(this).name(), line);
+        {
+            time_t timer = time(nullptr);
+            auto loc = std::source_location::current();
+            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+        }
     }
 
     template <Comparable T>
@@ -256,7 +268,6 @@ namespace MyBST {
     template <Comparable T>
     void ReverseTreeIterator<T>::search(const avl_shared_ptr &node, const avl_shared_ptr &root)
     {
-        std::cout << "searching: " << node->m_value << " root: " << root->m_value << std::endl;
         avl_shared_ptr found = root;
         while (found && found->m_value != node->m_value)
         {

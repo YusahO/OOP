@@ -113,18 +113,10 @@ int main()
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
         AVLTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
         std::cout << "INIT A\n" << a << std::endl;
-        std::ofstream output("abober.dot");
-        a.Export(output);
-        output.close();
         std::cout << "For each const auto &elem with separate ' '\n";
-        // std::cout << "end: " << a.end();
-        // for(auto elem = a.begin(); elem != a.end(); ++elem)
-        // {
-        //     std::cout << elem << "\n";
-        //     auto cp = elem;
-        //     ++cp;
-        //     std::cout << "elem+1" << cp << "\n";
-        // }
+        for(auto elem = a.begin(); elem != a.end(); ++elem)
+            std::cout << *elem << " ";
+        std::cout << std::endl;
         for (const auto &elem : a)
             std::cout << elem << " ";
         std::cout << std::endl;
@@ -148,6 +140,13 @@ int main()
         for (auto it = const_c.rbegin(); it != const_c.rend(); ++it)
             std::cout << *it << " ";
         std::cout << std::endl;
+        {
+            std::cout << "ITERATORS operator*" << std::endl;
+            AVLTree<int> tree{1,2,3,4,5,6};
+            std::cout << "tree: " << tree << "\n";
+            auto it = tree.begin();
+            std::cout << "*it: " << *it << "\n";
+        }
     }
 
     std::cout << "=== EXCEPTIONS ===" << std::endl;
@@ -181,17 +180,6 @@ int main()
         {
             std::cout << e.what();
         }
-        // try
-        // {
-        //     AVLTree<int> test;
-
-        //     *test.end();
-        // }
-
-        // catch (const std::exception &e)
-        // {
-        //     std::cout << e.what();
-        // }
         try
         {
             AVLTree<int> test;

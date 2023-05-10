@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "BaseTree.hpp"
 #include "TreeIterator.hpp"
 #include "ReverseTreeIterator.hpp"
 
@@ -10,7 +11,7 @@ namespace MyBST
 {
 
     template <Comparable T>
-    class AVLTree
+    class AVLTree : BaseTree
     {
     public:
         friend class TreeIterator<T>;
@@ -21,12 +22,12 @@ namespace MyBST
         using value_type = T;
         using size_type = size_t;
 
-    public:
+    private:
         class TreeNode;
         using avl_shared_ptr = typename std::shared_ptr<TreeNode>;
         using avl_weak_ptr = typename std::weak_ptr<TreeNode>;
 
-    public:
+    private:
         struct TreeNode
         {
             TreeNode();
@@ -61,6 +62,7 @@ namespace MyBST
         ~AVLTree() = default;
 
         bool operator==(const AVLTree &other) const;
+        bool operator!=(const AVLTree &other) const;
 
         // вставка
         bool insert(T &&value);
@@ -75,7 +77,7 @@ namespace MyBST
         template <Iterator Iter>
             requires Assignable<typename Iter::value_type, T>
         bool erase(Iter pos);
-        // bool erase(T &&value);
+        bool erase(T &&value);
         bool erase(const T &value);
 
         void clear() noexcept;
@@ -87,64 +89,62 @@ namespace MyBST
         ReverseTreeIterator<T> rbegin() const noexcept;
         ReverseTreeIterator<T> rend() const noexcept;
 
-        void Export(std::ostream &f)
-        {
-            avl_shared_ptr tmp = mp_root;
-            avl_export_to_dot(f);
-        }
+        // void Export(std::ostream &f)
+        // {
+        //     avl_shared_ptr tmp = mp_root;
+        //     avl_export_to_dot(f);
+        // }
 
-        void to_dot(avl_shared_ptr &tree, std::ostream &f)
-        {
-            if (tree->mp_left)
-            {
-                f << "\"" << tree->m_value << ":" << tree->m_height << "\""
-                  << " -> "
-                  << "\"" << tree->mp_left->m_value << ":" << tree->mp_left->m_height << "\""
-                  << " [color = blue];\n";
-            }
+        // void to_dot(avl_shared_ptr &tree, std::ostream &f)
+        // {
+        //     if (tree->mp_left)
+        //     {
+        //         f << "\"" << tree->m_value << ":" << tree->m_height << "\""
+        //           << " -> "
+        //           << "\"" << tree->mp_left->m_value << ":" << tree->mp_left->m_height << "\""
+        //           << " [color = blue];\n";
+        //     }
 
-            if (tree->mp_right)
-            {
-                f << "\"" << tree->m_value << ":" << tree->m_height << "\""
-                  << " -> "
-                  << "\"" << tree->mp_right->m_value << ":" << tree->mp_right->m_height << "\""
-                  << " [color = red];\n";
-            }
-        }
+        //     if (tree->mp_right)
+        //     {
+        //         f << "\"" << tree->m_value << ":" << tree->m_height << "\""
+        //           << " -> "
+        //           << "\"" << tree->mp_right->m_value << ":" << tree->mp_right->m_height << "\""
+        //           << " [color = red];\n";
+        //     }
+        // }
 
-        void apply_print(avl_shared_ptr p, std::ostream &arg)
-        {
-            if (!p)
-                return;
+        // void apply_print(avl_shared_ptr p, std::ostream &arg)
+        // {
+        //     if (!p)
+        //         return;
 
-            apply_print(p->mp_left, arg);
-            to_dot(p, arg);
-            apply_print(p->mp_right, arg);
-        }
+        //     apply_print(p->mp_left, arg);
+        //     to_dot(p, arg);
+        //     apply_print(p->mp_right, arg);
+        // }
 
-        void avl_export_to_dot(std::ostream &f)
-        {
-            if (!mp_root)
-                return;
+        // void avl_export_to_dot(std::ostream &f)
+        // {
+        //     if (!mp_root)
+        //         return;
 
-            f << "digraph " << "G" << " {\n";
+        //     f << "digraph " << "G" << " {\n";
 
-            if (!mp_root->mp_left && !mp_root->mp_right)
-            {
-                f << mp_root->m_value << "\n";
-            }
+        //     if (!mp_root->mp_left && !mp_root->mp_right)
+        //     {
+        //         f << mp_root->m_value << "\n";
+        //     }
 
-            apply_print(mp_root, f);
+        //     apply_print(mp_root, f);
 
-            f << "}\n";
-        }
+        //     f << "}\n";
+        // }
 
         template <typename P>
         friend std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree);
 
     protected:
-        avl_shared_ptr find_min(avl_shared_ptr &node) const;
-        avl_shared_ptr remove_min(avl_shared_ptr node);
         size_t get_height(const avl_shared_ptr &node) const;
         int get_balance(const avl_shared_ptr &node) const;
         void fix_height(avl_shared_ptr &node);
@@ -152,8 +152,7 @@ namespace MyBST
         avl_shared_ptr rotate_right(avl_shared_ptr &node);
         avl_shared_ptr do_balance(avl_shared_ptr &node);
 
-        avl_shared_ptr get_root() const;
-        avl_shared_ptr _deep_copy(const avl_shared_ptr &other);
+        avl_shared_ptr deep_copy(const avl_shared_ptr &other);
 
         bool _erase(const T &value);
         avl_shared_ptr _find(const T &value) const;
