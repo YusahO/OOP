@@ -7,7 +7,7 @@
 #include "BinarySearchTree.hpp"
 #include "BaseTreeIterator.hpp"
 
-namespace MyBST
+namespace MyAVL
 {
     template <Comparable T>
     class ReverseTreeIterator : public BaseTreeIterator

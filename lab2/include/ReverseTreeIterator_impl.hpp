@@ -4,7 +4,7 @@
 #include "ReverseTreeIterator.hpp"
 #include <utility>
 
-namespace MyBST
+namespace MyAVL
 {
     template <Comparable T>
     ReverseTreeIterator<T>::ReverseTreeIterator()

@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <list>
-using namespace MyBST;
+using namespace MyAVL;
 
 int main()
 {

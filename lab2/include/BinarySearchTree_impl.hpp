@@ -5,7 +5,7 @@
 #include <utility>
 #include <ctime>
 
-namespace MyBST
+namespace MyAVL
 {
     template <Comparable T>
     AVLTree<T>::AVLTree()

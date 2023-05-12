@@ -7,7 +7,7 @@
 
 #include <fstream>
 
-namespace MyBST
+namespace MyAVL
 {
 
     template <Comparable T>
@@ -53,7 +53,7 @@ namespace MyBST
         explicit AVLTree(Iter first, Iter last);
 
         template <Container Con>
-            requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
+            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
         explicit AVLTree(const Con &container);
 
         AVLTree(const AVLTree<T> &other);
@@ -83,7 +83,7 @@ namespace MyBST
         bool erase(const T &value);
 
         void clear() noexcept;
-        bool empty() const noexcept;
+        bool empty() const noexcept override;
         std::size_t size() const override;
 
         TreeIterator<T> begin() const;
