@@ -37,17 +37,4 @@ concept Iterator = requires (T t, T p)
     { t != p } -> std::same_as<bool>;
 };
 
-
-// template <Comparable T>
-// class AVLTree;
-
-// template <Comparable T>
-// using BSTSharedPtr = std::shared_ptr<AVLTree<T>::TreeNode>;
-
-// template <Comparable T>
-// using BSTWeakPtr = std::weak_ptr<AVLTree<T>::TreeNode>;
-
 }
-
-// #include "TreeNode.hpp"
-#include "AVLTree.hpp"
