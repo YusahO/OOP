@@ -1,12 +1,29 @@
 #pragma once
 
-#include "BinarySearchTree.hpp"
+#include "AVLTree.hpp"
 #include "Errors.hpp"
 #include <utility>
 #include <ctime>
 
-namespace MyBST
+namespace MyAVLTree
 {
+    template <typename P>
+    std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree)
+    {
+        if (tree.empty())
+        {
+            os << "{ empty }";
+        }
+        else
+        {
+            os << "{ ";
+            for (const auto &elem : tree)
+                os << elem << " ";
+            os << "}";
+        }
+        return os;
+    }
+
     template <Comparable T>
     AVLTree<T>::AVLTree()
         : mp_root(nullptr)
@@ -204,7 +221,7 @@ namespace MyBST
     template <Comparable T>
     TreeIterator<T> AVLTree<T>::begin() const
     {
-        return TreeIterator<T>(mp_root);
+        return { mp_root };
     }
 
     template <Comparable T>
@@ -216,15 +233,16 @@ namespace MyBST
     template <Comparable T>
     ReverseTreeIterator<T> AVLTree<T>::rbegin() const
     {
-        ReverseTreeIterator<T> iter;
-        iter.rightmost(mp_root);
-        return iter;
+        // ReverseTreeIterator<T> iter;
+        // iter.rightmost(mp_root);
+        return { mp_root };
     }
 
     template <Comparable T>
     ReverseTreeIterator<T> AVLTree<T>::rend() const
     {
-        return ReverseTreeIterator<T>(mp_root);
+        // return ReverseTreeIterator<T>(mp_root);
+        return {mp_root, true};
     }
 
     template <Comparable T>
@@ -427,7 +445,7 @@ namespace MyBST
         return node;
     }
 
-    
+
     template<Comparable T>
     typename AVLTree<T>::avl_shared_ptr AVLTree<T>::try_alloc_node(const T &value, int height) const
     {

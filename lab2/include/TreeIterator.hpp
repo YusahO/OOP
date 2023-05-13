@@ -4,10 +4,10 @@
 #include <stack>
 #include <iostream>
 
-#include "BinarySearchTree.hpp"
+#include "AVLTree.hpp"
 #include "BaseTreeIterator.hpp"
 
-namespace MyBST {
+namespace MyAVLTree {
 
 template <Comparable T>
 class AVLTree;

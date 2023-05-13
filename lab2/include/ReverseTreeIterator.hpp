@@ -4,10 +4,10 @@
 #include <stack>
 #include <iostream>
 
-#include "BinarySearchTree.hpp"
+#include "AVLTree.hpp"
 #include "BaseTreeIterator.hpp"
 
-namespace MyBST
+namespace MyAVLTree
 {
     template <Comparable T>
     class ReverseTreeIterator : public BaseTreeIterator
@@ -25,7 +25,7 @@ namespace MyBST
 
     public:
         ReverseTreeIterator();
-        explicit ReverseTreeIterator(const avl_shared_ptr &root);
+        ReverseTreeIterator(const avl_shared_ptr &root, bool end = false);
         ReverseTreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root);
 
         ReverseTreeIterator(const ReverseTreeIterator<T> &other);

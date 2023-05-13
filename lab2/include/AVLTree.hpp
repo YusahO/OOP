@@ -7,11 +7,11 @@
 
 #include <fstream>
 
-namespace MyBST
+namespace MyAVLTree
 {
 
     template <Comparable T>
-    class AVLTree : BaseTree
+    class AVLTree : public BaseTree
     {
     public:
         friend class TreeIterator<T>;
@@ -46,7 +46,7 @@ namespace MyBST
 
     public:
         AVLTree();
-        explicit AVLTree(std::initializer_list<T> lst);
+        AVLTree(std::initializer_list<T> lst);
 
         template <Iterator Iter>
             requires Assignable<typename Iter::value_type, T>
@@ -112,22 +112,22 @@ namespace MyBST
         avl_shared_ptr mp_root;
     };
 
-    template <typename P>
-    std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree)
-    {
-        if (tree.empty())
-        {
-            os << "{ empty }";
-            return os;
-        }
-
-        os << "{ ";
-        for (const auto &elem : tree)
-            os << elem << " ";
-        os << "}";
-        return os;
-    }
-
+    // template <typename P>
+    // std::ostream &operator<<(std::ostream &os, const AVLTree<P> &tree)
+    // {
+    //     if (tree.empty())
+    //     {
+    //         os << "{ empty }";
+    //     }
+    //     else
+    //     {
+    //         os << "{ ";
+    //         for (const auto &elem : tree)
+    //             os << elem << " ";
+    //         os << "}";
+    //     }
+    //     return os;
+    // }
 }
 
-#include "BinarySearchTree_impl.hpp"
+#include "AVLTree_impl.hpp"

@@ -5,7 +5,7 @@
 #include <utility>
 #include <source_location>
 
-namespace MyBST
+namespace MyAVLTree
 {
 
     template <Comparable T>

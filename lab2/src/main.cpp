@@ -1,9 +1,25 @@
 #include <iostream>
-#include "BinarySearchTree.hpp"
+#include "AVLTree.hpp"
 
 #include <vector>
 #include <list>
-using namespace MyBST;
+using namespace MyAVLTree;
+
+struct TestObj
+{
+    TestObj(): test(0) {}
+    TestObj(int test): test(test) {}
+    int test;
+    const auto operator<=>(const TestObj &other) const
+    {
+        return test<=>other.test;
+    }
+
+    const bool operator==(const TestObj &other) const
+    {
+        return test == other.test;
+    }
+};
 
 int main()
 {
@@ -78,6 +94,18 @@ int main()
         std::list<int> list_test{6, 5, 4, 3, 2, 1};
         AVLTree<int> tree(list_test);
         std::cout << tree << std::endl;
+    }
+    {
+        std::cout << "Custom objects\n";
+        AVLTree<TestObj> tree;
+        tree.insert(TestObj(12));
+        tree.insert(TestObj(13));
+        tree.insert(TestObj(14));
+        for(auto &obj : tree)
+        {
+            std::cout << obj.test << " ";
+        }
+        std::cout << std::endl;
     }
 
     std::cout << "=== TREE OPERATIONS ===" << std::endl;

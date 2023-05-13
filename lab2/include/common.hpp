@@ -2,8 +2,7 @@
 
 #include <memory>
 
-
-namespace MyBST {
+namespace MyAVLTree {
 
 template <typename T>
 concept Comparable = std::totally_ordered<T>;
@@ -51,4 +50,4 @@ concept Iterator = requires (T t, T p)
 }
 
 // #include "TreeNode.hpp"
-#include "BinarySearchTree.hpp"
+#include "AVLTree.hpp"

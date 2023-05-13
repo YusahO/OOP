@@ -4,7 +4,7 @@
 #include "ReverseTreeIterator.hpp"
 #include <utility>
 
-namespace MyBST
+namespace MyAVLTree
 {
     template <Comparable T>
     ReverseTreeIterator<T>::ReverseTreeIterator()
@@ -13,10 +13,20 @@ namespace MyBST
     }
 
     template <Comparable T>
-    ReverseTreeIterator<T>::ReverseTreeIterator(const avl_shared_ptr &root)
+    ReverseTreeIterator<T>::ReverseTreeIterator(const avl_shared_ptr &root, bool end)
     {
-        leftmost(root);
-        m_stack.emplace();
+        // if (end)
+        // leftmost(root);
+        // m_stack.emplace();
+        if (end || !root)
+        {
+            leftmost(root);
+            m_stack.emplace();
+        }
+        else
+        {
+            rightmost(root);
+        }
     }
 
     template <Comparable T>

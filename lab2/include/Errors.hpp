@@ -14,7 +14,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Error")
+        const char *errortype = "Error") 
     {
         sprintf(msg,
             "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
