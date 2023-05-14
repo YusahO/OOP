@@ -2,7 +2,7 @@
 
 #include <memory>
 
-namespace MyAVLTree {
+namespace MyBST {
 
 template <typename T>
 concept Comparable = std::totally_ordered<T>;

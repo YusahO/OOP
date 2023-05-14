@@ -5,7 +5,7 @@
 #include <utility>
 #include <source_location>
 
-namespace MyAVLTree
+namespace MyBST
 {
 
     template <Comparable T>
@@ -15,21 +15,29 @@ namespace MyAVLTree
     }
 
     template <Comparable T>
-    TreeIterator<T>::TreeIterator(const avl_shared_ptr &root, bool end)
-    {
-        if (end || !root)
+    TreeIterator<T>::TreeIterator(const bst_shared_ptr &root, bool end)
+    {   
+        if (!root)
         {
-            rightmost(root);
             m_stack.emplace();
+        }
+        else if (!end)
+        {
+            // leftmost(root);
+            root->leftmost_fill_stack(m_stack);
+            // std::cout << *this << "\n";
         }
         else
         {
-            leftmost(root);
+            // rightmost(root);
+            root->rightmost_fill_stack(m_stack);
+            m_stack.emplace();
+            // m_stack.emplace();
         }
     }
 
     template <Comparable T>
-    TreeIterator<T>::TreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root)
+    TreeIterator<T>::TreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
         if (node != nullptr)
         {
@@ -37,7 +45,8 @@ namespace MyAVLTree
         }
         else
         {
-            rightmost(root);
+            // rightmost(root);
+            root->rightmost_fill_stack(m_stack);
             m_stack.emplace(node);
         }
     }
@@ -75,7 +84,7 @@ namespace MyAVLTree
     {
         check_validity(__LINE__);
         check_in_bounds(__LINE__);
-        return m_stack.top().lock()->m_value;
+        return m_stack.top().lock()->get_value();
     }
 
     template <Comparable T>
@@ -83,7 +92,7 @@ namespace MyAVLTree
     {
         check_validity(__LINE__);
         check_in_bounds(__LINE__);
-        return &(m_stack.top().lock()->m_value);
+        return &(m_stack.top().lock()->get_value());
     }
 
     template <Comparable T>
@@ -103,18 +112,25 @@ namespace MyAVLTree
     {
         check_validity(__LINE__);
 
-        if (m_stack.top().lock()->mp_right)
+        // std::cout << *this << "\n";
+
+        // std::cout << m_stack.top().lock()->get_left() << "\n";
+        // std::cout << m_stack.top().lock()->get_right() << "\n";
+
+        if (m_stack.top().lock()->get_right())
         {
-            avl_shared_ptr node = m_stack.top().lock()->mp_right;
-            leftmost(node);
+            bst_shared_ptr node = m_stack.top().lock()->get_right();
+            // leftmost(node);
+            node->leftmost_fill_stack(m_stack);
+            // std::cout << *this << "\n";
         }
         else
         {
-            avl_shared_ptr node = m_stack.top().lock();
+            bst_shared_ptr node = m_stack.top().lock();
             m_stack.pop();
 
             bool stackNotEmpty = !m_stack.empty();
-            while (stackNotEmpty && m_stack.top().lock()->mp_right == node)
+            while (stackNotEmpty && m_stack.top().lock()->get_right() == node)
             {
                 node = m_stack.top().lock();
                 m_stack.pop();
@@ -125,7 +141,8 @@ namespace MyAVLTree
 
             if (!stackNotEmpty)
             {
-                rightmost(node);
+                // rightmost(node);
+                node->rightmost_fill_stack(m_stack);
                 m_stack.emplace();
             }
         }
@@ -152,24 +169,25 @@ namespace MyAVLTree
             return *this;
         }
 
-        if (m_stack.top().lock()->mp_left)
+        if (m_stack.top().lock()->get_left())
         {
-            avl_shared_ptr node = m_stack.top().lock()->mp_left;
+            bst_shared_ptr node = m_stack.top().lock()->get_left();
             rightmost(node);
         }
         else
         {
-            avl_shared_ptr node = m_stack.top().lock();
+            bst_shared_ptr node = m_stack.top().lock();
             m_stack.pop();
 
             bool stackNotEmpty = !m_stack.empty();
-            while (stackNotEmpty && m_stack.top().lock()->mp_left == node)
+            while (stackNotEmpty && m_stack.top().lock()->get_left() == node)
             {
                 node = m_stack.top().lock();
                 m_stack.pop();
                 if (m_stack.empty())
                 {
-                    leftmost(node);
+                    // leftmost(node);
+                    node->leftmost_fill_stack(m_stack);
                 }
             }
         }
@@ -195,8 +213,8 @@ namespace MyAVLTree
 
         if (!m_stack.empty() && !other.m_stack.empty())
         {
-            avl_shared_ptr f = m_stack.top().lock();
-            avl_shared_ptr s = other.m_stack.top().lock();
+            bst_shared_ptr f = m_stack.top().lock();
+            bst_shared_ptr s = other.m_stack.top().lock();
             return f == s;
         }
 
@@ -227,7 +245,7 @@ namespace MyAVLTree
         }
     }
 
-    template<Comparable T>
+    template <Comparable T>
     void TreeIterator<T>::check_in_bounds(int line) const
     {
         if (m_stack.top().expired())
@@ -238,41 +256,61 @@ namespace MyAVLTree
         }
     }
 
-    template <Comparable T>
-    void TreeIterator<T>::leftmost(const avl_shared_ptr &node)
-    {
-        avl_shared_ptr n = node;
-        while (n)
-        {
-            m_stack.emplace(n);
-            n = n->mp_left;
-        }
-    }
+    // template <Comparable T>
+    // void TreeIterator<T>::leftmost(const bst_shared_ptr &node)
+    // {
+    //     bst_shared_ptr n = node;
+    //     while (n)
+    //     {
+    //         m_stack.emplace(n);
+    //         n = n->get_left();
+    //     }
+    // }
+
+    // template <Comparable T>
+    // void TreeIterator<T>::rightmost(const bst_shared_ptr &node)
+    // {
+    //     bst_shared_ptr n = node;
+    //     while (n)
+    //     {
+    //         m_stack.emplace(n);
+    //         n = n->get_right();
+    //     }
+    // }
 
     template <Comparable T>
-    void TreeIterator<T>::rightmost(const avl_shared_ptr &node)
+    void TreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
-        avl_shared_ptr n = node;
-        while (n)
-        {
-            m_stack.emplace(n);
-            n = n->mp_right;
-        }
-    }
-
-    template <Comparable T>
-    void TreeIterator<T>::search(const avl_shared_ptr &node, const avl_shared_ptr &root)
-    {
-        avl_shared_ptr found = root;
-        while (found && found->m_value != node->m_value)
+        bst_shared_ptr found = root;
+        while (found && found->get_value() != node->get_value())
         {
             m_stack.emplace(found);
-            if (found->m_value < node->m_value)
-                found = found->mp_right;
+            if (found->get_value() < node->get_value())
+                found = found->get_right();
             else
-                found = found->mp_left;
+                found = found->get_left();
         }
         m_stack.emplace(found);
+    }
+
+    template <Comparable P>
+    std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
+    {
+        std::stack<std::weak_ptr<typename BSTree<P>::TreeNode>> st = iter.m_stack;
+        os << "[ ";
+        while (!st.empty())
+        {
+            if (st.top().expired())
+            {
+                os << "null ";
+            }
+            else
+            {
+                os << st.top().lock()->get_value() << " ";
+            }
+            st.pop();
+        }
+        return os << "]";
     }
 
 }

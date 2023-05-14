@@ -4,7 +4,7 @@
 #include "ReverseTreeIterator.hpp"
 #include <utility>
 
-namespace MyAVLTree
+namespace MyBST
 {
     template <Comparable T>
     ReverseTreeIterator<T>::ReverseTreeIterator()
@@ -13,24 +13,30 @@ namespace MyAVLTree
     }
 
     template <Comparable T>
-    ReverseTreeIterator<T>::ReverseTreeIterator(const avl_shared_ptr &root, bool end)
+    ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &root, bool end)
     {
         // if (end)
         // leftmost(root);
         // m_stack.emplace();
-        if (end || !root)
+        if (!root)
         {
-            leftmost(root);
             m_stack.emplace();
+        }
+        else if (!end)
+        {
+            root->rightmost_fill_stack(m_stack);
         }
         else
         {
-            rightmost(root);
+            // leftmost(root);
+            root->leftmost_fill_stack(m_stack);
+            m_stack.emplace();
         }
+        // std::cout << *this << "\n";
     }
 
     template <Comparable T>
-    ReverseTreeIterator<T>::ReverseTreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root)
+    ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
         if (node != nullptr)
         {
@@ -38,9 +44,12 @@ namespace MyAVLTree
         }
         else
         {
-            rightmost(root);
+            // rightmost(root);
+            root->rightmost_fill_stack(m_stack);
             // m_stack.emplace(node);
         }
+
+        std::cout << *this << "\n";
     }
 
     template <Comparable T>
@@ -75,13 +84,15 @@ namespace MyAVLTree
     const T &ReverseTreeIterator<T>::operator*() const
     {
         check_validity(__LINE__);
-        return m_stack.top().lock()->m_value;
+        check_in_bounds(__LINE__);
+        return m_stack.top().lock()->get_value();
     }
 
     template <Comparable T>
     const T *ReverseTreeIterator<T>::operator->() const
     {
         check_validity(__LINE__);
+        check_in_bounds(__LINE__);
         return &(m_stack.top().lock()->m_value);
     }
 
@@ -102,18 +113,18 @@ namespace MyAVLTree
     {
         check_validity(__LINE__);
 
-        if (m_stack.top().lock()->mp_right)
+        if (m_stack.top().lock()->get_right())
         {
-            avl_shared_ptr node = m_stack.top().lock()->mp_right;
-            leftmost(node);
+            bst_shared_ptr node = m_stack.top().lock()->get_right();
+            node->leftmost_fill_stack(m_stack);
         }
         else
         {
-            avl_shared_ptr node = m_stack.top().lock();
+            bst_shared_ptr node = m_stack.top().lock();
             m_stack.pop();
 
             bool stackNotEmpty = !m_stack.empty();
-            while (stackNotEmpty && m_stack.top().lock()->mp_right == node)
+            while (stackNotEmpty && m_stack.top().lock()->get_right() == node)
             {
                 node = m_stack.top().lock();
                 m_stack.pop();
@@ -124,7 +135,8 @@ namespace MyAVLTree
 
             if (!stackNotEmpty)
             {
-                rightmost(node);
+                // rightmost(node);
+                node->rightmost_fill_stack(m_stack);
                 m_stack.emplace();
             }
         }
@@ -151,25 +163,26 @@ namespace MyAVLTree
             return *this;
         }
 
-        if (m_stack.top().lock()->mp_left)
+        if (m_stack.top().lock()->get_left())
         {
-            avl_shared_ptr node = m_stack.top().lock()->mp_left;
-            rightmost(node);
+            bst_shared_ptr node = m_stack.top().lock()->get_left();
+            // rightmost(node);
+            node->rightmost_fill_stack(m_stack);
         }
         else
         {
-            avl_shared_ptr node = m_stack.top().lock();
+            bst_shared_ptr node = m_stack.top().lock();
             m_stack.pop();
 
             bool stackNotEmpty = !m_stack.empty();
-            // while (!m_stack.empty() && !m_stack.top().expired() && m_stack.top().lock()->mp_left == node)
-            while (stackNotEmpty && m_stack.top().lock()->mp_left == node)
+            while (stackNotEmpty && m_stack.top().lock()->get_left() == node)
             {
                 node = m_stack.top().lock();
                 m_stack.pop();
                 if (m_stack.empty())
                 {
-                    leftmost(node);
+                    // leftmost(node);
+                    node->leftmost_fill_stack(m_stack);
                     m_stack.emplace();
                     stackNotEmpty = false;
                 }
@@ -198,8 +211,8 @@ namespace MyAVLTree
 
         if (!m_stack.empty() && !other.m_stack.empty())
         {
-            avl_shared_ptr f = m_stack.top().lock();
-            avl_shared_ptr s = other.m_stack.top().lock();
+            bst_shared_ptr f = m_stack.top().lock();
+            bst_shared_ptr s = other.m_stack.top().lock();
             return f == s;
         }
 
@@ -230,7 +243,7 @@ namespace MyAVLTree
         }
     }
 
-    template<Comparable T>
+    template <Comparable T>
     void ReverseTreeIterator<T>::check_in_bounds(int line) const
     {
         if (m_stack.top().expired())
@@ -242,38 +255,16 @@ namespace MyAVLTree
     }
 
     template <Comparable T>
-    void ReverseTreeIterator<T>::leftmost(const avl_shared_ptr &node)
+    void ReverseTreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
-        avl_shared_ptr n = node;
-        while (n)
-        {
-            m_stack.emplace(n);
-            n = n->mp_left;
-        }
-    }
-
-    template <Comparable T>
-    void ReverseTreeIterator<T>::rightmost(const avl_shared_ptr &node)
-    {
-        avl_shared_ptr n = node;
-        while (n)
-        {
-            m_stack.emplace(n);
-            n = n->mp_right;
-        }
-    }
-
-    template <Comparable T>
-    void ReverseTreeIterator<T>::search(const avl_shared_ptr &node, const avl_shared_ptr &root)
-    {
-        avl_shared_ptr found = root;
+        bst_shared_ptr found = root;
         while (found && found->m_value != node->m_value)
         {
             m_stack.emplace(found);
             if (found->m_value < node->m_value)
-                found = found->mp_right;
+                found = found->get_right();
             else
-                found = found->mp_left;
+                found = found->get_left();
         }
         m_stack.emplace(found);
     }

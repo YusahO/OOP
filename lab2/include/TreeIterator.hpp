@@ -4,13 +4,13 @@
 #include <stack>
 #include <iostream>
 
-#include "AVLTree.hpp"
+#include "BSTree.hpp"
 #include "BaseTreeIterator.hpp"
 
-namespace MyAVLTree {
+namespace MyBST {
 
 template <Comparable T>
-class AVLTree;
+class BSTree;
 
 template <Comparable T>
 class TreeIterator : public BaseTreeIterator
@@ -22,14 +22,14 @@ public:
     using reference = T&;
 
 private:
-    friend AVLTree<T>;
-    using avl_shared_ptr = typename AVLTree<T>::avl_shared_ptr;
-    using avl_weak_ptr = typename AVLTree<T>::avl_weak_ptr;
+    friend BSTree<T>;
+    using bst_shared_ptr = typename BSTree<T>::bst_shared_ptr;
+    using bst_weak_ptr = typename BSTree<T>::bst_weak_ptr;
 
 public:
     TreeIterator();
-    TreeIterator(const avl_shared_ptr &root, bool end = false);
-    TreeIterator(const avl_shared_ptr &node, const avl_shared_ptr &root);
+    TreeIterator(const bst_shared_ptr &root, bool end = false);
+    TreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root);
 
     TreeIterator(const TreeIterator<T> &other);
     TreeIterator(TreeIterator<T> &&other);
@@ -56,36 +56,14 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
 protected:
-    void leftmost(const avl_shared_ptr &node);
-    void rightmost(const avl_shared_ptr &node);
     void reset();
-    void search(const avl_shared_ptr &node, const avl_shared_ptr &root);
+    void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
     void check_validity(int) const;
     void check_in_bounds(int) const;
 
 private:
-    std::stack<avl_weak_ptr> m_stack;
+    std::stack<bst_weak_ptr> m_stack;
 };
-
-template <Comparable P>
-std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
-{
-    std::stack<std::weak_ptr<typename AVLTree<P>::TreeNode>> st = iter.m_stack;
-    os << "[ ";
-    while (!st.empty())
-    {
-        if (st.top().expired())
-        {
-            os << "null ";
-        }
-        else
-        {
-            os << st.top().lock()->m_value << " ";
-        }
-        st.pop();
-    }
-    return os << "]";
-}
 
 }
 

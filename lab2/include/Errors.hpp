@@ -14,7 +14,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Error") 
+        const char *errortype = "Error") noexcept
     {
         sprintf(msg,
             "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
@@ -39,8 +39,8 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Invalid object access error")
-        : BaseError(filename, funcname, line, time, errortype)
+        const char *errortype = "Invalid object access error") noexcept
+        : BaseError(filename, funcname, line, time, errortype) 
     {
     }
 };
@@ -53,7 +53,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Invalid object access error")
+        const char *errortype = "Invalid object access error") noexcept
         : BaseError(filename, funcname, line, time, errortype)
     {
     }
@@ -67,7 +67,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Invalid object access error")
+        const char *errortype = "Invalid object access error") noexcept
         : IteratorError(filename, funcname, line, time, errortype)
     {
     }
@@ -81,7 +81,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Out of bounds access error")
+        const char *errortype = "Out of bounds access error") noexcept
         : IteratorError(filename, funcname, line, time, errortype)
     {
     }
@@ -94,22 +94,8 @@ public:
         const char *filename,
         const char *funcname,
         const int line,
-        const char *time,
-        const char *errortype = "Could not allocate tree element")
-        : TreeError(filename, funcname, line, time, errortype)
-    {
-    }
-};
-
-class TreeCopyError : public TreeError
-{
-public:
-    TreeCopyError(
-        const char *filename,
-        const char *funcname,
-        const int line,
-        const char *time,
-        const char *errortype = "Tree copy from invalid source error")
+        const char *time, 
+        const char *errortype = "Could not allocate tree element") noexcept
         : TreeError(filename, funcname, line, time, errortype)
     {
     }
@@ -123,7 +109,7 @@ public:
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Empty tree access error")
+        const char *errortype = "Empty tree access error") noexcept
         : TreeError(filename, funcname, line, time, errortype)
     {
     }

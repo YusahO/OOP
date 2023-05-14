@@ -1,18 +1,18 @@
 #include <iostream>
-#include "AVLTree.hpp"
+#include "BSTree.hpp"
 
 #include <vector>
 #include <list>
-using namespace MyAVLTree;
+using namespace MyBST;
 
 struct TestObj
 {
-    TestObj(): test(0) {}
-    TestObj(int test): test(test) {}
+    TestObj() : test(0) {}
+    TestObj(int test) : test(test) {}
     int test;
     const auto operator<=>(const TestObj &other) const
     {
-        return test<=>other.test;
+        return test <=> other.test;
     }
 
     const bool operator==(const TestObj &other) const
@@ -26,19 +26,19 @@ int main()
     std::cout << "=== CONSTRUCTORS ===" << std::endl;
     {
         std::cout << "Empty constructor\n";
-        AVLTree<int> tree1;
+        BSTree<int> tree1;
         std::cout << "Tree1 " << tree1 << std::endl;
     }
     {
         std::cout << "Initializer list constructor\n";
-        AVLTree<int> tree1{1, 2, 3, 4, 5};
+        BSTree<int> tree1{1, 2, 3, 4, 5};
         std::cout << "Tree1 " << tree1 << std::endl;
     }
     {
         std::cout << "Move constructor\n";
-        AVLTree<int> tree1{1, 2, 3, 4, 5};
+        BSTree<int> tree1{1, 2, 3, 4, 5};
         std::cout << "Tree1 before move " << tree1 << std::endl;
-        AVLTree<int> tree2(std::move(tree1));
+        BSTree<int> tree2(std::move(tree1));
         std::cout << "--- MOVING ---" << std::endl;
         std::cout << "Tree1 after move " << tree1 << std::endl;
         std::cout << "Tree2 after move " << tree2 << std::endl;
@@ -46,8 +46,8 @@ int main()
     }
     {
         std::cout << "Copy constructor\n";
-        AVLTree<int> tree1{1, 2, 3, 4, 5};
-        AVLTree<int> tree2(tree1);
+        BSTree<int> tree1{1, 2, 3, 4, 5};
+        BSTree<int> tree2(tree1);
         std::cout << "--- COPYING ---" << std::endl;
         std::cout << "Tree1 after copy " << tree1 << std::endl;
         std::cout << "Tree2 after copy " << tree2 << std::endl;
@@ -55,8 +55,8 @@ int main()
     }
     {
         std::cout << "Move operator=\n";
-        AVLTree<int> tree1{1, 2, 3, 4, 5};
-        AVLTree<int> tree2;
+        BSTree<int> tree1{1, 2, 3, 4, 5};
+        BSTree<int> tree2;
         std::cout << "Tree1 before move " << tree1 << std::endl;
         std::cout << "Tree2 before move " << tree2 << std::endl;
         tree2 = std::move(tree1);
@@ -67,8 +67,8 @@ int main()
     }
     {
         std::cout << "Copy operator=\n";
-        AVLTree<int> tree1{1, 2, 3, 4, 5};
-        AVLTree<int> tree2;
+        BSTree<int> tree1{1, 2, 3, 4, 5};
+        BSTree<int> tree2;
         std::cout << "Tree1 before copy " << tree1 << std::endl;
         std::cout << "Tree2 before copy " << tree2 << std::endl;
         tree2 = tree1;
@@ -80,39 +80,39 @@ int main()
     {
         std::cout << "Construct from std::vector\n";
         std::vector<int> vec_test{6, 5, 4, 3, 2, 1};
-        AVLTree<int> tree(vec_test);
+        BSTree<int> tree(vec_test);
         std::cout << tree << std::endl;
     }
     {
         std::cout << "Construct from std::vector::iterator\n";
         std::vector<int> vec_test{6, 5, 4, 3, 2, 1};
-        AVLTree<int> tree(vec_test.cbegin(), vec_test.cend());
+        BSTree<int> tree(vec_test.cbegin(), vec_test.cend());
         std::cout << tree << std::endl;
     }
     {
         std::cout << "Construct from std::list\n";
         std::list<int> list_test{6, 5, 4, 3, 2, 1};
-        AVLTree<int> tree(list_test);
+        BSTree<int> tree(list_test);
         std::cout << tree << std::endl;
     }
-    {
-        std::cout << "Custom objects\n";
-        AVLTree<TestObj> tree;
-        tree.insert(TestObj(12));
-        tree.insert(TestObj(13));
-        tree.insert(TestObj(14));
-        for(auto &obj : tree)
-        {
-            std::cout << obj.test << " ";
-        }
-        std::cout << std::endl;
-    }
+    // {
+    //     std::cout << "Custom objects\n";
+    //     BSTree<TestObj> tree;
+    //     tree.insert(TestObj(12));
+    //     tree.insert(TestObj(13));
+    //     tree.insert(TestObj(14));
+    //     for(auto &obj : tree)
+    //     {
+    //         std::cout << obj.test << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     std::cout << "=== TREE OPERATIONS ===" << std::endl;
     {
         std::cout << "--- INSERTION ---" << std::endl;
-        AVLTree<int> tree;
-        int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        BSTree<int> tree;
+        int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
         for (size_t i = 0; i < sizeof(arr) / sizeof(int); ++i)
         {
             std::cout << "insert " << i + 1 << ": " << (tree.insert(arr[i]) ? "true" : "false") << "\n";
@@ -141,17 +141,25 @@ int main()
         }
         std::cout << std::endl;
     }
+    {
+        std::cout << "--- BALANCING ---" << std::endl;
+        BSTree<int> tree{1, 2, 3, 4, 5, 6};
+        std::cout << "Initial tree: " << tree << '\n';
+        tree.balance();
+        std::cout << "Tree after balancing: " << tree << '\n';
+    }
 
     std::cout << "=== ITERATORS ===" << std::endl;
     {
         std::cout << "ITERATORS empty tree" << std::endl;
-        AVLTree<int> tree;
+        BSTree<int> tree;
         std::cout << "begin() == end(): " << (tree.begin() == tree.end()) << std::endl;
     }
     {
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
-        AVLTree<int> a({ 1, 5, 2, 3, 4, 0, 6, 8, 7 });
-        std::cout << "INIT A\n" << a << std::endl;
+        BSTree<int> a{1, 5, 2, 3, 4, 0, 6, 8, 7};
+        std::cout << "INIT A\n"
+                  << a << std::endl;
         std::cout << "For each const auto &elem with separate ' '\n";
         for (auto elem = a.begin(); elem != a.end(); ++elem)
             std::cout << *elem << " ";
@@ -163,13 +171,13 @@ int main()
         for (auto rit = a.rbegin(); rit != a.rend(); ++rit)
             std::cout << *rit << " ";
         std::cout << "\nFor each const reverse auto &elem with separate ' '\n";
-        const AVLTree<int> &ca = a;
+        const BSTree<int> &ca = a;
         for (auto rit = ca.rbegin(); rit != ca.rend(); ++rit)
             std::cout << *rit << " ";
         std::cout << std::endl;
 
         std::cout << "--- ITERATORS const tree ---" << std::endl;
-        const AVLTree<float> const_c{1, 5, 2, 3, 4, 0, 6, 8, 7};
+        const BSTree<float> const_c{1, 5, 2, 3, 4, 0, 6, 8, 7};
 
         std::cout << "For each const auto &elem with separate ' '\n";
         for (const auto &elem : const_c)
@@ -181,7 +189,7 @@ int main()
         std::cout << std::endl;
         {
             std::cout << "ITERATORS operator*" << std::endl;
-            AVLTree<int> tree{1, 2, 3, 4, 5, 6};
+            BSTree<int> tree{1, 2, 3, 4, 5, 6};
             std::cout << "tree: " << tree << "\n";
             auto it = tree.begin();
             std::cout << "*it: " << *it << "\n";
@@ -190,10 +198,11 @@ int main()
 
     std::cout << "=== EXCEPTIONS ===" << std::endl;
     {
+        std::cout << "try to dereference rend() iterator\n";
         try
         {
-            AVLTree<int> test;
-            *test.rbegin();
+            BSTree<int> test{1, 2, 3, 4, 5};
+            *test.rend();
         }
         catch (const std::exception &e)
         {
@@ -201,9 +210,10 @@ int main()
         }
         std::cout << std::endl;
 
+        std::cout << "try to dereference end() iterator\n";
         try
         {
-            AVLTree<int> test;
+            BSTree<int> test{1, 2, 3, 4, 5};
             *test.end();
         }
         catch (const std::exception &e)
@@ -212,22 +222,11 @@ int main()
         }
         std::cout << std::endl;
 
+        std::cout << "try to dereference iterator to empty object\n";
         try
         {
-            AVLTree<int> test1;
-            AVLTree<int> test2(test1);
-        }
-        catch (const std::exception &e)
-        {
-            std::cout << e.what();
-        }
-        std::cout << std::endl;
-
-        try
-        {
-            AVLTree<int> test1;
-            AVLTree<int> test2;
-            test1 = test2;
+            BSTree<int> test;
+            *test.begin();
         }
         catch (const std::exception &e)
         {
