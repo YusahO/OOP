@@ -6,13 +6,13 @@
 
 namespace MyBST
 {
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::ReverseTreeIterator()
         : m_stack()
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &root, bool end)
     {
         // if (end)
@@ -35,7 +35,7 @@ namespace MyBST
         // std::cout << *this << "\n";
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::ReverseTreeIterator(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
         if (node != nullptr)
@@ -52,19 +52,19 @@ namespace MyBST
         std::cout << *this << "\n";
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::ReverseTreeIterator(const ReverseTreeIterator<T> &other)
         : m_stack(other.m_stack)
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::ReverseTreeIterator(ReverseTreeIterator<T> &&other)
         : m_stack(std::move(other.m_stack))
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(const ReverseTreeIterator<T> &other)
     {
         other.check_validity(__LINE__);
@@ -72,7 +72,7 @@ namespace MyBST
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator=(ReverseTreeIterator<T> &&other)
     {
         other.check_validity(__LINE__);
@@ -80,7 +80,7 @@ namespace MyBST
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     const T &ReverseTreeIterator<T>::operator*() const
     {
         check_validity(__LINE__);
@@ -88,7 +88,7 @@ namespace MyBST
         return m_stack.top().lock()->get_value();
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     const T *ReverseTreeIterator<T>::operator->() const
     {
         check_validity(__LINE__);
@@ -96,19 +96,19 @@ namespace MyBST
         return &(m_stack.top().lock()->m_value);
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T>::operator bool() const
     {
         return valid() && !m_stack.top().expired();
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool ReverseTreeIterator<T>::valid() const
     {
         return !m_stack.empty();
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--()
     {
         check_validity(__LINE__);
@@ -144,7 +144,7 @@ namespace MyBST
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> ReverseTreeIterator<T>::operator++(int)
     {
         auto saved = *this;
@@ -152,7 +152,7 @@ namespace MyBST
         return saved;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
     {
         check_validity(__LINE__);
@@ -193,7 +193,7 @@ namespace MyBST
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> ReverseTreeIterator<T>::operator--(int)
     {
         auto saved = *this;
@@ -201,7 +201,7 @@ namespace MyBST
         return saved;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool ReverseTreeIterator<T>::operator==(const ReverseTreeIterator<T> &other) const
     {
         if (m_stack.size() != other.m_stack.size())
@@ -219,31 +219,31 @@ namespace MyBST
         return false;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool ReverseTreeIterator<T>::operator!=(const ReverseTreeIterator<T> &other) const
     {
         return !(*this == other);
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void ReverseTreeIterator<T>::reset()
     {
         while (!m_stack.empty())
             m_stack.pop();
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void ReverseTreeIterator<T>::check_validity(int line) const
     {
         if (!valid())
         {
             time_t timer = time(nullptr);
             auto loc = std::source_location::current();
-            throw InvalidIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
+            throw ExpiredIteratorError(loc.file_name(), loc.function_name(), line, ctime(&timer));
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void ReverseTreeIterator<T>::check_in_bounds(int line) const
     {
         if (m_stack.top().expired())
@@ -254,7 +254,7 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void ReverseTreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
     {
         bst_shared_ptr found = root;

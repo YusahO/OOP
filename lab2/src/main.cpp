@@ -128,13 +128,13 @@ int main()
         std::cout << tree << " size: " << tree.size() << std::endl;
         std::cout << "--- REMOVE ---" << std::endl;
         {
-            auto tree_cp = tree;
+            auto tree_cp = BSTree(tree);
             std::cout << "before del of 6: " << tree_cp << std::endl;
             std::cout << "result: " << (tree_cp.erase(6) ? "true" : "false") << std::endl;
             std::cout << "after: " << tree_cp << std::endl;
         }
         {
-            auto tree_cp = tree;
+            auto tree_cp = BSTree(tree);
             std::cout << "before del of 10 (not in tree): " << tree_cp << std::endl;
             std::cout << "result: " << (tree_cp.erase(10) ? "true" : "false") << std::endl;
             std::cout << "after: " << tree_cp << std::endl;

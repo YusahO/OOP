@@ -9,11 +9,12 @@
 
 namespace MyBST
 {
-    template <Comparable T>
+    template <TreeElement T>
     class ReverseTreeIterator : public BaseTreeIterator
     {
     public:
         using iterator_category = std::bidirectional_iterator_tag;
+        using iterator_concept = std::bidirectional_iterator_tag;
         using value_type = T;
         using pointer = T *;
         using reference = T &;
@@ -49,7 +50,7 @@ namespace MyBST
         bool operator==(const ReverseTreeIterator<T> &other) const;
         bool operator!=(const ReverseTreeIterator<T> &other) const;
 
-        template <Comparable P>
+        template <TreeElement P>
         friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
     protected:
@@ -62,25 +63,25 @@ namespace MyBST
         std::stack<bst_weak_ptr> m_stack;
     };
 
-    template <Comparable P>
-    std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
-    {
-        std::stack<std::weak_ptr<typename BSTree<P>::TreeNode>> st = iter.m_stack;
-        os << "[ ";
-        while (!st.empty())
-        {
-            if (st.top().expired())
-            {
-                os << "null ";
-            }
-            else
-            {
-                os << st.top().lock()->get_value() << " ";
-            }
-            st.pop();
-        }
-        return os << "]";
-    }
+    // template <TreeElement P>
+    // std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter)
+    // {
+    //     std::stack<std::weak_ptr<typename BSTree<P>::TreeNode>> st = iter.m_stack;
+    //     os << "[ ";
+    //     while (!st.empty())
+    //     {
+    //         if (st.top().expired())
+    //         {
+    //             os << "null ";
+    //         }
+    //         else
+    //         {
+    //             os << st.top().lock()->get_value() << " ";
+    //         }
+    //         st.pop();
+    //     }
+    //     return os << "]";
+    // }
 }
 
 #include "ReverseTreeIterator_impl.hpp"

@@ -9,14 +9,15 @@
 
 namespace MyBST {
 
-template <Comparable T>
+template <TreeElement T>
 class BSTree;
 
-template <Comparable T>
+template <TreeElement T>
 class TreeIterator : public BaseTreeIterator
 {
 public:
     using iterator_category = std::bidirectional_iterator_tag;
+    using iterator_concept = std::bidirectional_iterator_tag;
     using value_type = T;
     using pointer = T*;
     using reference = T&;
@@ -52,7 +53,7 @@ public:
     bool operator==(const TreeIterator<T> &other) const;
     bool operator!=(const TreeIterator<T> &other) const;
     
-    template <Comparable P>
+    template <TreeElement P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
 protected:

@@ -6,6 +6,4 @@ public:
     virtual ~BaseTreeIterator() = 0;
 };
 
-BaseTreeIterator::~BaseTreeIterator()
-{
-}
+#include "BaseTreeIterator_impl.hpp"

@@ -9,13 +9,13 @@
 namespace MyBST
 {
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::BSTree()
         : mp_root(nullptr)
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::BSTree(std::initializer_list<T> lst)
     {
         for (auto val : lst)
@@ -24,33 +24,33 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::BSTree(const BSTree<T> &other)
         : mp_root(deep_copy(other.mp_root))
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::BSTree(BSTree<T> &&other)
         : mp_root(std::exchange(other.mp_root, nullptr))
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> &BSTree<T>::operator=(const BSTree<T> &other)
     {
         mp_root = deep_copy(other.mp_root);
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> &BSTree<T>::operator=(BSTree<T> &&other)
     {
         mp_root = std::exchange(other.mp_root, nullptr);
         return *this;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     typename BSTree<T>::bst_shared_ptr BSTree<T>::deep_copy(const BSTree<T>::bst_shared_ptr &other)
     {
         if (!other)
@@ -69,8 +69,6 @@ namespace MyBST
 
             if (old_node->get_left())
             {
-                // new_node->set_left(
-                //     try_alloc_node(old_node->get_left()->get_value(), old_node->get_right()->get_height()));
                 new_node->set_left(
                     try_alloc_node(old_node->get_left()->get_value()));
                 st.push(old_node->get_left());
@@ -79,8 +77,6 @@ namespace MyBST
 
             if (old_node->get_right())
             {
-                // new_node->set_right(
-                //     try_alloc_node(old_node->get_right()->get_value(), old_node->get_right()->get_height()));
                 new_node->set_right(
                     try_alloc_node(old_node->get_right()->get_value()));
                 st.push(old_node->get_right());
@@ -90,7 +86,7 @@ namespace MyBST
         return new_root;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::operator==(const BSTree &other) const
     {
         for (auto it1 = begin(), it2 = other.begin(); it1 != end() && it2 != other.end(); ++it1, ++it2)
@@ -101,19 +97,19 @@ namespace MyBST
         return true;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::operator!=(const BSTree &other) const
     {
         return !(*this == other);
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::insert(T &&value)
     {
         return insert(value);
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::insert(const T &value)
     {
         BSTree<T>::bst_shared_ptr new_node = try_alloc_node(value);
@@ -145,32 +141,32 @@ namespace MyBST
         return true;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     TreeIterator<T> BSTree<T>::find(const T &value) const
     {
         BSTree<T>::bst_shared_ptr found = _find(value);
         return {found, mp_root};
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::contains(const T &value) const
     {
         return _find(value) != nullptr;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void BSTree<T>::clear() noexcept
     {
         mp_root = nullptr;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline bool BSTree<T>::empty() const noexcept
     {
         return mp_root == nullptr;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     std::size_t BSTree<T>::size() const noexcept
     {
         std::size_t s = 0;
@@ -179,7 +175,7 @@ namespace MyBST
         return s;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> BSTree<T>::get_union(const BSTree &other) const
     {
         BSTree result;
@@ -193,7 +189,7 @@ namespace MyBST
         return result;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> BSTree<T>::get_intersection(const BSTree &other) const
     {
         BSTree result;
@@ -207,7 +203,7 @@ namespace MyBST
         return result;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> BSTree<T>::get_difference(const BSTree &other) const
     {
         BSTree result;
@@ -221,7 +217,7 @@ namespace MyBST
         return result;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T> BSTree<T>::get_sym_difference(const BSTree &other) const
     {
         BSTree result;
@@ -241,31 +237,31 @@ namespace MyBST
         return result;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     TreeIterator<T> BSTree<T>::begin() const
     {
         return {mp_root};
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     TreeIterator<T> BSTree<T>::end() const
     {
         return {mp_root, true};
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> BSTree<T>::rbegin() const
     {
         return {mp_root};
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     ReverseTreeIterator<T> BSTree<T>::rend() const
     {
         return {mp_root, true};
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     template <Iterator Iter>
         requires Assignable<typename Iter::value_type, T>
     BSTree<T>::BSTree(Iter first, Iter last)
@@ -276,7 +272,7 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     template <Container Con>
         requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
     BSTree<T>::BSTree(const Con &container)
@@ -287,7 +283,7 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     template <Iterator Iter>
         requires Assignable<typename Iter::value_type, T>
     bool BSTree<T>::erase(Iter pos)
@@ -295,7 +291,7 @@ namespace MyBST
         return erase(*pos);
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::erase(const T &value)
     {
         BSTree<T>::bst_shared_ptr found = mp_root, parent;
@@ -354,7 +350,7 @@ namespace MyBST
         return true;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     std::vector<T> BSTree<T>::ravel() const
     {
         std::vector<T> nodes;
@@ -384,7 +380,7 @@ namespace MyBST
         return nodes;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void BSTree<T>::balance()
     {
         std::vector<T> elements{ravel()};
@@ -423,14 +419,14 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     typename BSTree<T>::bst_shared_ptr BSTree<T>::_find(const T &value) const
     {
         if (!mp_root)
         {
             time_t timer = time(nullptr);
             auto loc = std::source_location::current();
-            throw InvalidTreeError(loc.file_name(), loc.function_name(), __LINE__, ctime(&timer));
+            throw EmptyTreeError(loc.file_name(), loc.function_name(), __LINE__, ctime(&timer));
         }
 
         BSTree<T>::bst_shared_ptr node = mp_root;
@@ -444,7 +440,7 @@ namespace MyBST
         return node;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     typename BSTree<T>::bst_shared_ptr BSTree<T>::try_alloc_node(const T &value) const
     {
         BSTree<T>::bst_shared_ptr node;
@@ -461,7 +457,7 @@ namespace MyBST
         return node;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode()
         : m_value{},
           mp_left(nullptr),
@@ -469,79 +465,65 @@ namespace MyBST
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode(T &&value)
         : m_value(value),
-          //   m_height(height),
           mp_left(nullptr),
           mp_right(nullptr)
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode(const T &value)
         : m_value(value),
-          //   m_height(height),
           mp_left(nullptr),
           mp_right(nullptr)
     {
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline const T &BSTree<T>::TreeNode::get_value() const noexcept
     {
         return m_value;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline void BSTree<T>::TreeNode::set_value(const T &value) noexcept
     {
         m_value = value;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     bool BSTree<T>::TreeNode::operator!=(const TreeNode &other) const
     {
         return m_value != other.m_value;
     }
 
-    // template <Comparable T>
-    // size_t BSTree<T>::TreeNode::get_height() const noexcept
-    // {
-    //     return m_height;
-    // }
-
-    // template <Comparable T>
-    // inline void BSTree<T>::TreeNode::set_height(const T &height) noexcept
-    // {
-    //     m_height = height;
-    // }
-
-    template <Comparable T>
+    template <TreeElement T>
     const typename BSTree<T>::bst_shared_ptr &BSTree<T>::TreeNode::get_left() const noexcept
     {
         return mp_left;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline void BSTree<T>::TreeNode::set_left(const bst_shared_ptr &node) noexcept
     {
         mp_left = node;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     const typename BSTree<T>::bst_shared_ptr &BSTree<T>::TreeNode::get_right() const noexcept
     {
         return mp_right;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline void BSTree<T>::TreeNode::set_right(const bst_shared_ptr &node) noexcept
     {
         mp_right = node;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     typename BSTree<T>::bst_shared_ptr BSTree<T>::TreeNode::get_leftmost() noexcept
     {
         BSTree<T>::bst_shared_ptr tmp = mp_left;
@@ -555,7 +537,7 @@ namespace MyBST
         return tmp;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     typename BSTree<T>::bst_shared_ptr BSTree<T>::TreeNode::get_rightmost() noexcept
     {
         BSTree<T>::bst_shared_ptr tmp = mp_right;
@@ -569,7 +551,7 @@ namespace MyBST
         return tmp;
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void BSTree<T>::TreeNode::leftmost_fill_stack(std::stack<bst_weak_ptr> &stack) noexcept
     {
         BSTree<T>::bst_shared_ptr tmp = mp_left;
@@ -582,7 +564,7 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     void BSTree<T>::TreeNode::rightmost_fill_stack(std::stack<bst_weak_ptr> &stack) noexcept
     {
         BSTree<T>::bst_shared_ptr tmp = mp_right;
@@ -595,7 +577,7 @@ namespace MyBST
         }
     }
 
-    template <Comparable T>
+    template <TreeElement T>
     inline typename BSTree<T>::bst_shared_ptr BSTree<T>::TreeNode::get_this()
     {
         return this->shared_from_this();

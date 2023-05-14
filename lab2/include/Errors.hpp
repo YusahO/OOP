@@ -16,9 +16,9 @@ public:
         const char *time,
         const char *errortype = "Error") noexcept
     {
-        sprintf(msg,
-            "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
-            errortype, filename, line, funcname, time);
+        snprintf(msg, size_buf,
+                 "\033[31m%s\033[37m in file %s(%d) in function \n\t%s \n %s",
+                 errortype, filename, line, funcname, time);
     }
 
     virtual const char *what() const noexcept override
@@ -40,7 +40,7 @@ public:
         const int line,
         const char *time,
         const char *errortype = "Invalid object access error") noexcept
-        : BaseError(filename, funcname, line, time, errortype) 
+        : BaseError(filename, funcname, line, time, errortype)
     {
     }
 };
@@ -59,10 +59,10 @@ public:
     }
 };
 
-class InvalidIteratorError : public IteratorError
+class ExpiredIteratorError : public IteratorError
 {
 public:
-    InvalidIteratorError(
+    ExpiredIteratorError(
         const char *filename,
         const char *funcname,
         const int line,
@@ -94,17 +94,17 @@ public:
         const char *filename,
         const char *funcname,
         const int line,
-        const char *time, 
+        const char *time,
         const char *errortype = "Could not allocate tree element") noexcept
         : TreeError(filename, funcname, line, time, errortype)
     {
     }
 };
 
-class InvalidTreeError : public TreeError
+class EmptyTreeError : public TreeError
 {
 public:
-    InvalidTreeError(
+    EmptyTreeError(
         const char *filename,
         const char *funcname,
         const int line,
@@ -114,4 +114,3 @@ public:
     {
     }
 };
-

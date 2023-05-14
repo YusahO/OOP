@@ -11,7 +11,7 @@
 namespace MyBST
 {
 
-    template <Comparable T>
+    template <TreeElement T>
     class BSTree : public BaseTree
     {
     public:
@@ -44,8 +44,6 @@ namespace MyBST
             [[nodiscard]] const bst_shared_ptr &get_right() const noexcept;
 
             void set_value(const T &value) noexcept;
-            // void set_height(const T &height) noexcept;
-            // void fix_height() noexcept;
             void set_left(const bst_shared_ptr &node) noexcept;
             void set_right(const bst_shared_ptr& node) noexcept;
 
@@ -62,7 +60,6 @@ namespace MyBST
 
         private:
             T m_value;
-            // size_t m_height;
             bst_shared_ptr mp_left;
             bst_shared_ptr mp_right;
         };
@@ -79,7 +76,7 @@ namespace MyBST
             requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
         explicit BSTree(const Con &container);
 
-        BSTree(const BSTree<T> &other);
+        explicit BSTree(const BSTree<T> &other);
         BSTree(BSTree<T> &&other);
         BSTree &operator=(const BSTree<T> &other);
         BSTree &operator=(BSTree<T> &&other);
