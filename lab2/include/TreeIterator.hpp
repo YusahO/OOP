@@ -44,21 +44,20 @@ public:
     operator bool() const;
     bool valid() const;
 
-    TreeIterator<T> &operator++();
-    TreeIterator<T> operator++(int);
+    TreeIterator<T> &operator++() noexcept;
+    TreeIterator<T> operator++(int) noexcept;
 
-    TreeIterator<T> &operator--();
-    TreeIterator<T> operator--(int);
+    TreeIterator<T> &operator--() noexcept;
+    TreeIterator<T> operator--(int) noexcept;
 
     bool operator==(const TreeIterator<T> &other) const;
-    bool operator!=(const TreeIterator<T> &other) const;
+    // bool operator!=(const TreeIterator<T> &other) const;
     
     template <TreeElement P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);
 
 protected:
     void reset();
-    void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
     void check_validity(int) const;
     void check_in_bounds(int) const;
 

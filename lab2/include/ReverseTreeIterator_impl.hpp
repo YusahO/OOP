@@ -40,7 +40,8 @@ namespace MyBST
     {
         if (node != nullptr)
         {
-            search(node, root);
+            // search(node, root);
+            root->search_fill_stack(m_stack, node->get_value());
         }
         else
         {
@@ -48,8 +49,6 @@ namespace MyBST
             root->rightmost_fill_stack(m_stack);
             // m_stack.emplace(node);
         }
-
-        std::cout << *this << "\n";
     }
 
     template <TreeElement T>
@@ -109,9 +108,10 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--()
+    ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--() noexcept
     {
-        check_validity(__LINE__);
+        if (m_stack.empty())
+            return *this;
 
         if (m_stack.top().lock()->get_right())
         {
@@ -145,7 +145,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    ReverseTreeIterator<T> ReverseTreeIterator<T>::operator++(int)
+    ReverseTreeIterator<T> ReverseTreeIterator<T>::operator++(int) noexcept
     {
         auto saved = *this;
         ++(*this);
@@ -153,10 +153,12 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++()
+    ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++() noexcept
     {
-        check_validity(__LINE__);
-
+        // check_validity(__LINE__);
+        if (m_stack.empty())
+            return *this;
+        
         if (m_stack.top().expired())
         {
             m_stack.pop();
@@ -194,7 +196,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    ReverseTreeIterator<T> ReverseTreeIterator<T>::operator--(int)
+    ReverseTreeIterator<T> ReverseTreeIterator<T>::operator--(int) noexcept
     {
         auto saved = *this;
         --(*this);
@@ -219,11 +221,11 @@ namespace MyBST
         return false;
     }
 
-    template <TreeElement T>
-    bool ReverseTreeIterator<T>::operator!=(const ReverseTreeIterator<T> &other) const
-    {
-        return !(*this == other);
-    }
+    // template <TreeElement T>
+    // bool ReverseTreeIterator<T>::operator!=(const ReverseTreeIterator<T> &other) const
+    // {
+    //     return !(*this == other);
+    // }
 
     template <TreeElement T>
     void ReverseTreeIterator<T>::reset()
@@ -254,19 +256,19 @@ namespace MyBST
         }
     }
 
-    template <TreeElement T>
-    void ReverseTreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
-    {
-        bst_shared_ptr found = root;
-        while (found && found->m_value != node->m_value)
-        {
-            m_stack.emplace(found);
-            if (found->m_value < node->m_value)
-                found = found->get_right();
-            else
-                found = found->get_left();
-        }
-        m_stack.emplace(found);
-    }
+    // template <TreeElement T>
+    // void ReverseTreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
+    // {
+    //     bst_shared_ptr found = root;
+    //     while (found && found->m_value != node->m_value)
+    //     {
+    //         m_stack.emplace(found);
+    //         if (found->m_value < node->m_value)
+    //             found = found->get_right();
+    //         else
+    //             found = found->get_left();
+    //     }
+    //     m_stack.emplace(found);
+    // }
 
 }

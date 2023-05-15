@@ -41,21 +41,19 @@ namespace MyBST
         operator bool() const;
         bool valid() const;
 
-        ReverseTreeIterator<T> &operator++();
-        ReverseTreeIterator<T> operator++(int);
+        ReverseTreeIterator<T> &operator++() noexcept;
+        ReverseTreeIterator<T> operator++(int) noexcept;
 
-        ReverseTreeIterator<T> &operator--();
-        ReverseTreeIterator<T> operator--(int);
+        ReverseTreeIterator<T> &operator--() noexcept;
+        ReverseTreeIterator<T> operator--(int) noexcept;
 
         bool operator==(const ReverseTreeIterator<T> &other) const;
-        bool operator!=(const ReverseTreeIterator<T> &other) const;
 
         template <TreeElement P>
         friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 
     protected:
         void reset();
-        void search(const bst_shared_ptr &node, const bst_shared_ptr &root);
         void check_validity(int) const;
         void check_in_bounds(int) const;
 

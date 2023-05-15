@@ -87,15 +87,15 @@ public:
     }
 };
 
-class TreeBadAlloc : public TreeError
+class TreeNodeBadAlloc : public TreeError
 {
 public:
-    TreeBadAlloc(
+    TreeNodeBadAlloc(
         const char *filename,
         const char *funcname,
         const int line,
         const char *time,
-        const char *errortype = "Could not allocate tree element") noexcept
+        const char *errortype = "Could not allocate tree node") noexcept
         : TreeError(filename, funcname, line, time, errortype)
     {
     }

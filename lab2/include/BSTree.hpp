@@ -30,6 +30,9 @@ namespace MyBST
         using bst_shared_ptr = typename std::shared_ptr<TreeNode>;
         using bst_weak_ptr = typename std::weak_ptr<TreeNode>;
 
+        using const_bst_shared_ptr = typename std::shared_ptr<const TreeNode>;
+        using const_bst_weak_ptr = typename std::weak_ptr<const TreeNode>;
+
     public:
         class TreeNode : public std::enable_shared_from_this<TreeNode>
         {
@@ -39,22 +42,24 @@ namespace MyBST
             explicit TreeNode(const T &value);
 
             const T &get_value() const noexcept;
-            size_t get_height() const noexcept;
             [[nodiscard]] const bst_shared_ptr &get_left() const noexcept;
             [[nodiscard]] const bst_shared_ptr &get_right() const noexcept;
 
             void set_value(const T &value) noexcept;
             void set_left(const bst_shared_ptr &node) noexcept;
-            void set_right(const bst_shared_ptr& node) noexcept;
+            void set_right(const bst_shared_ptr &node) noexcept;
 
             [[nodiscard]] bst_shared_ptr get_leftmost() noexcept;
             [[nodiscard]] bst_shared_ptr get_rightmost() noexcept;
+
+            [[nodiscard]] bst_shared_ptr search(const T &value) const;
+            void search_fill_stack(std::stack<bst_weak_ptr> &stack, const T &value) const;
 
             void leftmost_fill_stack(std::stack<bst_weak_ptr> &stack) noexcept;
             void rightmost_fill_stack(std::stack<bst_weak_ptr> &stack) noexcept;
 
             bool operator!=(const TreeNode &other) const;
-            
+
         private:
             bst_shared_ptr get_this();
 
@@ -83,18 +88,8 @@ namespace MyBST
 
         ~BSTree() = default;
 
-        // void _print(const bst_shared_ptr &node, std::ostream &os) const
-        // {
-        //     if (!node)
-        //         return;
-            
-        //     os << node->get_value() << " ";
-        //     _print(node->get_left(), os);
-        //     _print(node->get_right(), os);
-        // }
-
         bool operator==(const BSTree &other) const;
-        bool operator!=(const BSTree &other) const;
+        // bool operator!=(const BSTree &other) const;
 
         // вставка
         bool insert(T &&value);
@@ -130,7 +125,7 @@ namespace MyBST
         friend std::ostream &operator<<(std::ostream &os, const BSTree<P> &tree);
 
     protected:
-        std::vector<T> ravel() const;
+        std::vector<bst_shared_ptr> ravel() const;
         bst_shared_ptr deep_copy(const bst_shared_ptr &other);
         bst_shared_ptr try_alloc_node(const T &value) const;
 

@@ -41,7 +41,7 @@ namespace MyBST
     {
         if (node != nullptr)
         {
-            search(node, root);
+            root->search_fill_stack(m_stack, node->get_value());
         }
         else
         {
@@ -108,14 +108,12 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    TreeIterator<T> &TreeIterator<T>::operator++()
+    TreeIterator<T> &TreeIterator<T>::operator++() noexcept
     {
-        check_validity(__LINE__);
+        // check_validity(__LINE__);
 
-        // std::cout << *this << "\n";
-
-        // std::cout << m_stack.top().lock()->get_left() << "\n";
-        // std::cout << m_stack.top().lock()->get_right() << "\n";
+        if (m_stack.empty())
+            return *this;
 
         if (m_stack.top().lock()->get_right())
         {
@@ -151,7 +149,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    TreeIterator<T> TreeIterator<T>::operator++(int)
+    TreeIterator<T> TreeIterator<T>::operator++(int) noexcept
     {
         auto saved = *this;
         ++(*this);
@@ -159,9 +157,11 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    TreeIterator<T> &TreeIterator<T>::operator--()
+    TreeIterator<T> &TreeIterator<T>::operator--() noexcept
     {
-        check_validity(__LINE__);
+        // check_validity(__LINE__);
+        if (m_stack.empty())
+            return *this;
 
         if (m_stack.top().expired())
         {
@@ -196,7 +196,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    TreeIterator<T> TreeIterator<T>::operator--(int)
+    TreeIterator<T> TreeIterator<T>::operator--(int) noexcept
     {
         auto saved = *this;
         --(*this);
@@ -221,11 +221,11 @@ namespace MyBST
         return false;
     }
 
-    template <TreeElement T>
-    bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
-    {
-        return !(*this == other);
-    }
+    // template <TreeElement T>
+    // bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
+    // {
+    //     return !(*this == other);
+    // }
 
     template <TreeElement T>
     void TreeIterator<T>::reset()
@@ -277,21 +277,6 @@ namespace MyBST
     //         n = n->get_right();
     //     }
     // }
-
-    template <TreeElement T>
-    void TreeIterator<T>::search(const bst_shared_ptr &node, const bst_shared_ptr &root)
-    {
-        bst_shared_ptr found = root;
-        while (found && found->get_value() != node->get_value())
-        {
-            m_stack.emplace(found);
-            if (found->get_value() < node->get_value())
-                found = found->get_right();
-            else
-                found = found->get_left();
-        }
-        m_stack.emplace(found);
-    }
 
     template <TreeElement P>
     std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter)
