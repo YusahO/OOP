@@ -21,6 +21,24 @@ struct TestObj
     }
 };
 
+struct ManyArgsTestObj
+{
+    ManyArgsTestObj(int test1, float test2) : test1(test1), test2(test2) {}
+
+    int test1;
+    float test2;
+
+    const auto operator<=>(const ManyArgsTestObj &other) const
+    {
+        return test1 <=> other.test1;
+    }
+
+    const bool operator==(const ManyArgsTestObj &other) const
+    {
+        return test1 == other.test1;
+    }
+};
+
 int main()
 {
     std::cout << "=== CONSTRUCTORS ===" << std::endl;
@@ -95,24 +113,38 @@ int main()
         BSTree<int> tree(list_test);
         std::cout << tree << std::endl;
     }
-    // {
-    //     std::cout << "Custom objects\n";
-    //     BSTree<TestObj> tree;
-    //     tree.insert(TestObj(12));
-    //     tree.insert(TestObj(13));
-    //     tree.insert(TestObj(14));
-    //     for(auto &obj : tree)
-    //     {
-    //         std::cout << obj.test << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
+
+    {
+        std::cout << "Custom object\n";
+        BSTree<TestObj> tree;
+        tree.insert(TestObj(12));
+        tree.insert(TestObj(13));
+        tree.insert(TestObj(14));
+        for (auto &obj : tree)
+        {
+            std::cout << obj.test << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    {
+        std::cout << "Custom object with many args\n";
+        BSTree<ManyArgsTestObj> tree;
+        tree.insert(12, 12);
+        tree.insert(13, 13.f);
+        tree.insert(14, 14.f);
+        for (auto &obj : tree)
+        {
+            std::cout << obj.test1 << " ";
+        }
+        std::cout << std::endl;
+    }
 
     std::cout << "=== TREE OPERATIONS ===" << std::endl;
     {
         std::cout << "--- INSERTION ---" << std::endl;
         BSTree<int> tree;
-        int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+        int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         for (size_t i = 0; i < sizeof(arr) / sizeof(int); ++i)
         {
             std::cout << "insert " << i + 1 << ": " << (tree.insert(arr[i]) ? "true" : "false") << "\n";
@@ -149,6 +181,33 @@ int main()
         std::cout << "Tree after balancing: " << tree << '\n';
     }
 
+    {
+        std::cout << "--- THEORETICAL MULTIPLE OPERATIONS ---" << std::endl;
+        BSTree<int> a{1, 2, 3, 4, 5}, b{ 3, 4, 5, 6, 7 };
+        std::cout << "Tree a: " << a << std::endl;
+        std::cout << "Tree b: " << b << std::endl;
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "intersection: " << a_cp.get_intersection(b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "difference: " << a_cp.get_difference(b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "sym-difference: " << a_cp.get_sym_difference(b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "union: " << a_cp.get_union(b_cp) << std::endl;
+        }
+    }
+
     std::cout << "=== ITERATORS ===" << std::endl;
     {
         std::cout << "ITERATORS empty tree" << std::endl;
@@ -159,7 +218,7 @@ int main()
         std::cout << "--- ITERATORS not const tree ---" << std::endl;
         BSTree<int> a{1, 5, 2, 3, 4, 0, 6, 8, 7};
         std::cout << "INIT A\n"
-                  << a << std::endl;
+            << a << std::endl;
         std::cout << "For each const auto &elem with separate ' '\n";
         for (auto elem = a.begin(); elem != a.end(); ++elem)
             std::cout << *elem << " ";

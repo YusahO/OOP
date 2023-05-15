@@ -53,6 +53,8 @@ namespace MyBST
             [[nodiscard]] bst_shared_ptr get_rightmost() noexcept;
 
             [[nodiscard]] bst_shared_ptr search(const T &value) const;
+            bool insert(bst_shared_ptr node);
+
             void search_fill_stack(std::stack<bst_weak_ptr> &stack, const T &value) const;
 
             void leftmost_fill_stack(std::stack<bst_weak_ptr> &stack) noexcept;
@@ -78,7 +80,7 @@ namespace MyBST
         explicit BSTree(Iter first, Iter last);
 
         template <Container Con>
-            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+            requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
         explicit BSTree(const Con &container);
 
         explicit BSTree(const BSTree<T> &other);
@@ -92,7 +94,9 @@ namespace MyBST
         // bool operator!=(const BSTree &other) const;
 
         // вставка
-        bool insert(T &&value);
+        template<typename...Args>
+        bool insert(Args&&... args);
+        // bool insert(T &&value);
         bool insert(const T &value);
 
         // поиск
@@ -127,7 +131,7 @@ namespace MyBST
     protected:
         std::vector<bst_shared_ptr> ravel() const;
         bst_shared_ptr deep_copy(const bst_shared_ptr &other);
-        bst_shared_ptr try_alloc_node(const T &value) const;
+        bst_shared_ptr try_alloc_node(T &&value) const;
 
         bst_shared_ptr _find(const T &value) const;
 

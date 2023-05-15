@@ -57,7 +57,7 @@ namespace MyBST
             return nullptr;
 
         std::stack<BSTree<T>::bst_shared_ptr> st;
-        BSTree<T>::bst_shared_ptr new_root = try_alloc_node(other->get_value());
+        BSTree<T>::bst_shared_ptr new_root = try_alloc_node(T{other->get_value()});
         st.push(other);
         st.push(new_root);
         while (!st.empty())
@@ -69,8 +69,8 @@ namespace MyBST
 
             if (old_node->get_left())
             {
-                new_node->set_left(
-                    try_alloc_node(old_node->get_left()->get_value()));
+                const T &value = old_node->get_left()->get_value();
+                new_node->set_left(try_alloc_node(T{value}));
                 st.push(old_node->get_left());
                 st.push(new_node->get_left());
             }
@@ -78,7 +78,7 @@ namespace MyBST
             if (old_node->get_right())
             {
                 new_node->set_right(
-                    try_alloc_node(old_node->get_right()->get_value()));
+                    try_alloc_node(T{old_node->get_right()->get_value()}));
                 st.push(old_node->get_right());
                 st.push(new_node->get_right());
             }
@@ -97,40 +97,54 @@ namespace MyBST
         return true;
     }
 
-    template <TreeElement T>
-    bool BSTree<T>::insert(T &&value)
+    template<TreeElement T>
+    template<typename...Args>
+    bool BSTree<T>::insert(Args&&... args)
     {
-        return insert(value);
-    }
-
-    template <TreeElement T>
-    bool BSTree<T>::insert(const T &value)
-    {
-        BSTree<T>::bst_shared_ptr new_node = try_alloc_node(value);
+        BSTree<T>::bst_shared_ptr new_node = try_alloc_node(T(std::forward<Args>(args)...));
 
         if (!mp_root)
         {
             mp_root = new_node;
             return true;
         }
+        return mp_root->insert(new_node);
+    }
 
-        BSTree<T>::bst_shared_ptr curr = mp_root, parent = curr;
+    template <TreeElement T>
+    bool BSTree<T>::insert(const T &value)
+    {
+        BSTree<T>::bst_shared_ptr new_node = try_alloc_node(T(value));
+
+        if (!mp_root)
+        {
+            mp_root = new_node;
+            return true;
+        }
+        return mp_root->insert(new_node);
+    }
+
+    template<TreeElement T>
+    bool BSTree<T>::TreeNode::insert(bst_shared_ptr node)
+    {
+        BSTree<T>::bst_shared_ptr curr = std::const_pointer_cast<BSTree<T>::TreeNode>(this->shared_from_this());
+        BSTree<T>::bst_shared_ptr parent = curr;
 
         while (curr)
         {
             parent = curr;
-            if (curr->get_value() < value)
+            if (curr->get_value() < node->get_value())
                 curr = curr->get_right();
-            else if (curr->get_value() > value)
+            else if (curr->get_value() > node->get_value())
                 curr = curr->get_left();
             else
                 return false;
         }
 
-        if (parent->get_value() < value)
-            parent->set_right(new_node);
+        if (parent->get_value() < node->get_value())
+            parent->set_right(node);
         else
-            parent->set_left(new_node);
+            parent->set_left(node);
 
         return true;
     }
@@ -139,7 +153,7 @@ namespace MyBST
     TreeIterator<T> BSTree<T>::find(const T &value) const
     {
         BSTree<T>::bst_shared_ptr found = _find(value);
-        return {found, mp_root};
+        return { found, mp_root };
     }
 
     template <TreeElement T>
@@ -234,25 +248,25 @@ namespace MyBST
     template <TreeElement T>
     TreeIterator<T> BSTree<T>::begin() const
     {
-        return {mp_root};
+        return { mp_root };
     }
 
     template <TreeElement T>
     TreeIterator<T> BSTree<T>::end() const
     {
-        return {mp_root, true};
+        return { mp_root, true };
     }
 
     template <TreeElement T>
     ReverseTreeIterator<T> BSTree<T>::rbegin() const
     {
-        return {mp_root};
+        return { mp_root };
     }
 
     template <TreeElement T>
     ReverseTreeIterator<T> BSTree<T>::rend() const
     {
-        return {mp_root, true};
+        return { mp_root, true };
     }
 
     template <TreeElement T>
@@ -268,7 +282,7 @@ namespace MyBST
 
     template <TreeElement T>
     template <Container Con>
-        requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+        requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
     BSTree<T>::BSTree(const Con &container)
     {
         for (const auto &elem : container)
@@ -386,7 +400,8 @@ namespace MyBST
         mp_root = node;
 
         std::stack<std::pair<typename BSTree<T>::bst_shared_ptr, std::pair<size_t, size_t>>> st;
-        st.emplace(node, std::make_pair<size_t, size_t>(0, std::move(len)));
+        // st.emplace(node, std::make_pair<size_t, size_t>(0, std::move(len)));
+        st.emplace(node, std::pair<size_t, size_t>{0, len});
         while (!st.empty())
         {
             auto node_and_bounds = st.top();
@@ -403,14 +418,16 @@ namespace MyBST
                 auto child = nodes[(mid + 1 + right) / 2];
                 child->set_left(nullptr), child->set_right(nullptr);
                 node->set_right(child);
-                st.emplace(child, std::make_pair<size_t, size_t>(mid + 1, std::move(right)));
+                // st.emplace(child, std::make_pair<size_t, size_t>(mid + 1, std::move(right)));
+                st.emplace(child, std::pair<size_t, size_t>{mid + 1, right});
             }
             if (left < mid)
             {
                 auto child = nodes[(left + mid) / 2];
                 child->set_left(nullptr), child->set_right(nullptr);
                 node->set_left(child);
-                st.emplace(child, std::make_pair<size_t, size_t>(std::move(left), std::move(mid)));
+                // st.emplace(child, std::make_pair<size_t, size_t>(std::move(left), std::move(mid)));
+                st.emplace(child, std::pair<size_t, size_t>{left, mid});
             }
         }
     }
@@ -430,7 +447,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    typename BSTree<T>::bst_shared_ptr BSTree<T>::try_alloc_node(const T &value) const
+    typename BSTree<T>::bst_shared_ptr BSTree<T>::try_alloc_node(T &&value) const
     {
         BSTree<T>::bst_shared_ptr node;
         try
@@ -449,24 +466,24 @@ namespace MyBST
     template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode()
         : m_value{},
-          mp_left(nullptr),
-          mp_right(nullptr)
+        mp_left(nullptr),
+        mp_right(nullptr)
     {
     }
 
     template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode(T &&value)
         : m_value(value),
-          mp_left(nullptr),
-          mp_right(nullptr)
+        mp_left(nullptr),
+        mp_right(nullptr)
     {
     }
 
     template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode(const T &value)
         : m_value(value),
-          mp_left(nullptr),
-          mp_right(nullptr)
+        mp_left(nullptr),
+        mp_right(nullptr)
     {
     }
 
@@ -551,14 +568,14 @@ namespace MyBST
             else
                 found = found->mp_left;
         }
-        
+
         return std::const_pointer_cast<BSTree<T>::TreeNode>(found);
     }
 
     template <TreeElement T>
     void BSTree<T>::TreeNode::search_fill_stack(std::stack<bst_weak_ptr> &stack, const T &value) const
     {
-        auto found = this->shared_from_this();
+        BSTree<T>::bst_shared_ptr found = std::const_pointer_cast<BSTree<T>::TreeNode>(this->shared_from_this());
         while (found && found->m_value != value)
         {
             stack.emplace(found);
