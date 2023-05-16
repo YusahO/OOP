@@ -205,6 +205,52 @@ int main()
             BSTree<int> b_cp = BSTree(b);
             std::cout << "union: " << a_cp.get_union(b_cp) << std::endl;
         }
+        std::cout << "--- ^, &, +, - ---" << std::endl;
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "intersection: " << (a_cp & b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "difference: " << (a_cp - b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "sym-difference: " << (a_cp ^ b_cp) << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            std::cout << "union: " << (a_cp + b_cp) << std::endl;
+        }
+        std::cout << "--- done to this obj ---" << std::endl;
+                {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            a_cp &= b_cp;
+            std::cout << "intersection: " << a_cp << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            a_cp -= b_cp;
+            std::cout << "difference: " << a_cp << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            a_cp ^= b_cp;
+            std::cout << "sym-difference: " << a_cp << std::endl;
+        }
+        {
+            BSTree<int> a_cp = BSTree(a);
+            BSTree<int> b_cp = BSTree(b);
+            a_cp += b_cp;
+            std::cout << "union: " << a_cp << std::endl;
+        }
     }
 
     std::cout << "\n=== ITERATORS ===" << std::endl;

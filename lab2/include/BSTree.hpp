@@ -71,6 +71,7 @@ namespace MyBST
     public:
         BSTree();
         BSTree(std::initializer_list<T> lst);
+        BSTree(const T *const arr, const size_t size);
 
         template <Iterator Iter>
             requires Assignable<typename Iter::value_type, T>
@@ -81,9 +82,20 @@ namespace MyBST
         explicit BSTree(const Con &container);
 
         explicit BSTree(const BSTree<T> &other);
-        BSTree(BSTree<T> &&other);
+        BSTree(BSTree<T> &&other) noexcept;
         BSTree &operator=(const BSTree<T> &other);
-        BSTree &operator=(BSTree<T> &&other);
+        BSTree &operator=(BSTree<T> &&other) noexcept;
+        BSTree &operator=(std::initializer_list<T> lst);
+
+        BSTree &operator+=(const BSTree<T> &other);
+        BSTree &operator-=(const BSTree<T> &other);
+        BSTree &operator^=(const BSTree<T> &other);
+        BSTree &operator&=(const BSTree<T> &other);
+
+        [[nodiscard]] BSTree operator+(const BSTree<T> &other) const;
+        [[nodiscard]] BSTree operator-(const BSTree<T> &other) const;
+        [[nodiscard]] BSTree operator^(const BSTree<T> &other) const;
+        [[nodiscard]] BSTree operator&(const BSTree<T> &other) const;
 
         ~BSTree() = default;
 
@@ -92,7 +104,6 @@ namespace MyBST
         // вставка
         template<typename...Args>
         bool insert(Args&&... args);
-        // bool insert(T &&value);
         bool insert(const T &value);
 
         // поиск

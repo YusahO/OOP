@@ -24,6 +24,15 @@ namespace MyBST
         }
     }
 
+    template<TreeElement T>
+    BSTree<T>::BSTree(const T *const arr, const size_t size)
+    {
+        for (size_t i = 0; i < size; ++i)
+        {
+            insert(arr[i]);
+        }
+    }
+
     template <TreeElement T>
     BSTree<T>::BSTree(const BSTree<T> &other)
         : mp_root(deep_copy(other.mp_root))
@@ -31,7 +40,7 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    BSTree<T>::BSTree(BSTree<T> &&other)
+    BSTree<T>::BSTree(BSTree<T> &&other) noexcept
         : mp_root(std::exchange(other.mp_root, nullptr))
     {
     }
@@ -44,10 +53,101 @@ namespace MyBST
     }
 
     template <TreeElement T>
-    BSTree<T> &BSTree<T>::operator=(BSTree<T> &&other)
+    BSTree<T> &BSTree<T>::operator=(BSTree<T> &&other) noexcept
     {
         mp_root = std::exchange(other.mp_root, nullptr);
         return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> &BSTree<T>::operator=(std::initializer_list<T> lst)
+    {
+        for (auto &elem : lst)
+        {
+            insert(elem);
+        }
+        return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> &BSTree<T>::operator+=(const BSTree<T> &other)
+    {
+        for (auto &other_elem : other)
+        {
+            insert(other_elem);
+        }
+        return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> &BSTree<T>::operator-=(const BSTree<T> &other)
+    {
+        for (auto &other_elem : other)
+        {
+            erase(other_elem);
+        }
+        return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> &BSTree<T>::operator^=(const BSTree<T> &other)
+    {
+        for (auto &other_elem : other)
+        {
+            if (contains(other_elem))
+            {
+                erase(other_elem);
+            }
+            else
+            {
+                insert(other_elem);
+            }
+        }
+        return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> &BSTree<T>::operator&=(const BSTree<T> &other)
+    {
+        std::vector<T> my_buff;
+        for (auto &my_elem : *this)
+        {
+            if (!other.contains(my_elem))
+            {
+                my_buff.emplace_back(my_elem);
+            }
+        }
+
+        for(auto &to_delete : my_buff)
+        {
+            erase(to_delete);
+        }
+
+        return *this;
+    }
+
+    template<TreeElement T>
+    BSTree<T> BSTree<T>::operator+(const BSTree<T> &other) const
+    {
+        return get_union(other);
+    }
+
+    template<TreeElement T>
+    BSTree<T> BSTree<T>::operator-(const BSTree<T> &other) const
+    {
+        return get_difference(other);
+    }
+
+    template<TreeElement T>
+    BSTree<T> BSTree<T>::operator&(const BSTree<T> &other) const
+    {
+        return get_intersection(other);
+    }
+
+    template<TreeElement T>
+    BSTree<T> BSTree<T>::operator^(const BSTree<T> &other) const
+    {
+        return get_sym_difference(other);
     }
 
     template <TreeElement T>
@@ -57,7 +157,7 @@ namespace MyBST
             return nullptr;
 
         std::stack<BSTree<T>::bst_shared_ptr> st;
-        BSTree<T>::bst_shared_ptr new_root = try_alloc_node(T{other->get_value()});
+        BSTree<T>::bst_shared_ptr new_root = try_alloc_node(T{ other->get_value() });
         st.push(other);
         st.push(new_root);
         while (!st.empty())
@@ -70,7 +170,7 @@ namespace MyBST
             if (old_node->get_left())
             {
                 const T &value = old_node->get_left()->get_value();
-                new_node->set_left(try_alloc_node(T{value}));
+                new_node->set_left(try_alloc_node(T{ value }));
                 st.push(old_node->get_left());
                 st.push(new_node->get_left());
             }
@@ -78,7 +178,7 @@ namespace MyBST
             if (old_node->get_right())
             {
                 new_node->set_right(
-                    try_alloc_node(T{old_node->get_right()->get_value()}));
+                    try_alloc_node(T{ old_node->get_right()->get_value() }));
                 st.push(old_node->get_right());
                 st.push(new_node->get_right());
             }
@@ -470,7 +570,7 @@ namespace MyBST
 
     template <TreeElement T>
     BSTree<T>::TreeNode::TreeNode(T &&value)
-        : m_value(value),
+        : m_value(std::move(value)),
         mp_left(nullptr),
         mp_right(nullptr)
     {
