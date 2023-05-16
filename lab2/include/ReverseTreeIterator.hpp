@@ -49,6 +49,8 @@ namespace MyBST
 
         bool operator==(const ReverseTreeIterator<T> &other) const;
 
+        ptrdiff_t operator-(const ReverseTreeIterator<T> &other) const;
+
         template <TreeElement P>
         friend std::ostream &operator<<(std::ostream &os, const ReverseTreeIterator<P> &iter);
 

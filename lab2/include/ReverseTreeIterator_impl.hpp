@@ -220,11 +220,11 @@ namespace MyBST
         return false;
     }
 
-    // template <TreeElement T>
-    // bool ReverseTreeIterator<T>::operator!=(const ReverseTreeIterator<T> &other) const
-    // {
-    //     return !(*this == other);
-    // }
+    template<TreeElement T>
+    ptrdiff_t ReverseTreeIterator<T>::operator-(const ReverseTreeIterator<T> &other) const
+    {
+        return std::distance(other, *this);
+    }
 
     template <TreeElement T>
     void ReverseTreeIterator<T>::reset()

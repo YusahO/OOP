@@ -219,11 +219,11 @@ namespace MyBST
         return false;
     }
 
-    // template <TreeElement T>
-    // bool TreeIterator<T>::operator!=(const TreeIterator<T> &other) const
-    // {
-    //     return !(*this == other);
-    // }
+    template<TreeElement T>
+    ptrdiff_t TreeIterator<T>::operator-(const TreeIterator &other) const
+    {
+        return std::distance(this, other);
+    }
 
     template <TreeElement T>
     void TreeIterator<T>::reset()

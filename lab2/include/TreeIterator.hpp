@@ -21,6 +21,7 @@ public:
     using value_type = T;
     using pointer = T*;
     using reference = T&;
+    using difference_type = ptrdiff_t;
 
 private:
     friend BSTree<T>;
@@ -50,8 +51,9 @@ public:
     TreeIterator<T> &operator--() noexcept;
     TreeIterator<T> operator--(int) noexcept;
 
-    bool operator==(const TreeIterator<T> &other) const;
-    // bool operator!=(const TreeIterator<T> &other) const;
+    bool operator==(const TreeIterator &other) const;
+
+    ptrdiff_t operator-(const TreeIterator &other) const;
     
     template <TreeElement P>
     friend std::ostream &operator<<(std::ostream &os, const TreeIterator<P> &iter);

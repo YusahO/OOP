@@ -78,7 +78,7 @@ namespace MyBST
         explicit BSTree(Iter first, Iter last);
 
         template <Container Con>
-            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
+            requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
         explicit BSTree(const Con &container);
 
         explicit BSTree(const BSTree<T> &other);
@@ -96,6 +96,11 @@ namespace MyBST
         [[nodiscard]] BSTree operator-(const BSTree<T> &other) const;
         [[nodiscard]] BSTree operator^(const BSTree<T> &other) const;
         [[nodiscard]] BSTree operator&(const BSTree<T> &other) const;
+
+        [[nodiscard]] BSTree get_union(const BSTree &other) const;
+        [[nodiscard]] BSTree get_intersection(const BSTree &other) const;
+        [[nodiscard]] BSTree get_difference(const BSTree &other) const;
+        [[nodiscard]] BSTree get_sym_difference(const BSTree &other) const;
 
         ~BSTree() = default;
 
@@ -121,11 +126,6 @@ namespace MyBST
         void clear() noexcept;
         bool empty() const noexcept override;
         std::size_t size() const noexcept override;
-
-        [[nodiscard]] BSTree get_union(const BSTree &other) const;
-        [[nodiscard]] BSTree get_intersection(const BSTree &other) const;
-        [[nodiscard]] BSTree get_difference(const BSTree &other) const;
-        [[nodiscard]] BSTree get_sym_difference(const BSTree &other) const;
 
         TreeIterator<T> begin() const;
         TreeIterator<T> end() const;
