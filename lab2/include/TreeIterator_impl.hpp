@@ -110,9 +110,7 @@ namespace MyBST
     template <TreeElement T>
     TreeIterator<T> &TreeIterator<T>::operator++() noexcept
     {
-        // check_validity(__LINE__);
-
-        if (m_stack.empty())
+        if (!(*this))
             return *this;
 
         if (m_stack.top().lock()->get_right())

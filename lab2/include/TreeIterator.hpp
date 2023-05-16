@@ -41,7 +41,7 @@ public:
     const T &operator*() const;
     const T *operator->() const;
     
-    operator bool() const;
+    explicit operator bool() const;
     bool valid() const;
 
     TreeIterator<T> &operator++() noexcept;

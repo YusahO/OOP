@@ -110,7 +110,7 @@ namespace MyBST
     template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator--() noexcept
     {
-        if (m_stack.empty())
+        if (!(*this))
             return *this;
 
         if (m_stack.top().lock()->get_right())
@@ -155,7 +155,6 @@ namespace MyBST
     template <TreeElement T>
     ReverseTreeIterator<T> &ReverseTreeIterator<T>::operator++() noexcept
     {
-        // check_validity(__LINE__);
         if (m_stack.empty())
             return *this;
         
