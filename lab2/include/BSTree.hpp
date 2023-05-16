@@ -25,15 +25,12 @@ namespace MyBST
         using value_type = T;
         using size_type = size_t;
 
-    public:
+    private:
         class TreeNode;
         using bst_shared_ptr = typename std::shared_ptr<TreeNode>;
         using bst_weak_ptr = typename std::weak_ptr<TreeNode>;
 
-        using const_bst_shared_ptr = typename std::shared_ptr<const TreeNode>;
-        using const_bst_weak_ptr = typename std::weak_ptr<const TreeNode>;
-
-    public:
+    private:
         class TreeNode : public std::enable_shared_from_this<TreeNode>
         {
         public:
@@ -53,7 +50,7 @@ namespace MyBST
             [[nodiscard]] bst_shared_ptr get_rightmost() noexcept;
 
             [[nodiscard]] bst_shared_ptr search(const T &value) const;
-            bool insert(bst_shared_ptr node);
+            bool insert(const bst_shared_ptr &node);
 
             void search_fill_stack(std::stack<bst_weak_ptr> &stack, const T &value) const;
 
@@ -80,7 +77,7 @@ namespace MyBST
         explicit BSTree(Iter first, Iter last);
 
         template <Container Con>
-            requires Convertible<typename Con::value_type, T> &&Assignable<typename Con::value_type, T>
+            requires Convertible<typename Con::value_type, T> && Assignable<typename Con::value_type, T>
         explicit BSTree(const Con &container);
 
         explicit BSTree(const BSTree<T> &other);
@@ -91,7 +88,6 @@ namespace MyBST
         ~BSTree() = default;
 
         bool operator==(const BSTree &other) const;
-        // bool operator!=(const BSTree &other) const;
 
         // вставка
         template<typename...Args>

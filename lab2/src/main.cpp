@@ -251,7 +251,7 @@ int main()
             BSTree<int> tree{1, 2, 3, 4, 5, 6};
             std::cout << "tree: " << tree << "\n";
             auto it = tree.begin();
-            std::cout << "*it: " << *it << "\n";
+            std::cout << "*tree.begin(): " << *it << "\n";
         }
     }
 

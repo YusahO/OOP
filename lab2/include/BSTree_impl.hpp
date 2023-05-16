@@ -125,7 +125,7 @@ namespace MyBST
     }
 
     template<TreeElement T>
-    bool BSTree<T>::TreeNode::insert(bst_shared_ptr node)
+    bool BSTree<T>::TreeNode::insert(const bst_shared_ptr &node)
     {
         BSTree<T>::bst_shared_ptr curr = std::const_pointer_cast<BSTree<T>::TreeNode>(this->shared_from_this());
         BSTree<T>::bst_shared_ptr parent = curr;
@@ -133,18 +133,18 @@ namespace MyBST
         while (curr)
         {
             parent = curr;
-            if (curr->get_value() < node->get_value())
-                curr = curr->get_right();
-            else if (curr->get_value() > node->get_value())
-                curr = curr->get_left();
+            if (curr->m_value < node->m_value)
+                curr = curr->mp_right;
+            else if (curr->m_value > node->m_value)
+                curr = curr->mp_left;
             else
                 return false;
         }
 
-        if (parent->get_value() < node->get_value())
-            parent->set_right(node);
+        if (parent->m_value < node->m_value)
+            parent->mp_right = node;
         else
-            parent->set_left(node);
+            parent->mp_left = node;
 
         return true;
     }
@@ -400,7 +400,6 @@ namespace MyBST
         mp_root = node;
 
         std::stack<std::pair<typename BSTree<T>::bst_shared_ptr, std::pair<size_t, size_t>>> st;
-        // st.emplace(node, std::make_pair<size_t, size_t>(0, std::move(len)));
         st.emplace(node, std::pair<size_t, size_t>{0, len});
         while (!st.empty())
         {
@@ -418,7 +417,6 @@ namespace MyBST
                 auto child = nodes[(mid + 1 + right) / 2];
                 child->set_left(nullptr), child->set_right(nullptr);
                 node->set_right(child);
-                // st.emplace(child, std::make_pair<size_t, size_t>(mid + 1, std::move(right)));
                 st.emplace(child, std::pair<size_t, size_t>{mid + 1, right});
             }
             if (left < mid)
@@ -426,7 +424,6 @@ namespace MyBST
                 auto child = nodes[(left + mid) / 2];
                 child->set_left(nullptr), child->set_right(nullptr);
                 node->set_left(child);
-                // st.emplace(child, std::make_pair<size_t, size_t>(std::move(left), std::move(mid)));
                 st.emplace(child, std::pair<size_t, size_t>{left, mid});
             }
         }
@@ -625,9 +622,6 @@ namespace MyBST
     template <typename P>
     std::ostream &operator<<(std::ostream &os, const BSTree<P> &tree)
     {
-        // os << "{ ";
-        // tree._print(tree.mp_root, os);
-        // os << "}";
         if (tree.empty())
         {
             os << "{ empty }";
