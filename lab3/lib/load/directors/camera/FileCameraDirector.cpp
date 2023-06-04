@@ -11,8 +11,7 @@ FileCameraDirector::FileCameraDirector(std::shared_ptr<FileCarcassModelLoader> &
     m_loader = loader;
 }
 
-std::shared_ptr<Camera> FileCameraDirector::load(std::shared_ptr<BaseCameraBuilder> builder,
-                                                      std::string &fileName)
+std::shared_ptr<Camera> FileCameraDirector::load(std::shared_ptr<BaseCameraBuilder> builder, std::string &fileName)
 {
     m_loader->open(fileName);
 

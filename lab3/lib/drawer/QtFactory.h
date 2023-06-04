@@ -1,6 +1,4 @@
-#ifndef QTFACTORY_H
-#define QTFACTORY_H
-
+#pragma once
 
 #include <AbstractFactory.h>
 #include <QtDrawer.h>
@@ -14,7 +12,5 @@ public:
     std::unique_ptr<BaseDrawer> createDrawer() override;
 
 private:
-    QGraphicsScene *_scene;
+    QGraphicsScene *m_scene;
 };
-
-#endif // QTFACTORY_H

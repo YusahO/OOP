@@ -1,5 +1,4 @@
-#ifndef DRAWCARCASSMODELADAPTER_H
-#define DRAWCARCASSMODELADAPTER_H
+#pragma once
 
 #include <ModelAdapter.h>
 #include <Camera.h>
@@ -21,5 +20,3 @@ private:
     std::shared_ptr<Camera> m_camera;
     std::shared_ptr<BaseDrawer> m_drawer;
 };
-
-#endif // DRAWCARCASSMODELADAPTER_H

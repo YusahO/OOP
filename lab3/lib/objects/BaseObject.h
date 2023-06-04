@@ -1,5 +1,4 @@
-#ifndef BASEOBJECT_H
-#define BASEOBJECT_H
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -41,5 +40,3 @@ protected:
 
     Vertex m_center;
 };
-
-#endif //BASEOBJECT_H

@@ -7,7 +7,7 @@ void CameraBuilder::build()
 
 void CameraBuilder::buildLocation(const Vertex &location, const Vertex &direction)
 {
-    m_camera = std::make_shared<Camera>(Camera(location, direction));
+    m_camera = std::make_shared<Camera>(location, direction);
 }
 
 bool CameraBuilder::isBuild() const

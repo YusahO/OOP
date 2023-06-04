@@ -1,8 +1,9 @@
 #include <Composite.h>
+#include "TransformMatrix.h"
 
 Composite::Composite(std::shared_ptr<BaseObject> &element)
 {
-    m_elements.push_back(element);
+    m_elements.emplace_back(element);
     updateCenter();
 }
 
@@ -16,7 +17,7 @@ Composite::Composite(const std::vector<std::shared_ptr<BaseObject>> &vector)
 
 bool Composite::add(const std::shared_ptr<BaseObject> &element)
 {
-    m_elements.push_back(element);
+    m_elements.emplace_back(element);
     updateCenter();
 
     return true;
@@ -33,18 +34,19 @@ bool Composite::remove(const Iterator &iter)
 
 void Composite::updateCenter()
 {
-    m_center = Vertex(0, 0, 0);
-    size_t count = 0;
+    m_center = Vertex(0);
 
     for (const auto &element : m_elements)
     {
         m_center = m_center + element->getCenter();
-        count++;
     }
 
-    m_center = Vertex(m_center.getX() / count,
-                     m_center.getY() / count,
-                     m_center.getZ() / count);
+    size_t count = m_elements.size();
+    m_center = Vertex(
+        m_center.getX() / count,
+        m_center.getY() / count,
+        m_center.getZ() / count
+    );
 }
 
 bool Composite::isVisible()
@@ -64,13 +66,9 @@ Vertex Composite::getCenter() const
 
 void Composite::moveElemsToOrigin(const Vertex &center)
 {
-    Vertex diff = Vertex(0, 0, 0) - center;
+    Vertex diff = Vertex(0) - center;
 
-    Matrix<double> mat = {{    1,            0,            0,             0      },
-                          {    0,            1,            0,             0      },
-                          {    0,            0,            1,             0      },
-                          {diff.getX(),  diff.getY(),  diff.getZ(),       1      }};
-
+    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
     transformElems(mat);
     updateCenter();
 }
@@ -79,10 +77,7 @@ void Composite::moveElemsToCenter(const Vertex &center)
 {
     Vertex diff = center - m_center;
 
-    Matrix<double> mat = {{    1,            0,            0,             0      },
-                          {    0,            1,            0,             0      },
-                          {    0,            0,            1,             0      },
-                          {diff.getX(),  diff.getY(),  diff.getZ(),       1      }};
+    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformElems(mat);
     updateCenter();

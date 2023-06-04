@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 
+// #define _USE_MATH_DEFINES
 #include <cmath>
+
 #include <QDebug>
 
 #include "mainwindow.h"
@@ -55,7 +57,7 @@ void MainWindow::checkCamExist()
     if (!m_cameras.size())
     {
         auto loc = std::source_location::current();
-        throw ModelException(
+        throw CameraException(
             loc.file_name(),
             loc.function_name(),
             loc.line(),
@@ -283,7 +285,7 @@ void MainWindow::on_upBtn_clicked()
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 0, 10, 0);
+    TranslateCamera move_cmd(camera, 0, -10, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -306,7 +308,7 @@ void MainWindow::on_downBtn_clicked()
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 0, -10, 0);
+    TranslateCamera move_cmd(camera, 0, 10, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -330,7 +332,7 @@ void MainWindow::on_rightBtn_clicked()
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, -10, 0, 0);
+    TranslateCamera move_cmd(camera, 10, 0, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -359,6 +361,54 @@ void MainWindow::on_rightUpBtn_clicked()
     updateScene();
 }
 
+void MainWindow::on_botLeftBtn_clicked()
+{
+    try
+    {
+        checkCamExist();
+    }
+    catch (const CameraException &error)
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        return;
+    }
+
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+
+    GetMainCamera get_camera(camera);
+    m_facade->execute(get_camera);
+
+    // RotateCamera rot_cmd(camera, 0, M_PI / 10., 0);
+    camera->rotate(15 * M_PI / 180);
+    // m_facade->execute(rot_cmd);
+
+    updateScene();
+}
+
+void MainWindow::on_botRightBtn_clicked()
+{
+    try
+    {
+        checkCamExist();
+    }
+    catch (const CameraException &error)
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        return;
+    }
+
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+
+    GetMainCamera get_camera(camera);
+    m_facade->execute(get_camera);
+
+    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
+    // m_facade->execute(rot_cmd);
+    camera->rotate(-15 * M_PI / 180);
+    
+    updateScene();
+}
+
 void MainWindow::on_topLeftBtn_clicked()
 {
     try
@@ -371,16 +421,64 @@ void MainWindow::on_topLeftBtn_clicked()
         return;
     }
 
-    auto camera = make_shared<Camera>();
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    RotateCamera rot_cmd(camera, 0, 0, 10);
-    m_facade->execute(rot_cmd);
-
+    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
+    // m_facade->execute(rot_cmd);
+    camera->rotateCW(-15 * M_PI / 180);
+    
     updateScene();
 }
+
+void MainWindow::on_topRightBtn_clicked()
+{
+    try
+    {
+        checkCamExist();
+    }
+    catch (const CameraException &error)
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        return;
+    }
+
+    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+
+    GetMainCamera get_camera(camera);
+    m_facade->execute(get_camera);
+
+    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
+    // m_facade->execute(rot_cmd);
+    camera->rotateCW(15 * M_PI / 180);
+    
+    updateScene();
+}
+
+// void MainWindow::on_topLeftBtn_clicked()
+// {
+//     try
+//     {
+//         checkCamExist();
+//     }
+//     catch (const CameraException &error)
+//     {
+//         QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+//         return;
+//     }
+
+//     auto camera = make_shared<Camera>();
+
+//     GetMainCamera get_camera(camera);
+//     m_facade->execute(get_camera);
+
+//     RotateCamera rot_cmd(camera, 0, 0, 10);
+//     m_facade->execute(rot_cmd);
+
+//     updateScene();
+// }
 
 void MainWindow::on_leftBtn_clicked()
 {
@@ -399,7 +497,7 @@ void MainWindow::on_leftBtn_clicked()
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 10, 0, 0);
+    TranslateCamera move_cmd(camera, -10, 0, 0);
     m_facade->execute(move_cmd);
 
     updateScene();

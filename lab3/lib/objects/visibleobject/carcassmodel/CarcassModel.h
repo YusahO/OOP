@@ -25,6 +25,6 @@ public:
     virtual void transform(const Matrix<double> &mat, const Vertex &center) override;
 
 protected:
-    std::shared_ptr<Mesh> m_data;
+    std::shared_ptr<Mesh> m_mesh;
 };
 

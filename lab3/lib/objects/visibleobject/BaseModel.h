@@ -1,8 +1,7 @@
-#ifndef BASEMODEL_H
-#define BASEMODEL_H
+#pragma once
 
 #include <VisibleObject.h>
 
-class BaseModel: public VisibleObject { };
-
-#endif // BASEMODEL_H
+class BaseModel: public VisibleObject
+{
+};

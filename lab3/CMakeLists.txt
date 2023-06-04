@@ -30,6 +30,7 @@ set(src_files
 "./lib/actions/ModelAction.cpp"
 "./lib/actions/BaseAction.cpp"
 "./lib/actions/ModelsAction.cpp"
+"./lib/matrix/TransformMatrix.cpp"
 "./lib/matrix/errors/errors.cpp"
 "./lib/matrix/matrix/matrix_base.cpp"
 "./lib/load/directors/model/FileModelDirector.cpp"

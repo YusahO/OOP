@@ -7,6 +7,13 @@ double toRadians(const double angle)
     return angle * (M_PI / 180);
 }
 
+Vertex::Vertex(double v)
+    : m_x(v),
+      m_y(v),
+      m_z(v)
+{
+}
+
 Vertex::Vertex(const double x, const double y, const double z)
     : m_x(x),
       m_y(y),
@@ -15,23 +22,23 @@ Vertex::Vertex(const double x, const double y, const double z)
 }
 
 
-Vertex::Vertex(const Vertex &&point) noexcept
+Vertex::Vertex(const Vertex &&other) noexcept
 {
-    setX(point.m_x);
-    setY(point.m_y);
-    setZ(point.m_z);
+    setX(other.m_x);
+    setY(other.m_y);
+    setZ(other.m_z);
 
-    point.~Vertex();
+    other.~Vertex();
 }
 
 
-Vertex &Vertex::operator=(Vertex &&point) noexcept
+Vertex &Vertex::operator=(Vertex &&other) noexcept
 {
-    setX(point.m_x);
-    setY(point.m_y);
-    setZ(point.m_z);
+    setX(other.m_x);
+    setY(other.m_y);
+    setZ(other.m_z);
 
-    point.~Vertex();
+    other.~Vertex();
 
     return *this;
 }
@@ -66,46 +73,86 @@ void Vertex::setZ(const double z)
     m_z = z;
 }
 
-bool Vertex::operator==(const Vertex &point) const noexcept
+bool Vertex::operator==(const Vertex &other) const noexcept
 {
-    return (point.m_x == m_x) && (point.m_y == m_y) && (point.m_z == m_z);
+    return (other.m_x == m_x) && (other.m_y == m_y) && (other.m_z == m_z);
 }
 
-bool Vertex::isEqual(const Vertex &point) const noexcept
+bool Vertex::isEqual(const Vertex &other) const noexcept
 {
-    return *this == point;
+    return *this == other;
 }
 
-bool Vertex::operator!=(const Vertex &point) const noexcept
+bool Vertex::operator!=(const Vertex &other) const noexcept
 {
-    return !(*this == point);
+    return !(*this == other);
 }
 
-bool Vertex::isNotEqual(const Vertex &point) const noexcept
+bool Vertex::isNotEqual(const Vertex &other) const noexcept
 {
-    return !(*this == point);
+    return !(*this == other);
 }
 
-Vertex Vertex::operator+(const Vertex &point) const
+Vertex Vertex::operator+(const Vertex &other) const
 {
     Vertex d{*this};
 
-    d.setX(d.m_x + point.m_x);
-    d.setY(d.m_y + point.m_y);
-    d.setZ(d.m_z + point.m_z);
+    d.setX(d.m_x + other.m_x);
+    d.setY(d.m_y + other.m_y);
+    d.setZ(d.m_z + other.m_z);
 
     return d;
 }
 
-Vertex Vertex::operator-(const Vertex &point) const
+Vertex Vertex::operator-(const Vertex &other) const
 {
     Vertex d{*this};
 
-    d.setX(d.m_x - point.m_x);
-    d.setY(d.m_y - point.m_y);
-    d.setZ(d.m_z - point.m_z);
+    d.setX(d.m_x - other.m_x);
+    d.setY(d.m_y - other.m_y);
+    d.setZ(d.m_z - other.m_z);
 
     return d;
+}
+
+Vertex Vertex::operator*(const Vertex &other) const
+{
+    Vertex d{*this};
+
+    d.setX(d.m_x * other.m_x);
+    d.setY(d.m_y * other.m_y);
+    d.setZ(d.m_z * other.m_z);
+
+    return *this;
+}
+
+Vertex Vertex::operator*(const double &coef) const
+{
+    Vertex d{*this};
+
+    d.setX(d.m_x * coef);
+    d.setY(d.m_y * coef);
+    d.setZ(d.m_z * coef);
+
+    return *this;
+}
+
+Vertex &Vertex::operator+=(const Vertex &other)
+{
+    m_x += other.m_x;
+    m_y += other.m_y;
+    m_z += other.m_z;
+
+    return *this;
+}
+
+Vertex &Vertex::operator-=(const Vertex &other)
+{
+    m_x -= other.m_x;
+    m_y -= other.m_y;
+    m_z -= other.m_z;
+
+    return *this;
 }
 
 
@@ -119,6 +166,22 @@ void Vertex::transform(const Matrix<double> &mat)
     m_z = new_location[0][2];
 }
 
+double Vertex::dotProduct(const Vertex &a, const Vertex &b) noexcept
+{
+    return (a.m_x * b.m_x) + (a.m_y * b.m_y) + (a.m_z * b.m_z);
+}
+
+Vertex Vertex::crossProduct(const Vertex &a, const Vertex &b) noexcept
+{
+    Vertex result;
+
+    result.m_x = a.m_y * b.m_z - a.m_z * b.m_y;
+    result.m_y = -(a.m_x * b.m_z - a.m_z * b.m_x);
+    result.m_z = a.m_x * b.m_y - a.m_y * b.m_x;
+
+    return result;
+}
+
 Vertex Vertex::getCenter() const
 {
     return *this;
@@ -127,4 +190,12 @@ Vertex Vertex::getCenter() const
 Vertex Vertex::getAbsVertex(const Vertex &center)
 {
     return (*this) + center;
+}
+
+void Vertex::normalize()
+{
+    double length = sqrt(m_x * m_x + m_y * m_y + m_z * m_z);
+    m_x /= length;
+    m_y /= length;
+    m_z /= length;
 }

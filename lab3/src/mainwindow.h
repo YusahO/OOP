@@ -59,11 +59,11 @@ private slots:
     void on_rotateAllBtn_clicked();
     void on_rightUpBtn_clicked();
 
-    void on_topLeftBtn_clicked();
     void on_botLeftBtn_clicked();
-
-    void on_topRightBtn_clicked();
     void on_botRightBtn_clicked();
+
+    void on_topLeftBtn_clicked();
+    void on_topRightBtn_clicked();
 
 
 protected:

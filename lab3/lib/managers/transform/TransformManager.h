@@ -14,19 +14,21 @@ public:
     ~TransformManager() = default;
 
     void translateObject(const std::shared_ptr<BaseObject> &object,
-                           const double &dx,
-                           const double &dy,
-                           const double &dz);
+        const double &dx,
+        const double &dy,
+        const double &dz);
+
     void scaleObject(const std::shared_ptr<BaseObject> &object,
-                            const double &kx,
-                            const double &ky,
-                            const double &kz);
+        const double &kx,
+        const double &ky,
+        const double &kz);
+        
     void rotateObject(const std::shared_ptr<BaseObject> &object,
-                             const double &ox,
-                             const double &oy,
-                             const double &oz);
+        const double &ox,
+        const double &oy,
+        const double &oz);
 
     void transformObject(const std::shared_ptr<BaseObject> &object,
-                                const Matrix<double> &mat);
+        const Matrix<double> &mat);
 };
 

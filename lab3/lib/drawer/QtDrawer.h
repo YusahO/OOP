@@ -1,5 +1,4 @@
-#ifndef QTDRAWER_H
-#define QTDRAWER_H
+#pragma once
 
 #include <QGraphicsScene>
 
@@ -16,7 +15,5 @@ public:
     void clearScene() override;
 
 private:
-    QGraphicsScene *_scene;
+    QGraphicsScene *m_scene;
 };
-
-#endif // QTDRAWER_H

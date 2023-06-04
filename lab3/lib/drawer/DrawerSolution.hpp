@@ -1,5 +1,4 @@
-#ifndef DRAWERSOLUTION_H
-#define DRAWERSOLUTION_H
+#pragma once
 
 #include <DrawerSolution.h>
 
@@ -10,6 +9,3 @@ std::unique_ptr<BaseDrawer> DrawerSolution<Tfactory, Tscene>::createDrawer(Tscen
 
     return factory->createDrawer();
 }
-
-
-#endif // DRAWERSOLUTION_H

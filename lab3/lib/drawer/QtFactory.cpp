@@ -2,10 +2,10 @@
 
 QtFactory::QtFactory(QGraphicsScene *scene)
 {
-    _scene = scene;
+    m_scene = scene;
 }
 
 std::unique_ptr<BaseDrawer> QtFactory::createDrawer()
 {
-    return std::unique_ptr<BaseDrawer>(new QtDrawer(_scene));
+    return std::unique_ptr<BaseDrawer>(new QtDrawer(m_scene));
 }

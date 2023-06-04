@@ -1,5 +1,4 @@
-#ifndef BASEDRAWER_H
-#define BASEDRAWER_H
+#pragma once
 
 #include <Vertex.h>
 
@@ -12,5 +11,3 @@ public:
     virtual void drawLine(const Vertex &vertex1, const Vertex &vertex2) = 0;
     virtual void clearScene() = 0;
 };
-
-#endif // BASEDRAWER_H

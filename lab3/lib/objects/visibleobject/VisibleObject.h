@@ -1,5 +1,4 @@
-#ifndef VISIBLEOBJECT_H
-#define VISIBLEOBJECT_H
+#pragma once
 
 #include "BaseObject.h"
 
@@ -12,4 +11,3 @@ public:
     bool isVisible() override { return true; }
 };
 
-#endif //VISIBLEOBJECT_H

@@ -1,7 +1,8 @@
 #include "Mesh.h"
+#include "TransformMatrix.h"
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges)
-    : m_center{ },
+    : m_center { },
       m_vertices(vertices),
       m_edges(edges)
 {
@@ -9,8 +10,8 @@ Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges)
 
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges, Vertex &center)
-    : m_center(center), 
-      m_vertices(vertices), 
+    : m_center(center),
+      m_vertices(vertices),
       m_edges(edges)
 {
 }
@@ -32,39 +33,35 @@ const Vertex Mesh::getCenter() const
 
 void Mesh::addVertex(const Vertex &point)
 {
-    m_vertices.push_back(point);
+    m_vertices.emplace_back(point);
     updateCenter();
 }
 
 void Mesh::addEdge(const Edge &edge)
 {
-    m_edges.push_back(edge);
+    m_edges.emplace_back(edge);
 }
 
 void Mesh::updateCenter()
 {
-    m_center = Vertex(0, 0, 0);
-    size_t count = 0;
+    m_center = Vertex(0);
 
     for (const auto &element : m_vertices)
-    {
         m_center = m_center + element.getCenter();
-        count++;
-    }
 
-    m_center = Vertex(m_center.getX() / count,
-                     m_center.getY() / count,
-                     m_center.getZ() / count);
+    size_t count = m_vertices.size();
+    m_center = Vertex(
+        m_center.getX() / count,
+        m_center.getY() / count,
+        m_center.getZ() / count
+    );
 }
 
 void Mesh::moveVerticesToOrigin(const Vertex &center)
 {
-    Vertex diff = Vertex(0, 0, 0) - center;
+    Vertex diff = Vertex(0) - center;
 
-    Matrix<double> mat = {{    1,            0,            0,             0      },
-                          {    0,            1,            0,             0      },
-                          {    0,            0,            1,             0      },
-                          {diff.getX(),  diff.getY(),  diff.getZ(),       1      }};
+    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformVertices(mat);
     updateCenter();
@@ -72,12 +69,9 @@ void Mesh::moveVerticesToOrigin(const Vertex &center)
 
 void Mesh::moveVerticesToCenter(const Vertex &center)
 {
-    Vertex diff = center - Vertex(0, 0, 0);
+    Vertex diff = center - Vertex(0);
 
-    Matrix<double> mat = {{    1,            0,            0,             0      },
-                          {    0,            1,            0,             0      },
-                          {    0,            0,            1,             0      },
-                          {diff.getX(),  diff.getY(),  diff.getZ(),       1      }};
+    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformVertices(mat);
     updateCenter();

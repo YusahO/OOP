@@ -1,5 +1,4 @@
-#ifndef DRAWERFACTORYSOLUTION_H
-#define DRAWERFACTORYSOLUTION_H
+#pragma once
 
 #include <AbstractFactory.h>
 #include <QtFactory.h>
@@ -13,4 +12,3 @@ public:
 
 #include <DrawerSolution.hpp>
 
-#endif // DRAWERFACTORYSOLUTION_H
