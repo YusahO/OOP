@@ -182,7 +182,7 @@ Vertex Vertex::crossProduct(const Vertex &a, const Vertex &b) noexcept
     return result;
 }
 
-Vertex Vertex::getCenter() const
+Vertex Vertex::getOrigin() const
 {
     return *this;
 }

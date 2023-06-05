@@ -2,7 +2,7 @@
 #include "TransformMatrix.h"
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges)
-    : m_center { },
+    : m_origin { },
       m_vertices(vertices),
       m_edges(edges)
 {
@@ -10,7 +10,7 @@ Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges)
 
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges, Vertex &center)
-    : m_center(center),
+    : m_origin(center),
       m_vertices(vertices),
       m_edges(edges)
 {
@@ -26,15 +26,15 @@ const std::vector<Edge> &Mesh::getEdges() const
     return m_edges;
 }
 
-const Vertex Mesh::getCenter() const
+const Vertex Mesh::getOrigin() const
 {
-    return m_center;
+    return m_origin;
 }
 
 void Mesh::addVertex(const Vertex &point)
 {
     m_vertices.emplace_back(point);
-    updateCenter();
+    updateOrigin();
 }
 
 void Mesh::addEdge(const Edge &edge)
@@ -42,18 +42,18 @@ void Mesh::addEdge(const Edge &edge)
     m_edges.emplace_back(edge);
 }
 
-void Mesh::updateCenter()
+void Mesh::updateOrigin()
 {
-    m_center = Vertex(0);
+    m_origin = Vertex(0);
 
     for (const auto &element : m_vertices)
-        m_center = m_center + element.getCenter();
+        m_origin = m_origin + element.getOrigin();
 
     size_t count = m_vertices.size();
-    m_center = Vertex(
-        m_center.getX() / count,
-        m_center.getY() / count,
-        m_center.getZ() / count
+    m_origin = Vertex(
+        m_origin.getX() / count,
+        m_origin.getY() / count,
+        m_origin.getZ() / count
     );
 }
 
@@ -64,7 +64,7 @@ void Mesh::moveVerticesToOrigin(const Vertex &center)
     Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformVertices(mat);
-    updateCenter();
+    updateOrigin();
 }
 
 void Mesh::moveVerticesToCenter(const Vertex &center)
@@ -74,7 +74,7 @@ void Mesh::moveVerticesToCenter(const Vertex &center)
     Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformVertices(mat);
-    updateCenter();
+    updateOrigin();
 }
 
 void Mesh::transformVertices(const Matrix<double> &mat)
@@ -85,7 +85,7 @@ void Mesh::transformVertices(const Matrix<double> &mat)
 
 void Mesh::transform(const Matrix<double> &mat, const Vertex &center)
 {
-    updateCenter();
+    updateOrigin();
 
     moveVerticesToOrigin(center);
     transformVertices(mat);

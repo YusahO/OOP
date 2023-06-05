@@ -57,7 +57,6 @@ private slots:
     void on_scaleAllBtn_clicked();
 
     void on_rotateAllBtn_clicked();
-    void on_rightUpBtn_clicked();
 
     void on_botLeftBtn_clicked();
     void on_botRightBtn_clicked();

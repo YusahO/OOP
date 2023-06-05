@@ -16,11 +16,11 @@ public:
 
     const std::vector<Vertex> &getVertices() const;
     const std::vector<Edge> &getEdges() const;
-    const Vertex getCenter() const;
+    const Vertex getOrigin() const;
 
     void addVertex(const Vertex &point);
     void addEdge(const Edge &edge);
-    void updateCenter();
+    void updateOrigin();
 
     void moveVerticesToOrigin(const Vertex &center);
     void moveVerticesToCenter(const Vertex &center);
@@ -28,7 +28,7 @@ public:
     void transform(const Matrix<double> &mat, const Vertex &center);
 
 private:
-    Vertex m_center;
+    Vertex m_origin;
 
     std::vector<Vertex> m_vertices;
     std::vector<Edge> m_edges;

@@ -16,9 +16,9 @@ CarcassModel::CarcassModel(const CarcassModel &model)
     m_id = model.m_id;
 }
 
-Vertex CarcassModel::getCenter() const
+Vertex CarcassModel::getOrigin() const
 {
-    return m_mesh->getCenter();
+    return m_mesh->getOrigin();
 }
 
 void CarcassModel::transform(const Matrix<double> &mat, const Vertex &center)

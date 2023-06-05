@@ -9,24 +9,17 @@ class Camera : public InvisibleObject
 
 public:
     Camera() = default;
-    Camera(const Vertex &location, const Vertex &direction);
+    Camera(const Vertex &location, const Vertex &angles);
     ~Camera() override = default;
 
-    virtual Vertex getCenter() const override;
+    virtual Vertex getOrigin() const override;
     void transform(const Matrix<double> &mat, const Vertex &center) override;
-    void updateAxes();
+    // void updateAxes();
 
-    void rotate(double angle) { Y_angle += angle; }
-    void rotateCW(double angle) { Z_angle += angle; }
+    void rotate(const Vertex &angles);
 
 private:
     Vertex m_location;
-
-    double Y_angle;
-    double Z_angle;
-
-    Vertex m_direction;
-    Vertex m_right;
-    Vertex m_up;
+    Vertex m_angle;
 };
 

@@ -21,7 +21,7 @@ public:
 
     ~CarcassModel() override = default;
 
-    virtual Vertex getCenter() const override;
+    virtual Vertex getOrigin() const override;
     virtual void transform(const Matrix<double> &mat, const Vertex &center) override;
 
 protected:

@@ -4,21 +4,21 @@
 Composite::Composite(std::shared_ptr<BaseObject> &element)
 {
     m_elements.emplace_back(element);
-    updateCenter();
+    updateOrigin();
 }
 
 
 Composite::Composite(const std::vector<std::shared_ptr<BaseObject>> &vector)
 {
     m_elements = vector;
-    updateCenter();
+    updateOrigin();
 }
 
 
 bool Composite::add(const std::shared_ptr<BaseObject> &element)
 {
     m_elements.emplace_back(element);
-    updateCenter();
+    updateOrigin();
 
     return true;
 }
@@ -27,25 +27,25 @@ bool Composite::add(const std::shared_ptr<BaseObject> &element)
 bool Composite::remove(const Iterator &iter)
 {
     m_elements.erase(iter);
-    updateCenter();
+    updateOrigin();
 
     return true;
 }
 
-void Composite::updateCenter()
+void Composite::updateOrigin()
 {
-    m_center = Vertex(0);
+    m_origin = Vertex(0);
 
     for (const auto &element : m_elements)
     {
-        m_center = m_center + element->getCenter();
+        m_origin = m_origin + element->getOrigin();
     }
 
     size_t count = m_elements.size();
-    m_center = Vertex(
-        m_center.getX() / count,
-        m_center.getY() / count,
-        m_center.getZ() / count
+    m_origin = Vertex(
+        m_origin.getX() / count,
+        m_origin.getY() / count,
+        m_origin.getZ() / count
     );
 }
 
@@ -59,9 +59,9 @@ bool Composite::isComposite() const
     return true;
 }
 
-Vertex Composite::getCenter() const
+Vertex Composite::getOrigin() const
 {
-    return m_center;
+    return m_origin;
 }
 
 void Composite::moveElemsToOrigin(const Vertex &center)
@@ -70,31 +70,31 @@ void Composite::moveElemsToOrigin(const Vertex &center)
 
     Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
     transformElems(mat);
-    updateCenter();
+    updateOrigin();
 }
 
 void Composite::moveElemsToCenter(const Vertex &center)
 {
-    Vertex diff = center - m_center;
+    Vertex diff = center - m_origin;
 
     Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
 
     transformElems(mat);
-    updateCenter();
+    updateOrigin();
 }
 
 void Composite::transformElems(const Matrix<double> &mat)
 {
     for (const auto &element : m_elements)
     {
-        element->updateCenter();
-        element->transform(mat, m_center);
+        element->updateOrigin();
+        element->transform(mat, m_origin);
     }
 }
 
 void Composite::transform(const Matrix<double> &mat, const Vertex &center)
 {
-    updateCenter();
+    updateOrigin();
 
     moveElemsToOrigin(center);
     transformElems(mat);

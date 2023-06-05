@@ -7,7 +7,7 @@ BaseObject::BaseObject()
     m_id = s_next_id++;
 }
 
-void BaseObject::updateCenter()
+void BaseObject::updateOrigin()
 {
 }
 

@@ -36,6 +36,11 @@ TranslateCamera::TranslateCamera(const std::shared_ptr<Camera> camera, const dou
     m_method = &TransformManager::translateObject;
 }
 
+void TranslateCamera::execute()
+{
+    (*(m_transform_manager).*m_method)(m_camera, m_dx, m_dy, m_dz);
+}
+
 RotateCamera::RotateCamera(const std::shared_ptr<Camera> camera, const double ax, const double ay, const double az)
     : m_camera(camera),
       m_ax(ax),
@@ -47,12 +52,8 @@ RotateCamera::RotateCamera(const std::shared_ptr<Camera> camera, const double ax
 
 void RotateCamera::execute()
 {
+    m_camera->rotate({m_ax, m_ay, m_az});
     (*(m_transform_manager).*m_method)(m_camera, m_ax, m_ay, m_az);
-}
-
-void TranslateCamera::execute()
-{
-    (*(m_transform_manager).*m_method)(m_camera, m_dx, m_dy, m_dz);
 }
 
 

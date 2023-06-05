@@ -13,12 +13,12 @@ public:
 
     virtual bool add(const std::shared_ptr<BaseObject> &element);
     virtual bool remove(const Iterator &iter);
-    virtual void updateCenter() override;
+    virtual void updateOrigin() override;
 
     virtual bool isVisible() const override;
     virtual bool isComposite() const override;
 
-    virtual Vertex getCenter() const override;
+    virtual Vertex getOrigin() const override;
     virtual void moveElemsToOrigin(const Vertex &center);
     virtual void moveElemsToCenter(const Vertex &center);
     virtual void transformElems(const Matrix<double> &mat);

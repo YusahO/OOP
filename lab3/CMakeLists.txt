@@ -19,6 +19,7 @@ set(src_files
 "./lib/objects/Composite.cpp"
 "./lib/objects/invisibleobject/Camera.cpp"
 "./lib/objects/invisibleobject/InvisibleObject.cpp"
+"./lib/objects/visibleobject/VisibleObject.cpp"
 "./lib/objects/visibleobject/BaseModel.cpp"
 "./lib/objects/visibleobject/carcassmodel/Mesh.cpp"
 "./lib/objects/visibleobject/carcassmodel/Vertex.cpp"

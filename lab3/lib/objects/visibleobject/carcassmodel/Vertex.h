@@ -42,7 +42,7 @@ public:
     Vertex getAbsVertex(const Vertex &center);
     void normalize();
     
-    Vertex getCenter() const;
+    Vertex getOrigin() const;
     void transform(const Matrix<double> &mat);
 
     static Vertex crossProduct(const Vertex &a, const Vertex &b) noexcept;

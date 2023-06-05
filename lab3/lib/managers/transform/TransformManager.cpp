@@ -9,8 +9,8 @@ void TransformManager::translateObject(const std::shared_ptr <BaseObject> &objec
     const double &dz)
 {
     Matrix<double> mat = TransformMatrix::createTranslationMatrix4(dx, dy, dz);
-    object->updateCenter();
-    object->transform(mat, object->getCenter());
+    object->updateOrigin();
+    object->transform(mat, object->getOrigin());
 }
 
 
@@ -21,8 +21,8 @@ void TransformManager::scaleObject(const std::shared_ptr <BaseObject> &object,
 {
     Matrix<double> mat = TransformMatrix::createScalingMatrix4(kx, ky, kz);
 
-    object->updateCenter();
-    object->transform(mat, object->getCenter());
+    object->updateOrigin();
+    object->transform(mat, object->getOrigin());
 }
 
 
@@ -33,13 +33,13 @@ void TransformManager::rotateObject(const std::shared_ptr <BaseObject> &object,
 {
 
     Matrix<double> mat = TransformMatrix::createRotationMatrix4(ax, ay, az);
-    object->updateCenter();
-    object->transform(mat, object->getCenter());
+    object->updateOrigin();
+    object->transform(mat, object->getOrigin());
 }
 
 void TransformManager::transformObject(const std::shared_ptr<BaseObject> &object,
     const Matrix<double> &mat)
 {
-    object->updateCenter();
-    object->transform(mat, object->getCenter());
+    object->updateOrigin();
+    object->transform(mat, object->getOrigin());
 }

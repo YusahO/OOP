@@ -89,7 +89,7 @@ void MainWindow::checkCamDelete()
             loc.file_name(),
             loc.function_name(),
             loc.line(),
-            "Can not delete the last camera with the loaded models"
+            "Cannot delete the last camera with the loaded models"
         );
     }
 }
@@ -100,8 +100,8 @@ void MainWindow::on_addCameraBtn_clicked()
 
     auto id = std::make_shared<size_t>(0);
     Vertex location(cont.width() / 2.0, cont.height() / 2.0, 0.0);
-    Vertex direction(0, 0, 0);
-    AddCamera addCMD(id, location, direction);
+    Vertex angles(0);
+    AddCamera addCMD(id, location, angles);
 
     m_facade->execute(addCMD);
     m_cameras.push_back(*id);
@@ -147,7 +147,7 @@ void MainWindow::on_loadModelBtn_clicked()
     }
     catch (const BaseException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Ошибка при загрузке файла!");
+        QMessageBox::critical(nullptr, "Ошибка", "Ошибка при загрузке модели из файла!");
         return;
     }
 
@@ -245,7 +245,7 @@ void MainWindow::on_deleteCameraBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Это последняя камера! Для удаления удалите модели!");
+        QMessageBox::critical(nullptr, "Ошибка", "Для удаления этой камеры необходимо удалить все модели");
         return;
     }
 
@@ -276,16 +276,16 @@ void MainWindow::on_upBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    auto camera = make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 0, -10, 0);
+    TranslateCamera move_cmd(camera, 0, 10, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -299,16 +299,16 @@ void MainWindow::on_downBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    auto camera = make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 0, 10, 0);
+    TranslateCamera move_cmd(camera, 0, -10, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -322,23 +322,24 @@ void MainWindow::on_rightBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
     //std::size_t id = m_cameras.at(ui->cameraCB->currentIndex());
-    auto camera = make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, 10, 0, 0);
+    TranslateCamera move_cmd(camera, -10, 0, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
 }
 
-void MainWindow::on_rightUpBtn_clicked()
+
+void MainWindow::on_leftBtn_clicked()
 {
     try
     {
@@ -346,16 +347,16 @@ void MainWindow::on_rightUpBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    auto camera = make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    TranslateCamera move_cmd(camera, -10, 10, 0);
+    TranslateCamera move_cmd(camera, 10, 0, 0);
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -369,18 +370,17 @@ void MainWindow::on_botLeftBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    // RotateCamera rot_cmd(camera, 0, M_PI / 10., 0);
-    camera->rotate(15 * M_PI / 180);
-    // m_facade->execute(rot_cmd);
+    RotateCamera rot_cmd(camera, 0, M_PI / 10., 0);
+    m_facade->execute(rot_cmd);
 
     updateScene();
 }
@@ -393,18 +393,17 @@ void MainWindow::on_botRightBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
-    // m_facade->execute(rot_cmd);
-    camera->rotate(-15 * M_PI / 180);
+    RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
+    m_facade->execute(rot_cmd);
     
     updateScene();
 }
@@ -417,18 +416,17 @@ void MainWindow::on_topLeftBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
-    // m_facade->execute(rot_cmd);
-    camera->rotateCW(-15 * M_PI / 180);
+    RotateCamera rot_cmd(camera, 0, 0, -M_PI / 10.);
+    m_facade->execute(rot_cmd);
     
     updateScene();
 }
@@ -441,67 +439,21 @@ void MainWindow::on_topRightBtn_clicked()
     }
     catch (const CameraException &error)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
+        QMessageBox::warning(nullptr, "Предупреждение", "Пожалуйста, загрузите камеру");
         return;
     }
 
-    std::shared_ptr<Camera> camera = std::make_shared<Camera>();
+    std::shared_ptr<Camera> camera;
 
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
-    // RotateCamera rot_cmd(camera, 0, -M_PI / 10., 0);
-    // m_facade->execute(rot_cmd);
-    camera->rotateCW(15 * M_PI / 180);
+    RotateCamera rot_cmd(camera, 0, 0, M_PI / 10.);
+    m_facade->execute(rot_cmd);
     
     updateScene();
 }
 
-// void MainWindow::on_topLeftBtn_clicked()
-// {
-//     try
-//     {
-//         checkCamExist();
-//     }
-//     catch (const CameraException &error)
-//     {
-//         QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
-//         return;
-//     }
-
-//     auto camera = make_shared<Camera>();
-
-//     GetMainCamera get_camera(camera);
-//     m_facade->execute(get_camera);
-
-//     RotateCamera rot_cmd(camera, 0, 0, 10);
-//     m_facade->execute(rot_cmd);
-
-//     updateScene();
-// }
-
-void MainWindow::on_leftBtn_clicked()
-{
-    try
-    {
-        checkCamExist();
-    }
-    catch (const CameraException &error)
-    {
-        QMessageBox::critical(nullptr, "Ошибка", "Не загружено ни одной камеры.");
-        return;
-    }
-
-    auto camera = make_shared<Camera>();
-
-    GetMainCamera get_camera(camera);
-    m_facade->execute(get_camera);
-
-    TranslateCamera move_cmd(camera, -10, 0, 0);
-    m_facade->execute(move_cmd);
-
-    updateScene();
-}
 
 void MainWindow::on_moveBtn_clicked()
 {
@@ -521,7 +473,7 @@ void MainWindow::on_moveBtn_clicked()
         return;
     }
 
-    shared_ptr<BaseObject> model = std::make_shared<CarcassModel>();
+    std::shared_ptr<BaseObject> model;
 
     GetSceneObject get_object_cmd(model, m_models.at(ui->modelsCB->currentIndex()));
     m_facade->execute(get_object_cmd);
@@ -550,7 +502,7 @@ void MainWindow::on_moveAllBtn_clicked()
         return;
     }
 
-    auto composite = std::make_shared<Composite>();
+    std::shared_ptr<Composite> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 
@@ -578,7 +530,7 @@ void MainWindow::on_scaleBtn_clicked()
         return;
     }
 
-    shared_ptr<BaseObject> model = std::make_shared<CarcassModel>();
+    shared_ptr<BaseObject> model; // = std::make_shared<CarcassModel>();
 
     GetSceneObject get_object_cmd(model, m_models.at(ui->modelsCB->currentIndex()));
     m_facade->execute(get_object_cmd);
@@ -608,7 +560,7 @@ void MainWindow::on_scaleAllBtn_clicked()
         return;
     }
 
-    auto composite = std::make_shared<Composite>();
+    std::shared_ptr<Composite> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 
@@ -639,7 +591,7 @@ void MainWindow::on_rotateBtn_clicked()
         return;
     }
 
-    shared_ptr<BaseObject> model = std::make_shared<CarcassModel>();
+    shared_ptr<BaseObject> model; // = std::make_shared<CarcassModel>();
 
     GetSceneObject get_object_cmd(model, m_models.at(ui->modelsCB->currentIndex()));
     m_facade->execute(get_object_cmd);
@@ -671,7 +623,7 @@ void MainWindow::on_rotateAllBtn_clicked()
         return;
     }
 
-    auto composite = std::make_shared<Composite>();
+    std::shared_ptr<Composite> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 
