@@ -49,12 +49,12 @@ void Composite::updateCenter()
     );
 }
 
-bool Composite::isVisible()
+bool Composite::isVisible() const
 {
     return false;
 }
 
-bool Composite::isComposite()
+bool Composite::isComposite() const
 {
     return true;
 }

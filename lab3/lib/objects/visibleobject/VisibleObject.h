@@ -8,6 +8,7 @@ public:
     VisibleObject() = default;
     ~VisibleObject() override = default;
 
-    bool isVisible() override { return true; }
+    virtual bool isVisible() const override;
+    virtual bool isComposite() const override;
 };
 

@@ -15,22 +15,14 @@ class BaseObject
 public:
     BaseObject();
     virtual ~BaseObject() = default;
+    
+    virtual void updateCenter();
 
-    virtual bool add(const std::shared_ptr<BaseObject> &);
-    virtual bool remove(const Iterator &);
-    virtual void updateCenter() {};
-
-    virtual bool isVisible();
-    virtual bool isComposite();
+    virtual bool isVisible() const = 0;
+    virtual bool isComposite() const = 0;
 
     virtual Vertex getCenter() const = 0;
-    virtual void moveElemsToOrigin(const Vertex &);
-    virtual void moveElemsToCenter(const Vertex &);
-    virtual void transformElems(const Matrix<double> &);
     virtual void transform(const Matrix<double> &mat, const Vertex &center) = 0;
-
-    virtual Iterator begin();
-    virtual Iterator end();
 
     virtual std::size_t getId();
 

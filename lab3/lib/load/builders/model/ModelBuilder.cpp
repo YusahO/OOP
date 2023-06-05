@@ -29,5 +29,5 @@ bool ModelBuilder::isBuild() const
 
 std::shared_ptr<CarcassModel> ModelBuilder::get()
 {
-    return std::make_shared<CarcassModel>(CarcassModel(m_model));
+    return std::make_shared<CarcassModel>(m_model);
 }

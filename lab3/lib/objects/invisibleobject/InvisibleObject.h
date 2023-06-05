@@ -8,5 +8,6 @@ public:
     InvisibleObject() = default;
     ~InvisibleObject() = default;
 
-    bool isVisible() override;
+    bool isVisible() const override;
+    bool isComposite() const override;
 };

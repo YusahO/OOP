@@ -26,12 +26,6 @@ Vertex DrawCarcassModelAdapter::getProjection(const Vertex &point)
 
     Vertex projection = point;
 
-    double cos_angle = cos(m_camera->Y_angle);
-    double sin_angle = sin(m_camera->Y_angle);
-
-    qDebug() << "cur cos angle: " << cos_angle << ":" << sin_angle << "\n";
-    qDebug() << "cam pos: " << m_camera->m_location.getX() << " " << m_camera->m_location.getY() << " " << m_camera->m_location.getZ(); 
-
     Matrix<double> trans_1 = TransformMatrix::createTranslationMatrix4(
         -m_camera->m_location.getX(),
         -m_camera->m_location.getY(),
