@@ -76,7 +76,7 @@ std::vector<Vertex> FileCarcassModelLoader::loadVertices()
     for (int i = 0; i < vertexNum; i++)
     {
        *m_file >> x >> y >> z;
-       vertexes.push_back(Vertex(x, y, z));
+       vertexes.emplace_back(x, y, z);
     }
 
     return vertexes;

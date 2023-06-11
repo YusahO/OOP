@@ -1,7 +1,24 @@
-#include "TransformMatrix.h"
+#include "Transformer.h"
 #include <cmath>
 
-Matrix<double> TransformMatrix::createTranslationMatrix4(const double dx, const double dy, const double dz)
+Transformer::Transformer()
+    : m_matrix(4, 4, 0)
+{
+    for (size_t i = 0; i < 4; ++i)
+    {
+        m_matrix[i][i] = 1;
+    }
+}
+
+void Transformer::transform(Vertex &vert)
+{
+    Matrix<double> mat = { {vert.getX(), vert.getY(), vert.getZ(), 1} };
+    mat *= m_matrix;
+
+    vert = { mat[0][0], mat[0][1], mat[0][2] };
+}
+
+void Transformer::setTranslationMatrix(const double dx, const double dy, const double dz)
 {
     Matrix<double> mat(4, 4, 0);
     mat[0][0] = 1;
@@ -11,10 +28,11 @@ Matrix<double> TransformMatrix::createTranslationMatrix4(const double dx, const 
     mat[3][0] = dx;
     mat[3][1] = dy;
     mat[3][2] = dz;
-    return mat;
+
+    m_matrix = mat;
 }
 
-Matrix<double> TransformMatrix::createRotationMatrix4(const double ax, const double ay, const double az)
+void Transformer::setRotationMatrix(const double ax, const double ay, const double az)
 {
     Matrix<double> mat(4, 4, 0);
 
@@ -36,10 +54,10 @@ Matrix<double> TransformMatrix::createRotationMatrix4(const double ax, const dou
 
     mat[3][3] = 1;
 
-    return mat;
+    m_matrix = mat;
 }
 
-Matrix<double> TransformMatrix::createScalingMatrix4(const double kx, const double ky, const double kz)
+void Transformer::setScalingMatrix(const double kx, const double ky, const double kz)
 {
     Matrix<double> mat(4, 4, 0);
 
@@ -48,5 +66,5 @@ Matrix<double> TransformMatrix::createScalingMatrix4(const double kx, const doub
     mat[2][2] = kz;
     mat[3][3] = 1;
 
-    return mat;
+    m_matrix = mat;
 }

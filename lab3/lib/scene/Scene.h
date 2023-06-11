@@ -20,16 +20,21 @@ public:
 
     Iterator getObjectIter(const std::size_t id);
     std::shared_ptr<BaseObject> getObject(const std::size_t id);
-    std::shared_ptr<Composite> getVisibleObjects();
-    std::shared_ptr<Composite> getInvisibleObjects();
+    std::shared_ptr<BaseObject> getObjects();
+    // std::shared_ptr<BaseObject> getInvisibleObjects();
 
-    Iterator vbegin();
-    Iterator vend();
+    // Iterator vbegin();
+    // Iterator vend();
 
-    Iterator ibegin();
-    Iterator iend();
+    Iterator begin();
+    Iterator end();
+
+    // Iterator ibegin();
+    // Iterator iend();
 
 protected:
-    std::shared_ptr<Composite> m_visible_objects;
-    std::shared_ptr<Composite> m_invisible_objects;
+    // std::shared_ptr<BaseObject> m_visible_objects;
+    // std::shared_ptr<BaseObject> m_invisible_objects;
+    std::shared_ptr<BaseObject> m_objects;
 };
+

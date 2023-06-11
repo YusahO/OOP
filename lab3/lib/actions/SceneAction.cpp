@@ -12,7 +12,8 @@ void ClearScene::execute()
 
 
 
-GetMainCamera::GetMainCamera(std::shared_ptr<Camera> &camera) : m_camera(camera)
+GetMainCamera::GetMainCamera(std::shared_ptr<Camera> &camera)
+    : m_camera(camera)
 {
     m_method = &SceneManager::getCamera;
 }
@@ -24,9 +25,10 @@ void GetMainCamera::execute()
 
 
 
-GetSceneObjects::GetSceneObjects(std::shared_ptr<Composite> &objects) : m_objects(objects)
+GetSceneObjects::GetSceneObjects(std::shared_ptr<BaseObject> &objects)
+    : m_objects(objects)
 {
-    m_method = &SceneManager::getVisibleObjects;
+    m_method = &SceneManager::getObjects;
 }
 
 void GetSceneObjects::execute()

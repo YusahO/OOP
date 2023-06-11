@@ -22,7 +22,8 @@ private:
     Action m_method;
 };
 
-class GetMainCamera : public SceneAction {
+class GetMainCamera : public SceneAction 
+{
     using Action = std::shared_ptr<Camera>(SceneManager::*)() const;
 public:
     explicit GetMainCamera(std::shared_ptr<Camera> &camera);
@@ -36,15 +37,15 @@ private:
     Action m_method;
 };
 
-class GetSceneObjects:public SceneAction
+class GetSceneObjects : public SceneAction
 {
-    using Action = std::shared_ptr<Composite>(SceneManager::*)();
+    using Action = std::shared_ptr<BaseObject>(SceneManager::*)();
 public:
-    GetSceneObjects(std::shared_ptr<Composite> &objects);
+    GetSceneObjects(std::shared_ptr<BaseObject> &objects);
 
     virtual void execute() override;
 private:
-    std::shared_ptr<Composite> &m_objects;
+    std::shared_ptr<BaseObject> &m_objects;
 
     Action m_method;
 };
@@ -85,7 +86,7 @@ public:
     virtual void execute() override;
 
 private:
-    std::shared_ptr<Scene> m_scene;
+    std::shared_ptr<Scene> &m_scene;
     Action m_method;
 };
 

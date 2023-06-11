@@ -5,7 +5,7 @@
 
 class CarcassModel;
 
-class ModelAdapter: public BaseAdapter
+class ModelAdapter : public BaseAdapter
 {
 public:
     virtual ~ModelAdapter() = default;

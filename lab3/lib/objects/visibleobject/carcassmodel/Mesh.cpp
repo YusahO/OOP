@@ -1,5 +1,5 @@
 #include "Mesh.h"
-#include "TransformMatrix.h"
+#include "Transformer.h"
 
 Mesh::Mesh(std::vector<Vertex> &vertices, std::vector<Edge> &edges)
     : m_origin { },
@@ -61,9 +61,10 @@ void Mesh::moveVerticesToOrigin(const Vertex &center)
 {
     Vertex diff = Vertex(0) - center;
 
-    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
+    std::shared_ptr<Transformer> transformer = std::make_shared<Transformer>();
+    transformer->setTranslationMatrix(diff.getX(),  diff.getY(),  diff.getZ());
 
-    transformVertices(mat);
+    transformVertices(transformer);
     updateOrigin();
 }
 
@@ -71,23 +72,23 @@ void Mesh::moveVerticesToCenter(const Vertex &center)
 {
     Vertex diff = center - Vertex(0);
 
-    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
+    std::shared_ptr<Transformer> transformer = std::make_shared<Transformer>();
+    transformer->setTranslationMatrix(diff.getX(),  diff.getY(),  diff.getZ());
 
-    transformVertices(mat);
+    transformVertices(transformer);
     updateOrigin();
 }
 
-void Mesh::transformVertices(const Matrix<double> &mat)
+void Mesh::transformVertices(const shared_ptr<BaseTransformer> &transformer)
 {
     for (auto &vertex : m_vertices)
-        vertex.transform(mat);
+        transformer->transform(vertex);
 }
 
-void Mesh::transform(const Matrix<double> &mat, const Vertex &center)
+void Mesh::transform(const shared_ptr<BaseTransformer> &transformer, const Vertex &center)
 {
-    updateOrigin();
-
     moveVerticesToOrigin(center);
-    transformVertices(mat);
+    transformVertices(transformer);
     moveVerticesToCenter(center);
+    updateOrigin();
 }

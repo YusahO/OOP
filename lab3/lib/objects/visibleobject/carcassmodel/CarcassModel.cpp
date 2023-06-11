@@ -20,8 +20,3 @@ Vertex CarcassModel::getOrigin() const
 {
     return m_mesh->getOrigin();
 }
-
-void CarcassModel::transform(const Matrix<double> &mat, const Vertex &center)
-{
-    m_mesh->transform(mat, center);
-}

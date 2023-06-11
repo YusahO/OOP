@@ -52,6 +52,7 @@ RotateCamera::RotateCamera(const std::shared_ptr<Camera> camera, const double ax
 
 void RotateCamera::execute()
 {
+    qDebug() << (void *)m_camera.get();
     m_camera->rotate({m_ax, m_ay, m_az});
     (*(m_transform_manager).*m_method)(m_camera, m_ax, m_ay, m_az);
 }

@@ -22,7 +22,7 @@ Vertex::Vertex(const double x, const double y, const double z)
 }
 
 
-Vertex::Vertex(const Vertex &&other) noexcept
+Vertex::Vertex(Vertex &&other) noexcept
 {
     setX(other.m_x);
     setY(other.m_y);

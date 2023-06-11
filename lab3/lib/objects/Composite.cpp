@@ -1,5 +1,5 @@
 #include <Composite.h>
-#include "TransformMatrix.h"
+#include "Transformer.h"
 
 Composite::Composite(std::shared_ptr<BaseObject> &element)
 {
@@ -62,43 +62,6 @@ bool Composite::isComposite() const
 Vertex Composite::getOrigin() const
 {
     return m_origin;
-}
-
-void Composite::moveElemsToOrigin(const Vertex &center)
-{
-    Vertex diff = Vertex(0) - center;
-
-    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
-    transformElems(mat);
-    updateOrigin();
-}
-
-void Composite::moveElemsToCenter(const Vertex &center)
-{
-    Vertex diff = center - m_origin;
-
-    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(diff.getX(),  diff.getY(),  diff.getZ());
-
-    transformElems(mat);
-    updateOrigin();
-}
-
-void Composite::transformElems(const Matrix<double> &mat)
-{
-    for (const auto &element : m_elements)
-    {
-        element->updateOrigin();
-        element->transform(mat, m_origin);
-    }
-}
-
-void Composite::transform(const Matrix<double> &mat, const Vertex &center)
-{
-    updateOrigin();
-
-    moveElemsToOrigin(center);
-    transformElems(mat);
-    moveElemsToCenter(center);
 }
 
 Iterator Composite::begin()

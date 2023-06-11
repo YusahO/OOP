@@ -2,7 +2,7 @@
 
 #include "BaseManager.h"
 #include "BaseObject.h"
-#include "matrix.h"
+#include "BaseTransformer.h"
 
 class TransformManager : public BaseManager
 {
@@ -28,7 +28,6 @@ public:
         const double &oy,
         const double &oz);
 
-    void transformObject(const std::shared_ptr<BaseObject> &object,
-        const Matrix<double> &mat);
+    void transformObject(const std::shared_ptr<BaseObject> &object, std::shared_ptr<BaseTransformer> &transformer);
 };
 

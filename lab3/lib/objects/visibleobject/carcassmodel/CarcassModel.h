@@ -8,11 +8,11 @@
 #include "Vertex.h"
 #include "Edge.h"
 #include "Mesh.h"
-#include "DrawCarcassModelAdapter.h"
 
 class CarcassModel : public BaseModel
 {
     friend class DrawCarcassModelAdapter;
+    friend class TransformCarcassModelAdapter;
 
 public:
     CarcassModel();
@@ -22,7 +22,6 @@ public:
     ~CarcassModel() override = default;
 
     virtual Vertex getOrigin() const override;
-    virtual void transform(const Matrix<double> &mat, const Vertex &center) override;
 
 protected:
     std::shared_ptr<Mesh> m_mesh;

@@ -1,8 +1,12 @@
 #include <DrawCompositeAdapter.h>
+#include "TransformCompositeAdapter.h"
 
 void DrawCompositeAdapter::setCamera(std::shared_ptr<Camera> camera)
 {
+    qDebug() << "setCamera adapter " << (void*)camera.get();
     m_camera = camera;
+    qDebug() << "m_camera " << (void*)m_camera.get();
+
 }
 
 void DrawCompositeAdapter::setDrawer(std::shared_ptr<BaseDrawer> drawer)

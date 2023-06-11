@@ -4,6 +4,7 @@ std::size_t BaseObject::s_next_id = 1;
 
 BaseObject::BaseObject()
 {
+    // qDebug() << "BaseObject created";
     m_id = s_next_id++;
 }
 

@@ -2,10 +2,14 @@
 
 #include "InvisibleObject.h"
 #include "DrawCarcassModelAdapter.h"
+#include "TransformCarcassModelAdapter.h"
+#include "TransformCameraAdapter.h"
 
 class Camera : public InvisibleObject
 {
     friend class DrawCarcassModelAdapter;
+    friend class TransformCarcassModelAdapter;
+    friend class TransformCameraAdapter;
 
 public:
     Camera() = default;
@@ -13,7 +17,6 @@ public:
     ~Camera() override = default;
 
     virtual Vertex getOrigin() const override;
-    void transform(const Matrix<double> &mat, const Vertex &center) override;
     // void updateAxes();
 
     void rotate(const Vertex &angles);

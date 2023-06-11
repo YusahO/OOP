@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "TransformMatrix.h"
+#include "Transformer.h"
 
 void DrawCarcassModelAdapter::setCamera(std::shared_ptr<Camera> camera)
 {
@@ -19,20 +19,15 @@ Vertex DrawCarcassModelAdapter::getProjection(const Vertex &point)
 {
     Vertex projection = point;
 
-    Matrix<double> rot = TransformMatrix::createRotationMatrix4(
+    Transformer transfomer;
+    transfomer.setRotationMatrix(
         m_camera->m_angle.getX(),
         m_camera->m_angle.getY(),
         m_camera->m_angle.getZ()
     );
 
-    Matrix<double> translation = TransformMatrix::createTranslationMatrix4(
-        m_camera->m_location.getX(),
-        m_camera->m_location.getY(),
-        m_camera->m_location.getZ()
-    );
-
-    projection.transform(rot * translation);
-    return projection;
+    transfomer.transform(projection);
+    return projection + m_camera->m_location;
 }
 
 void DrawCarcassModelAdapter::request()

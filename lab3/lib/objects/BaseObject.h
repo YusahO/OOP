@@ -15,17 +15,22 @@ class BaseObject
 public:
     BaseObject();
     virtual ~BaseObject() = default;
-    virtual void updateOrigin();
 
-    virtual bool isVisible() const = 0;
-    virtual bool isComposite() const = 0;
+    virtual bool isVisible() const { return false; };
+    virtual bool isComposite() const { return false; };
 
-    virtual Vertex getOrigin() const = 0;
-    virtual void transform(const Matrix<double> &mat, const Vertex &center) = 0;
-
+    virtual Vertex getOrigin() const { return m_origin; };
     virtual std::size_t getId();
 
+    virtual bool add(const std::shared_ptr<BaseObject> &element) { return false; }
+    virtual bool remove(const Iterator &iter) { return false; }
+
+    virtual Iterator begin() { return Iterator(); }
+    virtual Iterator end() { return Iterator(); }
+
 protected:
+    virtual void updateOrigin();
+
     std::size_t m_id;
     static std::size_t s_next_id;
 

@@ -24,9 +24,9 @@ std::shared_ptr<BaseObject> SceneManager::getObject(const size_t id)
     return m_scene->getObject(id);
 }
 
-std::shared_ptr<Composite> SceneManager::getVisibleObjects()
+std::shared_ptr<BaseObject> SceneManager::getObjects()
 {
-    return m_scene->getVisibleObjects();
+    return m_scene->getObjects();
 }
 
 size_t SceneManager::addCamera(const Vertex &location, const Vertex &direction)
@@ -55,4 +55,5 @@ void SceneManager::setScene(std::shared_ptr<Scene> &scene)
 void SceneManager::setCamera(const std::size_t id)
 {
     m_camera = std::dynamic_pointer_cast<Camera>(*m_scene->getObjectIter(id));
+    qDebug() << (void*)m_camera.get();
 }

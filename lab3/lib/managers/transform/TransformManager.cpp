@@ -1,16 +1,46 @@
 #include <cmath>
 
 #include "TransformManager.h"
-#include "TransformMatrix.h"
+#include "Transformer.h"
+#include "TransformCarcassModelAdapter.h"
+#include "TransformCameraAdapter.h"
+#include "TransformCompositeAdapter.h"
 
 void TransformManager::translateObject(const std::shared_ptr <BaseObject> &object,
     const double &dx,
     const double &dy,
     const double &dz)
 {
-    Matrix<double> mat = TransformMatrix::createTranslationMatrix4(dx, dy, dz);
-    object->updateOrigin();
-    object->transform(mat, object->getOrigin());
+    std::shared_ptr<Transformer> transformer = std::make_shared<Transformer>();
+    transformer->setTranslationMatrix(dx, dy, dz);
+
+    if (object->isComposite())
+    {
+        TransformCompositeAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Composite>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && !object->isVisible())
+    {
+        TransformCameraAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setAdaptee(std::dynamic_pointer_cast<Camera>(object));
+        adapter.setOrigin(object->getOrigin());
+        adapter.request();
+    }
+    else if (!object->isComposite() && object->isVisible())
+    {
+        TransformCarcassModelAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<CarcassModel>(object));
+        adapter.request();
+    }
 }
 
 
@@ -19,10 +49,36 @@ void TransformManager::scaleObject(const std::shared_ptr <BaseObject> &object,
     const double &ky,
     const double &kz)
 {
-    Matrix<double> mat = TransformMatrix::createScalingMatrix4(kx, ky, kz);
+    std::shared_ptr<Transformer> transformer = std::make_shared<Transformer>();
+    transformer->setScalingMatrix(kx, ky, kz);
 
-    object->updateOrigin();
-    object->transform(mat, object->getOrigin());
+    if (object->isComposite())
+    {
+        TransformCompositeAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Composite>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && !object->isVisible())
+    {
+        TransformCameraAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Camera>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && object->isVisible())
+    {
+        TransformCarcassModelAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<CarcassModel>(object));
+        adapter.request();
+    }
 }
 
 
@@ -31,15 +87,66 @@ void TransformManager::rotateObject(const std::shared_ptr <BaseObject> &object,
     const double &ay,
     const double &az)
 {
+    std::shared_ptr<Transformer> transformer = std::make_shared<Transformer>();
+    transformer->setRotationMatrix(ax, ay, az);
 
-    Matrix<double> mat = TransformMatrix::createRotationMatrix4(ax, ay, az);
-    object->updateOrigin();
-    object->transform(mat, object->getOrigin());
+    if (object->isComposite())
+    {
+        TransformCompositeAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Composite>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && !object->isVisible())
+    {
+        TransformCameraAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Camera>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && object->isVisible())
+    {
+        TransformCarcassModelAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<CarcassModel>(object));
+        adapter.request();
+    }
 }
 
 void TransformManager::transformObject(const std::shared_ptr<BaseObject> &object,
-    const Matrix<double> &mat)
+    std::shared_ptr<BaseTransformer> &transformer)
 {
-    object->updateOrigin();
-    object->transform(mat, object->getOrigin());
+    if (object->isComposite())
+    {
+        TransformCompositeAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Composite>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && !object->isVisible())
+    {
+        TransformCameraAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<Camera>(object));
+        adapter.request();
+    }
+    else if (!object->isComposite() && object->isVisible())
+    {
+        TransformCarcassModelAdapter adapter;
+
+        adapter.setTransformer(transformer);
+        adapter.setOrigin(object->getOrigin());
+        adapter.setAdaptee(std::dynamic_pointer_cast<CarcassModel>(object));
+        adapter.request();
+    }
 }

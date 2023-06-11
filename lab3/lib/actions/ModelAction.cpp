@@ -51,16 +51,16 @@ void RotateModel::execute()
 
 
 
-TransformModel::TransformModel(const std::shared_ptr<BaseObject> object, const Matrix<double> &mat)
+TransformModel::TransformModel(const std::shared_ptr<BaseObject> object, std::shared_ptr<BaseTransformer> &transformer)
     : m_object(object),
-      m_mat(mat)
+      m_transformer(transformer)
 {
     m_method = &TransformManager::transformObject;
 }
 
 void TransformModel::execute()
 {
-    (*(m_transform_manager).*m_method)(m_object, m_mat);
+    (*(m_transform_manager).*m_method)(m_object, m_transformer);
 }
 
 

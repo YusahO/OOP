@@ -1,5 +1,5 @@
 #include <ModelLoadModeratorCreator.h>
-#include <FileModelDirector.h>
+#include <LoadModelDirector.h>
 
 std::shared_ptr<ModelLoadModerator> ModelLoadModeratorCreator::createModerator()
 {
@@ -16,7 +16,7 @@ void ModelLoadModeratorCreator::createInstance()
     if (!moderator)
     {
         auto reader = std::shared_ptr<FileCarcassModelLoader>(new FileCarcassModelLoader());
-        auto director = std::shared_ptr<BaseModelDirector>(new FileModelDirector(reader));
+        auto director = std::shared_ptr<BaseModelDirector>(new LoadModelDirector(reader));
         moderator = std::make_shared<ModelLoadModerator>(director);
     }
 

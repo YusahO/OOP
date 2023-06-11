@@ -9,17 +9,18 @@ class SceneManager : public BaseManager
 public:
     SceneManager();
     SceneManager(const SceneManager &scene) = delete;
-    SceneManager &operator = (const SceneManager &scene) = delete;
+    SceneManager &operator=(const SceneManager &scene) = delete;
 
     ~SceneManager() = default;
 
     std::shared_ptr<Scene> getScene() const;
     std::shared_ptr<Camera> getCamera() const;
+
     std::shared_ptr<BaseObject> getObject(const size_t id);
-    std::shared_ptr<Composite> getVisibleObjects();
+    std::shared_ptr<BaseObject> getObjects();
 
     size_t addCamera(const Vertex &location, const Vertex &direction);
-    size_t addObject(const shared_ptr<BaseObject> &object);
+    size_t addObject(const std::shared_ptr<BaseObject> &object);
 
     void retranslateObject(const size_t id);
 

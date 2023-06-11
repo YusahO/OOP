@@ -1,6 +1,6 @@
 #include "ModelsAction.h"
 
-TranslateModels::TranslateModels(const std::shared_ptr<Composite> objects, const double dx, const double dy, const double dz)
+TranslateModels::TranslateModels(const std::shared_ptr<BaseObject> objects, const double dx, const double dy, const double dz)
     : m_objects(objects),
       m_dx(dx),
       m_dy(dy),
@@ -15,7 +15,7 @@ void TranslateModels::execute()
 }
 
 
-ScaleModels::ScaleModels(const std::shared_ptr<Composite> objects, const double kx, const double ky, const double kz)
+ScaleModels::ScaleModels(const std::shared_ptr<BaseObject> objects, const double kx, const double ky, const double kz)
     : m_objects(objects),
       m_kx(kx),
       m_ky(ky),
@@ -30,7 +30,7 @@ void ScaleModels::execute()
 }
 
 
-RotateModels::RotateModels(const std::shared_ptr<Composite> objects, const double ax, const double ay, const double az)
+RotateModels::RotateModels(const std::shared_ptr<BaseObject> objects, const double ax, const double ay, const double az)
     : m_objects(objects),
       m_ax(ax),
       m_ay(ay),
@@ -46,14 +46,14 @@ void RotateModels::execute()
 
 
 
-TransformModels::TransformModels(const std::shared_ptr<Composite> objects, const Matrix<double> &mat)
+TransformModels::TransformModels(const std::shared_ptr<BaseObject> objects, std::shared_ptr<BaseTransformer> &transformer)
     : m_objects(objects),
-      m_mat(mat)
+      m_transformer(transformer)
 {
     m_method = &TransformManager::transformObject;
 }
 
 void TransformModels::execute()
 {
-    (*(m_transform_manager).*m_method)(m_objects, m_mat);
+    (*(m_transform_manager).*m_method)(m_objects, m_transformer);
 }

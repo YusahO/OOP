@@ -1,6 +1,6 @@
 #include "FileSceneDirector.h"
 #include "FileCameraDirector.h"
-#include "FileModelDirector.h"
+#include "LoadModelDirector.h"
 #include "Exceptions.h"
 
 FileSceneDirector::FileSceneDirector()
@@ -35,7 +35,7 @@ void FileSceneDirector::loadModels(std::shared_ptr<SceneBuilder> builder, std::s
 
     for (size_t i = 0; i < models_amount; ++i)
     {
-        auto model = FileModelDirector(m_loader).load(model_builder, filename);
+        auto model = LoadModelDirector(m_loader).load(model_builder, filename);
         builder->buildObject(model);
     }
 }

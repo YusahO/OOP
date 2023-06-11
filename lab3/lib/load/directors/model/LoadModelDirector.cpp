@@ -1,19 +1,19 @@
-#include "FileModelDirector.h"
+#include "LoadModelDirector.h"
 #include "Exceptions.h"
 #include "ModelBuilder.h"
 
 
-FileModelDirector::FileModelDirector()
+LoadModelDirector::LoadModelDirector()
 {
     m_loader = std::make_shared<FileCarcassModelLoader>();
 }
 
-FileModelDirector::FileModelDirector(std::shared_ptr<FileCarcassModelLoader> &loader)
+LoadModelDirector::LoadModelDirector(std::shared_ptr<FileCarcassModelLoader> &loader)
 {
     m_loader = loader;
 }
 
-std::shared_ptr<CarcassModel> FileModelDirector::load(std::shared_ptr<BaseModelBuilder> builder, std::string &filename)
+std::shared_ptr<CarcassModel> LoadModelDirector::load(std::shared_ptr<BaseModelBuilder> builder, std::string &filename)
 {
     m_loader->open(filename);
 

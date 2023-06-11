@@ -5,29 +5,26 @@
 class Composite : public BaseObject
 {
     friend class DrawCompositeAdapter;
+    friend class TransformCompositeAdapter;
 
 public:
     Composite() = default;
     explicit Composite(std::shared_ptr<BaseObject> &element);
     explicit Composite(const std::vector<std::shared_ptr<BaseObject>> &vector);
 
-    virtual bool add(const std::shared_ptr<BaseObject> &element);
-    virtual bool remove(const Iterator &iter);
-    virtual void updateOrigin() override;
+    virtual bool add(const std::shared_ptr<BaseObject> &element) override;
+    virtual bool remove(const Iterator &iter) override;
 
     virtual bool isVisible() const override;
     virtual bool isComposite() const override;
 
     virtual Vertex getOrigin() const override;
-    virtual void moveElemsToOrigin(const Vertex &center);
-    virtual void moveElemsToCenter(const Vertex &center);
-    virtual void transformElems(const Matrix<double> &mat);
-    virtual void transform(const Matrix<double> &mat, const Vertex &center) override;
 
-    virtual Iterator begin();
-    virtual Iterator end();
+    virtual Iterator begin() override;
+    virtual Iterator end() override;
 
 private:
+    virtual void updateOrigin() override;
     std::vector<std::shared_ptr<BaseObject>> m_elements;
 };
 

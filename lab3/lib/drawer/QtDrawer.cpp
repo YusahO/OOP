@@ -13,7 +13,7 @@ QtDrawer::QtDrawer(const QtDrawer &drawer)
 
 void QtDrawer::drawLine(const Vertex &vertex1, const Vertex &vertex2)
 {
-    m_scene->addLine(vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY(), QPen({255, 255, 255}));
+    m_scene->addLine(vertex1.getX(), vertex1.getY(), vertex2.getX(), vertex2.getY(), QPen({0, 0, 0}));
 }
 
 

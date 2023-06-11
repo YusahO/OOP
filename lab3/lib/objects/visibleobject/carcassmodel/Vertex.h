@@ -10,7 +10,7 @@ public:
     Vertex(const double x, const double y, const double z);
 
     Vertex(const Vertex &point) = default;
-    Vertex(const Vertex &&point) noexcept;
+    Vertex(Vertex &&point) noexcept;
 
     Vertex &operator=(const Vertex &point) = default;
     Vertex &operator=(Vertex &&point) noexcept;

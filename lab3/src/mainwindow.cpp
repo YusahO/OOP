@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 
-// #define _USE_MATH_DEFINES
 #include <cmath>
-
 #include <QDebug>
 
 #include "mainwindow.h"
@@ -128,7 +126,7 @@ void MainWindow::on_loadModelBtn_clicked()
         return;
     }
 
-    auto path = QFileDialog::getOpenFileName(nullptr, "Загрузка модели", "../lab_03/data/cube.txt");
+    auto path = QFileDialog::getOpenFileName(nullptr, "Загрузка модели", ".");
 
     if (path.isNull())
         return;
@@ -425,6 +423,8 @@ void MainWindow::on_topLeftBtn_clicked()
     GetMainCamera get_camera(camera);
     m_facade->execute(get_camera);
 
+    qDebug() << "wind camer " << (void *)camera.get();
+
     RotateCamera rot_cmd(camera, 0, 0, -M_PI / 10.);
     m_facade->execute(rot_cmd);
     
@@ -478,7 +478,7 @@ void MainWindow::on_moveBtn_clicked()
     GetSceneObject get_object_cmd(model, m_models.at(ui->modelsCB->currentIndex()));
     m_facade->execute(get_object_cmd);
 
-    TranslateModel move_cmd(model, ui->dxDSB->value(), ui->dyDSB->value(), ui->dzDSB->value());
+    TranslateModel move_cmd(model, ui->dxDSB->value(), -ui->dyDSB->value(), ui->dzDSB->value());
     m_facade->execute(move_cmd);
 
     updateScene();
@@ -502,7 +502,7 @@ void MainWindow::on_moveAllBtn_clicked()
         return;
     }
 
-    std::shared_ptr<Composite> composite;
+    std::shared_ptr<BaseObject> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 
@@ -530,7 +530,7 @@ void MainWindow::on_scaleBtn_clicked()
         return;
     }
 
-    shared_ptr<BaseObject> model; // = std::make_shared<CarcassModel>();
+    std::shared_ptr<BaseObject> model; // = std::make_shared<CarcassModel>();
 
     GetSceneObject get_object_cmd(model, m_models.at(ui->modelsCB->currentIndex()));
     m_facade->execute(get_object_cmd);
@@ -560,7 +560,7 @@ void MainWindow::on_scaleAllBtn_clicked()
         return;
     }
 
-    std::shared_ptr<Composite> composite;
+    std::shared_ptr<BaseObject> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 
@@ -623,7 +623,7 @@ void MainWindow::on_rotateAllBtn_clicked()
         return;
     }
 
-    std::shared_ptr<Composite> composite;
+    std::shared_ptr<BaseObject> composite;
     GetSceneObjects get_objs(composite);
     m_facade->execute(get_objs);
 

@@ -4,6 +4,7 @@
 
 #include "Vertex.h"
 #include "Edge.h"
+#include "BaseTransformer.h"
 
 class Mesh
 {
@@ -20,14 +21,14 @@ public:
 
     void addVertex(const Vertex &point);
     void addEdge(const Edge &edge);
-    void updateOrigin();
 
     void moveVerticesToOrigin(const Vertex &center);
     void moveVerticesToCenter(const Vertex &center);
-    void transformVertices(const Matrix<double> &mat);
-    void transform(const Matrix<double> &mat, const Vertex &center);
+    void transformVertices(const shared_ptr<BaseTransformer> &transformer);
+    void transform(const shared_ptr<BaseTransformer> &transformer, const Vertex &center);
 
 private:
+    void updateOrigin();
     Vertex m_origin;
 
     std::vector<Vertex> m_vertices;

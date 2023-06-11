@@ -27,6 +27,7 @@ void Facade::execute(BaseAction &command)
         m_draw_composite_adapter
     );
 
+    qDebug() << "get cam" << (void *)m_scene_manager->getCamera().get();
     m_draw_manager->setCamera(m_scene_manager->getCamera());
     command.execute();
 }

@@ -6,47 +6,49 @@
 #include <QDebug>
 
 Scene::Scene()
-    : m_visible_objects(new Composite), 
-      m_invisible_objects(new Composite)
+    : m_objects(new Composite)
 {
 }
 
 std::size_t Scene::addObject(const std::shared_ptr<BaseObject> &object)
 {
-    if (object->isVisible())
-        m_visible_objects->add(object);
-    else
-        m_invisible_objects->add(object);
-
+    // if (object->isVisible())
+    //     m_visible_objects->add(object);
+    // else
+    //     m_invisible_objects->add(object);
+    m_objects->add(object);
     return object->getId();
 }
 
 std::size_t Scene::addCamera(const Vertex &location, const Vertex &direction)
 {
     auto camera = std::make_shared<Camera>(location, direction);
-    m_invisible_objects->add(camera);
+    // m_invisible_objects->add(camera);
+    m_objects->add(camera);
 
     return camera->getId();
 }
 
 void Scene::deleteObject(Iterator &iter)
 {
-    if ((*iter)->isVisible())
-        m_visible_objects->remove(iter);
-    else
-        m_invisible_objects->remove(iter);
+    // if ((*iter)->isVisible())
+    //     m_visible_objects->remove(iter);
+    // else
+    //     m_invisible_objects->remove(iter);
+    m_objects->remove(iter);
 }
 
 Iterator Scene::getObjectIter(const std::size_t id)
 {
-    auto iter = vbegin();
-    for (; iter != vend() && (*iter)->getId() != id; ++iter);
+    auto iter = begin();
+    // qDebug() << (void *)iter->get();
+    for (; iter != end() && (*iter)->getId() != id; ++iter);
 
-    if (iter == vend())
-    {
-        iter = ibegin();
-        for (; iter != iend() && (*iter)->getId() != id; ++iter);
-    }
+    // if (iter == end())
+    // {
+    //     iter = begin();
+    //     for (; iter != end() && (*iter)->getId() != id; ++iter);
+    // }
 
     return iter;
 }
@@ -56,32 +58,42 @@ std::shared_ptr<BaseObject> Scene::getObject(const std::size_t id)
     return *getObjectIter(id);
 }
 
-std::shared_ptr<Composite> Scene::getVisibleObjects()
+// std::shared_ptr<BaseObject> Scene::getVisibleObjects()
+// {
+//     return m_objects;
+// }
+
+std::shared_ptr<BaseObject> Scene::getObjects()
 {
-    return m_visible_objects;
+    return m_objects;
 }
 
-std::shared_ptr<Composite> Scene::getInvisibleObjects()
+// Iterator Scene::begin()
+// {
+//     return m_objects->begin();
+// }
+
+// Iterator Scene::end()
+// {
+//     return m_objects->end();
+// }
+
+Iterator Scene::begin()
 {
-    return m_invisible_objects;
+    return m_objects->begin();
 }
 
-Iterator Scene::vbegin()
+Iterator Scene::end()
 {
-    return m_visible_objects->begin();
+    return m_objects->end();
 }
 
-Iterator Scene::vend()
-{
-    return m_visible_objects->end();
-}
+// Iterator Scene::begin()
+// {
+//     return m_objects->begin();
+// }
 
-Iterator Scene::ibegin()
-{
-    return m_invisible_objects->begin();
-}
-
-Iterator Scene::iend()
-{
-    return m_invisible_objects->end();
-}
+// Iterator Scene::end()
+// {
+//     return m_objects->end();
+// }

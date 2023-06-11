@@ -58,15 +58,15 @@ private:
 
 class TransformModel : public ModelAction
 {
-    using Action = void(TransformManager::*)(const std::shared_ptr<BaseObject> &object, const Matrix<double> &mat);
+    using Action = void(TransformManager::*)(const std::shared_ptr<BaseObject> &object, std::shared_ptr<BaseTransformer> &transformer);
 public:
-    TransformModel(const std::shared_ptr<BaseObject> object, const Matrix<double> &mat);
+    TransformModel(const std::shared_ptr<BaseObject> object, std::shared_ptr<BaseTransformer> &transformer);
 
     virtual void execute() override;
 
 private:
     std::shared_ptr<BaseObject> m_object;
-    Matrix<double> m_mat;
+    std::shared_ptr<BaseTransformer> m_transformer;
     Action m_method;
 };
 
